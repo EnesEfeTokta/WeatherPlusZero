@@ -426,23 +426,32 @@
                                 </Grid.RowDefinitions>
 
                                 <Border Grid.Column="0" Grid.Row="1">
-                                    <Grid x:Name="TimeDayGrid">
+                                    <Canvas x:Name="TimeDayCanvas"
+                                                Width="395"
+                                                Height="30"
+                                                VerticalAlignment="Center">
                                         <ProgressBar x:Name="TimeDayProgressBar"
                                                      Minimum="0"
                                                      Maximum="24"
                                                      Value="0"
-                                                     Height="5"
+                                                     Height="4"
                                                      Width="395"
                                                      Background="LightGray"
                                                      Foreground="Yellow"
-                                                     VerticalAlignment="Center"/>
+                                                     VerticalAlignment="Top" 
+                                                     HorizontalAlignment="Center" 
+                                                     Canvas.Top="8"/>
 
                                         <Image x:Name="WeatherStatusIconImage" 
                                                Source="Images\SunIcon.png"
                                                Width="20"
                                                Height="20"
-                                               VerticalAlignment="Center"/>
-                                    </Grid>
+                                               VerticalAlignment="Center">
+                                            <Image.RenderTransform>
+                                                <TranslateTransform x:Name="WeatherStatusTransform" />
+                                            </Image.RenderTransform>
+                                        </Image>
+                                    </Canvas>
                                 </Border>
 
                                 <Border Grid.Column="0" Grid.Row="2">
@@ -454,17 +463,17 @@
                                         </Grid.ColumnDefinitions>
                                         <Border x:Name="khfrkjh" Grid.Column="1" Grid.Row="0">
                                             <Grid>
-                                                <TextBlock x:Name="StartDayTime" 
-                                                               Text="00:00"
-                                                               Foreground="White"
-                                                               HorizontalAlignment="Left"
-                                                               VerticalAlignment="Top"/>
+                                                <TextBlock x:Name="StartDayTimeTextBlock" 
+                                                           Text="00:00"
+                                                           Foreground="White"
+                                                           HorizontalAlignment="Left"
+                                                           VerticalAlignment="Top"/>
 
-                                                <TextBlock x:Name="EndDayTime" 
-                                                               Text="23:59"
-                                                               Foreground="White"
-                                                               HorizontalAlignment="Right"
-                                                               VerticalAlignment="Top"/>
+                                                <TextBlock x:Name="EndDayTimeTextBlock" 
+                                                           Text="23:59"
+                                                           Foreground="White"
+                                                           HorizontalAlignment="Right"
+                                                           VerticalAlignment="Top"/>
                                             </Grid>
                                         </Border>
                                     </Grid>

@@ -181,7 +181,8 @@ namespace WeatherPlusZero
 
             BitmapImage newImage = new BitmapImage();
             newImage.BeginInit();
-            newImage.UriSource = new Uri(filePath);
+            newImage.UriSource = new Uri($"pack://application:,,,/{filePath}", UriKind.Absolute);
+            newImage.CacheOption = BitmapCacheOption.OnLoad;
             newImage.EndInit();
 
             image.Source = newImage;
@@ -203,20 +204,21 @@ namespace WeatherPlusZero
             // Günün saatini 0-24 aralığında al
             double hour = now.Hour + now.Minute / 60.0; // Dakikaları saate çevir
 
-            // ProgressBar değerini güncelle
-            SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
-
-            SetImagePosition(TimeDayProgressBar, WeatherIconIcon);
-
             // Gün batımı kontrolü ve resmin değiştirilmesi
-            if (hour >= 18 || hour < 6) // Gece veya gün batımı
+            if (hour >= 16 || hour < 6) // Gece veya gün batımı
             {
-                SetIconImage("C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png", WeatherStatusIconImage); // Ay resmi
+                // ProgressBar değerini güncelle
+                SetDayInformation(hour, TimeDayProgressBar, Colors.DarkBlue);
+                SetIconImage("Images/MoonIcon.png", WeatherStatusIconImage); // Ay resmi
             }
             else
             {
-                SetIconImage("C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\MoonIcon.png", WeatherStatusIconImage); // Güneş resmi
+                // ProgressBar değerini güncelle
+                SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
+                SetIconImage("Images/SunIcon.png", WeatherStatusIconImage); // Güneş resmi
             }
+
+            SetImagePosition(TimeDayProgressBar, WeatherStatusTransform);
         }
 
         /// <summary>
@@ -241,18 +243,21 @@ namespace WeatherPlusZero
         /// 
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="progressBar"></param>
+        /// <param name="transform"></param>
         /// <returns></returns>
-        public bool SetImagePosition(ProgressBar progressBar, Image image)
+        public bool SetImagePosition(ProgressBar progressBar, TranslateTransform transform)
         {
-            if (progressBar == null && image == null)
+            if (progressBar == null || transform == null)
             {
                 return false;
             }
 
             double progressWidth = progressBar.ActualWidth;
+
             double imagePosition = (progressBar.Value / progressBar.Maximum) * progressWidth;
-            Canvas.SetLeft(image, imagePosition - (image.Width / 2));
+
+            transform.X = imagePosition - (WeatherStatusIconImage.Width / 2);
+
             return true;
         }
 
