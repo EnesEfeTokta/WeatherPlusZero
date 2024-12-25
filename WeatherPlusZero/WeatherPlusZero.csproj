@@ -94,5 +94,22 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\AppLogo.png" />
+    <Resource Include="Images\CloudyWeather.jpg" />
+    <Resource Include="Images\DayIcon.png" />
+    <Resource Include="Images\HumidIcon.png" />
+    <Resource Include="Images\LocationIcon.png" />
+    <Resource Include="Images\MoonIcon.png" />
+    <Resource Include="Images\PressureIcon.png" />
+    <Resource Include="Images\RainyWeatherInTheEvening.jpg" />
+    <Resource Include="Images\SnowyWeather.jpg" />
+    <Resource Include="Images\StormWeather.jpg" />
+    <Resource Include="Images\SunIcon.png" />
+    <Resource Include="Images\SunnyWeather.jpg" />
+    <Resource Include="Images\TemperatureIcon.png" />
+    <Resource Include="Images\WindIcon.png" />
+    <Resource Include="Images\WindyCloudySunny.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

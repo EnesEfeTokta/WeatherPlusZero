@@ -5,7 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WeatherPlusZero"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Weather Plus Zero"
+        Height="460"
+        Width="800"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Icon="Images\AppLogo.png">
     <Grid x:Name="GeneralGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -24,7 +29,7 @@
 
         <!-- Background Image -->
         <Grid.Background>
-            <ImageBrush ImageSource="C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero_Demo\WpfApp1Demo\Resources\RainyWeatherInTheEvening.jpg"
+            <ImageBrush ImageSource="Images\RainyWeatherInTheEvening.jpg"
                         Stretch="UniformToFill"/>
         </Grid.Background>
 
@@ -151,7 +156,7 @@
         <Border x:Name="WeatherIconBorder" Grid.Column="3" Grid.Row="2">
             <Grid>
                 <Image x:Name="WeatherIconIcon"
-                       Source="C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero_Demo\WpfApp1Demo\Images\Icons\WindyCloudySunny.png"
+                       Source="Images\WindyCloudySunny.png"
                        Width="100"
                        Height="100"
                        HorizontalAlignment="Right"
@@ -191,7 +196,7 @@
                         <Border Grid.Column="0" Grid.Row="0">
                             <Grid>
                                 <Image x:Name="TemperatureIconImage" 
-                                       Source="C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero_Demo\WpfApp1Demo\Images\Icons\TemperatureIcon.png" 
+                                       Source="Images\TemperatureIcon.png" 
                                        Width="15"
                                        Height="15"
                                        HorizontalAlignment="Left"
@@ -240,7 +245,7 @@
                         <Border Grid.Column="0" Grid.Row="0">
                             <Grid>
                                 <Image x:Name="HumidIconImage" 
-                                       Source="C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero_Demo\WpfApp1Demo\Images\Icons\HumidIcon.png" 
+                                       Source="Images\HumidIcon.png" 
                                        Width="15"
                                        Height="15"
                                        HorizontalAlignment="Left"
@@ -289,7 +294,7 @@
                         <Border Grid.Column="0" Grid.Row="0">
                             <Grid>
                                 <Image x:Name="WindIconImage" 
-                                       Source="C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero_Demo\WpfApp1Demo\Images\Icons\WindIcon.png" 
+                                       Source="Images\WindIcon.png" 
                                        Width="15"
                                        Height="15"
                                        HorizontalAlignment="Left"
@@ -339,7 +344,7 @@
                         <Border Grid.Column="0" Grid.Row="0">
                             <Grid>
                                 <Image x:Name="PressureIconImage" 
-                                       Source="C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero_Demo\WpfApp1Demo\Images\Icons\PressureIcon.png" 
+                                       Source="Images\PressureIcon.png" 
                                        Width="15"
                                        Height="15"
                                        HorizontalAlignment="Left"
@@ -406,7 +411,7 @@
                                            HorizontalAlignment="Center"/>
 
                                 <Image x:Name="DayScheduleIconImage" 
-                                       Source="C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero_Demo\WpfApp1Demo\Images\Icons\DayIcon.png"
+                                       Source="Images\DayIcon.png"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center"/>
                             </Grid>
@@ -433,7 +438,7 @@
                                                      VerticalAlignment="Center"/>
 
                                         <Image x:Name="WeatherStatusIconImage" 
-                                               Source="C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero_Demo\WpfApp1Demo\Images\Icons\SunIcon.png"
+                                               Source="Images\SunIcon.png"
                                                Width="20"
                                                Height="20"
                                                VerticalAlignment="Center"/>
