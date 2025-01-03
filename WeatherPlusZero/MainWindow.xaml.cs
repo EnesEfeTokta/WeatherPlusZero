@@ -24,6 +24,10 @@ namespace WeatherPlusZero
         private DispatcherTimer timer { get; set; }
 
         public ObservableCollection<DayForecast> WeatherList { get; set; }
+
+        WeatherAPIManager weatherAPIManager = new WeatherAPIManager();
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -39,45 +43,45 @@ namespace WeatherPlusZero
             {
                 new DayForecast
                 {
-                    DayName = "Monday",
-                    IconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png", // İkon dosyasının doğru yolunu verin
-                    MinMaxTemperature = "12°C / 20°C"
+                    dayName = "Monday",
+                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png", // İkon dosyasının doğru yolunu verin
+                    minMaxTemperature = "12°C / 20°C"
                 },
                 new DayForecast
                 {
-                    DayName = "Tuesday",
-                    IconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    MinMaxTemperature = "10°C / 18°C"
+                    dayName = "Tuesday",
+                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    minMaxTemperature = "10°C / 18°C"
                 },
                 new DayForecast
                 {
-                    DayName = "Wednesday",
-                    IconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    MinMaxTemperature = "8°C / 15°C"
+                    dayName = "Wednesday",
+                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    minMaxTemperature = "8°C / 15°C"
                 },
                 new DayForecast
                 {
-                    DayName = "Thursday",
-                    IconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    MinMaxTemperature = "10°C / 18°C"
+                    dayName = "Thursday",
+                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    minMaxTemperature = "10°C / 18°C"
                 },
                 new DayForecast
                 {
-                    DayName = "Tuesday",
-                    IconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    MinMaxTemperature = "10°C / 18°C"
+                    dayName = "Tuesday",
+                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    minMaxTemperature = "10°C / 18°C"
                 },
                 new DayForecast
                 {
-                    DayName = "Wednesday",
-                    IconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    MinMaxTemperature = "8°C / 15°C"
+                    dayName = "Wednesday",
+                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    minMaxTemperature = "8°C / 15°C"
                 },
                 new DayForecast
                 {
-                    DayName = "Thursday",
-                    IconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    MinMaxTemperature = "10°C / 18°C"
+                    dayName = "Thursday",
+                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    minMaxTemperature = "10°C / 18°C"
                 },
 
             };
@@ -136,6 +140,8 @@ namespace WeatherPlusZero
         {
             string cityName = CityNameSearchTextBox.Text;
             SetCityName(cityName);
+
+            MessageBox.Show(weatherAPIManager.GetWeather(cityName));
         }
 
         /// <summary>
@@ -280,10 +286,47 @@ namespace WeatherPlusZero
 
     }
 
+    /// <summary>
+    /// WeatherApi.com JSON modelini temsil eder.
+    /// </summary>
+    public class WeatherApiResponse
+    {
+        public Location location { get; set; }
+        public Forecast forecast { get; set; }
+    }
+
+    public class Location
+    {
+        public string name { get; set; }
+    }
+
+    public class Forecast
+    {
+        public List<ForecastDay> forecastday { get; set; }
+    }
+
+    public class ForecastDay
+    {
+        public string date { get; set; }
+        public Day day { get; set; }
+    }
+
+    public class Day
+    {
+        public double maxtemp_c { get; set; }
+        public double mintemp_c { get; set; }
+        public Condition condition { get; set; }
+    }
+
+    public class Condition
+    {
+        public string icon { get; set; }
+    }
+
     public class DayForecast
     {
-        public string DayName { get; set; }
-        public string IconPath { get; set; }
-        public string MinMaxTemperature { get; set; }
+        public string dayName { get; set; }
+        public string iconPath { get; set; }
+        public string minMaxTemperature { get; set; }
     }
 }
