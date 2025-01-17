@@ -34,7 +34,7 @@ namespace WeatherPlusZero
             InitializeAsync();
         }
 
-        private async void InitializeAsync()
+        private void InitializeAsync()
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(60);
@@ -91,42 +91,6 @@ namespace WeatherPlusZero
             };
 
             SetFutureDays(WeatherItemsControl, WeatherList);
-
-            // Veri bağlamalarını başlat
-            SetData setData = new SetData();
-
-            /*
-            await setData.AddRow(new User
-            {
-                namesurname = "Enes Efe Tokta",
-                email = "eneıuhısefetojkhkta@gamil.com",
-                password = "123456",
-                registrationdate = DateTime.Now
-            }, 
-            "users"
-            );
-            */
-
-
-            //await setData.DeleteRow(6885, "userid", "users");
-
-            /*
-            await setData.EditRow(new User
-            {
-                namesurname = "Enes Efe Tokta v2",
-                email = "eneıuhısefetojkhkta@gamil.com",
-                password = "123456",
-                registrationdate = DateTime.Now
-            },
-            "users",
-            "userid",
-            9712
-            );
-            */
-
-            GetData getData = new GetData();
-            string message = await getData.ReadSpecificRow("users", "userid", 9712);
-            MessageBox.Show(message);
         }
 
         /// <summary>

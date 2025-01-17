@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using System.Linq;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using System.Windows;
+//using Newtonsoft.Json;
 
 namespace WeatherPlusZero
 {
@@ -16,7 +19,7 @@ namespace WeatherPlusZero
 
     public class SetData : DataBase
     {
-        public async Task<bool> AddRow(object newRow, string tableName)
+        public async Task<bool> SetAddRow(object newRow, string tableName)
         {
             using (var client = new HttpClient())
             {
@@ -42,7 +45,7 @@ namespace WeatherPlusZero
             }
         }
 
-        public async Task<bool> DeleteRow(int primaryKey, string primaryColumnName, string tableName)
+        public async Task<bool> SetDeleteRow(int primaryKey, string primaryColumnName, string tableName)
         {
             using (var client = new HttpClient())
             {
@@ -65,7 +68,7 @@ namespace WeatherPlusZero
             }
         }
 
-        public async Task<bool> EditRow(object updatedRow, string tableName, string primaryColumnName, int primaryKey)
+        public async Task<bool> SetEditRow(object updatedRow, string tableName, string primaryColumnName, int primaryKey)
         {
             using (var client = new HttpClient())
             {
@@ -94,7 +97,7 @@ namespace WeatherPlusZero
 
     public class GetData : DataBase
     {
-        public async Task<string> ReadSpecificRow(string tableName, string primaryColumnName, int primaryKey)
+        public async Task<string> GetRow(string tableName, string primaryColumnName, int primaryKey)
         {
             using (var client = new HttpClient())
             {
@@ -116,7 +119,46 @@ namespace WeatherPlusZero
                 return await response.Content.ReadAsStringAsync();
             }
         }
+
+        public async Task<int> GetPrimaryKeyByEmail(string tableName, string primaryColumnName, string email, string emailColumnName)
+        {
+            using (var client = new HttpClient())
+            {
+                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?select={primaryColumnName}&{emailColumnName}=eq.{email}";
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
+
+                HttpResponseMessage response = await client.GetAsync(endpoint);
+                string content = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show($"Okuma Hatası: {response.StatusCode} - {content}", "Hata");
+                    return -1;
+                }
+
+                using (JsonDocument document = JsonDocument.Parse(content))
+                {
+                    JsonElement root = document.RootElement;
+
+                    if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
+                    {
+                        JsonElement firstElement = root[0];
+                        if (firstElement.TryGetProperty(primaryColumnName, out JsonElement primaryKeyElement))
+                        {
+                            return primaryKeyElement.GetInt32();
+                        }
+                    }
+                }
+            }
+
+            return -1;
+        }
     }
+
+
 
     public class User
     {
@@ -131,4 +173,6 @@ namespace WeatherPlusZero
         public string cityname { get; set; }
         public string countryname { get; set; }
     }
+
+
 }

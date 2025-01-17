@@ -48,5 +48,6 @@ namespace WeatherPlusZero
     public class Current
     {
         public float temp_c { get; set; } // Celsius sıcaklık
+        public float temp_f { get; set; } // Fahrenheit sıcaklık
     }
 }
