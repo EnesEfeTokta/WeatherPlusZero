@@ -7,7 +7,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using System.Windows;
-//using Newtonsoft.Json;
 
 namespace WeatherPlusZero
 {

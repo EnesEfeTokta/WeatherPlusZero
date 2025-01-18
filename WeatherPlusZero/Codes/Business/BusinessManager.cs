@@ -17,17 +17,17 @@ namespace WeatherPlusZero
 
     internal class CityApiSearch
     {
-        public void SearchCity(string city)
-        {
-            if (string.IsNullOrWhiteSpace(city))
-            {
-                MessageBox.Show("The city name cannot be empty.");
-                return;
-            }
+        //public void SearchCity(string city)
+        //{
+        //    if (string.IsNullOrWhiteSpace(city))
+        //    {
+        //        MessageBox.Show("The city name cannot be empty.");
+        //        return;
+        //    }
 
-            WeatherAPIManager weatherAPIManager = new WeatherAPIManager();
-            string result = weatherAPIManager.GetWeather(city);
-            MessageBox.Show(result);
-        }
+        //    WeatherAPIManager weatherAPIManager = new WeatherAPIManager();
+        //    string result = weatherAPIManager.GetWeather(city);
+        //    MessageBox.Show(result);
+        //}
     }
 }

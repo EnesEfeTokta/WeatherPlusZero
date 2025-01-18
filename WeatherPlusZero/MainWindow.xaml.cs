@@ -25,7 +25,7 @@ namespace WeatherPlusZero
 
         public ObservableCollection<DayForecast> WeatherList { get; set; }
 
-        WeatherAPIManager weatherAPIManager = new WeatherAPIManager();
+        //WeatherAPI weatherAPI = new WeatherAPI();
 
 
         public MainWindow()
@@ -34,7 +34,7 @@ namespace WeatherPlusZero
             InitializeAsync();
         }
 
-        private void InitializeAsync()
+        private async void InitializeAsync()
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(60);
@@ -91,6 +91,10 @@ namespace WeatherPlusZero
             };
 
             SetFutureDays(WeatherItemsControl, WeatherList);
+
+            GetAPI getAPI = new GetAPI();
+            string result = await getAPI.GetWeatherData("Berlin");
+            MessageBox.Show(result);
         }
 
         /// <summary>
@@ -145,7 +149,7 @@ namespace WeatherPlusZero
             string cityName = CityNameSearchTextBox.Text;
             SetCityName(cityName);
 
-            MessageBox.Show(weatherAPIManager.GetWeather(cityName));
+            //MessageBox.Show(weatherAPI.GetWeather(cityName));
         }
 
         /// <summary>
@@ -288,43 +292,6 @@ namespace WeatherPlusZero
             return true;
         }
 
-    }
-
-    /// <summary>
-    /// WeatherApi.com JSON modelini temsil eder.
-    /// </summary>
-    public class WeatherApiResponse
-    {
-        public Location location { get; set; }
-        public Forecast forecast { get; set; }
-    }
-
-    public class Location
-    {
-        public string name { get; set; }
-    }
-
-    public class Forecast
-    {
-        public List<ForecastDay> forecastday { get; set; }
-    }
-
-    public class ForecastDay
-    {
-        public string date { get; set; }
-        public Day day { get; set; }
-    }
-
-    public class Day
-    {
-        public double maxtemp_c { get; set; }
-        public double mintemp_c { get; set; }
-        public Condition condition { get; set; }
-    }
-
-    public class Condition
-    {
-        public string icon { get; set; }
     }
 
     public class DayForecast
