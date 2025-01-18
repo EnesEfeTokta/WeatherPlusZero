@@ -92,9 +92,9 @@ namespace WeatherPlusZero
 
             SetFutureDays(WeatherItemsControl, WeatherList);
 
-            GetAPI getAPI = new GetAPI();
-            string result = await getAPI.GetWeatherData("Berlin");
-            MessageBox.Show(result);
+            GetWeather getWeather = new GetWeather();
+            WeatherData weatherData = await getWeather.GetWeatherData("Agri");
+            MessageBox.Show(weatherData.Address);
         }
 
         /// <summary>
