@@ -125,10 +125,15 @@ namespace WeatherPlusZero
         }
 
 
-        public async Task<WeatherData> GetWeatherData(string city)
+        public async Task<WeatherData> GetWeatherData(string city, RequestType requestType = RequestType.InstantNot)
         {
             if (string.IsNullOrWhiteSpace(city))
                 return null;
+
+            if (requestType == RequestType.Instant)
+            {
+                return await ApiWeatherData(city);
+            }
 
             if (await IsCityChangedAsync(city) || await IsTimePassed() && IsConnectedInternet())
             {
@@ -216,6 +221,12 @@ namespace WeatherPlusZero
                 return false;
             }
         }
+    }
+
+    public enum RequestType
+    {
+        Instant,
+        InstantNot
     }
 
 

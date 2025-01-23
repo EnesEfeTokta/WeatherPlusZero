@@ -34,7 +34,7 @@ namespace WeatherPlusZero
             InitializeAsync();
         }
 
-        private async void InitializeAsync()
+        private void InitializeAsync()
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(60);
@@ -91,10 +91,6 @@ namespace WeatherPlusZero
             };
 
             SetFutureDays(WeatherItemsControl, WeatherList);
-
-            GetWeather getWeather = new GetWeather();
-            WeatherData weatherData = await getWeather.GetWeatherData("Agri");
-            MessageBox.Show(weatherData.Address);
         }
 
         /// <summary>
@@ -134,7 +130,7 @@ namespace WeatherPlusZero
         {
             if (e.Key == Key.Enter)
             {
-                SetCityName(CityNameSearchTextBox.Text);
+                SearchCity();
                 e.Handled = false;
             }
         }
@@ -146,21 +142,22 @@ namespace WeatherPlusZero
         /// <param name="e"></param>
         private void CityNameSearchClickButton(object sender, RoutedEventArgs e)
         {
-            string cityName = CityNameSearchTextBox.Text;
-            SetCityName(cityName);
-
-            //MessageBox.Show(weatherAPI.GetWeather(cityName));
+            SearchCity();
         }
 
-        /// <summary>
-        /// Kullanıcının girmiş olduğu şehri alır.
-        /// </summary>
-        /// <param name="cityName"></param>
-        /// <returns>Alım başarılı olmup olmadığı belirlenir.</returns>
-        public bool SetCityName(string cityName)
+        private async void SearchCity()
         {
-            this.cityName = cityName;
-            return true;
+            string cityName = CityNameSearchTextBox.Text;
+            if (cityName == "Search for city...")
+                return;
+
+            SearchCity citySearch = new SearchCity();
+            bool successStatus = await citySearch.SearchCityName(cityName);
+
+            if (!successStatus)
+            {
+                MessageBox.Show("Please enter a valid city name. No special characters, emoji and numeric characters.", "Error");
+            }
         }
 
         /// <summary>
@@ -169,14 +166,20 @@ namespace WeatherPlusZero
         /// <param name="value"></param>
         /// <param name="textBlock"></param>
         /// <returns></returns>
-        public bool SetUITexts(string text, TextBlock textBlock)
+        public bool UpdateMainWeatherParametersText(string temp = null, string windSpeed = null, string windDir = null, string degrees = null, string humid = null, string pressure = null)
         {
-            if (textBlock == null)
-            {
-                return false;
-            }
+            if (temp != null)
+                TemperatureValueTextBlock.Text = $"{temp}℃";
 
-            textBlock.Text = text;
+            if (windSpeed != null)
+                WindValueTextBlock.Text = $"{degrees} °{windDir} {windSpeed}km.h";
+
+            if (humid != null)
+                HumidValueTextBlock.Text = $"%{humid}";
+
+            if (pressure != null)
+                PressureValueTextBlock.Text = $"{pressure} hPa/mb";
+
             return true;
         }
 
