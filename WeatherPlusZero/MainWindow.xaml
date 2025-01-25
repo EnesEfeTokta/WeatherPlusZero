@@ -523,9 +523,11 @@
                                 <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
                                     <!-- Scrollable Area -->
                                     <ScrollViewer x:Name="WeatherScrollViewer"
-                                                  HorizontalScrollBarVisibility="Hidden"
-                                                  VerticalScrollBarVisibility="Disabled"
-                                                  PanningMode="HorizontalOnly">
+                    HorizontalScrollBarVisibility="Hidden"
+                    VerticalScrollBarVisibility="Disabled"
+                    PreviewMouseLeftButtonDown="WeatherScrollViewer_PreviewMouseLeftButtonDown"
+                    PreviewMouseMove="WeatherScrollViewer_PreviewMouseMove"
+                    PreviewMouseLeftButtonUp="WeatherScrollViewer_PreviewMouseLeftButtonUp">
                                         <ItemsControl x:Name="WeatherItemsControl" 
                                                       ItemsSource="{Binding WeatherList}">
                                             <ItemsControl.ItemsPanel>

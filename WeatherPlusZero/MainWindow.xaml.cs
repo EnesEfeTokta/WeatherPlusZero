@@ -12,15 +12,16 @@ namespace WeatherPlusZero
 {
     public partial class MainWindow : Window
     {
-        public string cityName { get; set; }
 
         private DispatcherTimer timer { get; set; }
 
-        public ObservableCollection<DayForecast> WeatherList { get; set; }
+        private ObservableCollection<FutureDay> WeatherList { get; set; }
+
+        private Point _startPoint;
+        private bool _isDragging;
 
         public MainWindow()
         {
-            InitializeComponent();
             InitializeAsync();
         }
 
@@ -31,55 +32,6 @@ namespace WeatherPlusZero
 
             timer.Tick += Timer_Tick;
             timer.Start();
-
-            // Veri kaynağını başlat
-            WeatherList = new ObservableCollection<DayForecast>
-            {
-                 new DayForecast
-                {
-                    dayName = "Monday",
-                    iconPath =  "pack://application:,,,/Images/Icons/SunIcon.png",
-                    minMaxTemperature = "12°C / 20°C"
-                },
-                new DayForecast
-                {
-                    dayName = "Tuesday",
-                    iconPath = "pack://application:,,,/Images/Icons/SunIcon.png",
-                    minMaxTemperature = "10°C / 18°C"
-                },
-                 new DayForecast
-                {
-                    dayName = "Wednesday",
-                    iconPath = "pack://application:,,,/Images/Icons/SunIcon.png",
-                    minMaxTemperature = "8°C / 15°C"
-                },
-                  new DayForecast
-                {
-                    dayName = "Thursday",
-                    iconPath =  "pack://application:,,,/Images/Icons/SunIcon.png",
-                    minMaxTemperature = "10°C / 18°C"
-                },
-                 new DayForecast
-                {
-                    dayName = "Tuesday",
-                   iconPath = "pack://application:,,,/Images/Icons/SunIcon.png",
-                    minMaxTemperature = "10°C / 18°C"
-                },
-                 new DayForecast
-                {
-                    dayName = "Wednesday",
-                    iconPath =  "pack://application:,,,/Images/Icons/SunIcon.png",
-                    minMaxTemperature = "8°C / 15°C"
-                },
-                 new DayForecast
-                {
-                   dayName = "Thursday",
-                   iconPath = "pack://application:,,,/Images/Icons/SunIcon.png",
-                    minMaxTemperature = "10°C / 18°C"
-                },
-            };
-
-            SetFutureDays(WeatherItemsControl, WeatherList);
 
             ApplicationStart();
         }
@@ -328,24 +280,36 @@ namespace WeatherPlusZero
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="itemsControl"></param>
         /// <param name="days"></param>
-        /// <returns></returns>
-        public bool SetFutureDays(ItemsControl itemsControl, ObservableCollection<DayForecast> days)
+        public void SetFutureDays(ObservableCollection<FutureDay> days)
         {
-            if (itemsControl == null && days.Count > 0)
-            {
-                return false;
-            }
-
-            itemsControl.ItemsSource = days;
-            return true;
+            WeatherList = days;
+            WeatherItemsControl.ItemsSource = WeatherList;
         }
-    }
-    public class DayForecast
-    {
-        public string dayName { get; set; }
-        public string iconPath { get; set; }
-        public string minMaxTemperature { get; set; }
+
+        private void WeatherScrollViewer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _startPoint = e.GetPosition(WeatherScrollViewer);
+            _isDragging = true;
+            WeatherScrollViewer.CaptureMouse();
+        }
+
+        private void WeatherScrollViewer_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_isDragging)
+            {
+                Point currentPoint = e.GetPosition(WeatherScrollViewer);
+                double deltaX = _startPoint.X - currentPoint.X;
+                _startPoint = currentPoint;
+
+                WeatherScrollViewer.ScrollToHorizontalOffset(WeatherScrollViewer.HorizontalOffset + deltaX);
+            }
+        }
+        private void WeatherScrollViewer_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _isDragging = false;
+            WeatherScrollViewer.ReleaseMouseCapture();
+        }
+
     }
 }

@@ -5,6 +5,8 @@ using System.Windows;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
 using System.Globalization;
+using System.Collections.ObjectModel;
+using System.Reactive.Linq;
 
 namespace WeatherPlusZero
 {
@@ -19,10 +21,7 @@ namespace WeatherPlusZero
             GetInitialData();
 
             // Timer başlatılıyor.
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            StartTimer();
         }
 
         private async void GetInitialData()
@@ -47,6 +46,37 @@ namespace WeatherPlusZero
             // Hava durumu ikonu güncelleniyor.
             string iconPath = $"pack://application:,,,/Images/WeatherStatus/{_weatherData.CurrentConditions.Icon}.png";
             mainWindow.UpdateWeatherStatusIcon(iconPath);
+
+            // Gelecek hava durumu tahminleri alınıyor.
+            List<Day> days = _weatherData.Days;
+            ObservableCollection<FutureDay> futureDays = new ObservableCollection<FutureDay>();
+            foreach (Day day in days)
+            {
+                FutureDay futureDay = new FutureDay();
+
+                if (DateTime.TryParse(day.Datetime, out DateTime dateTime))
+                {
+                    futureDay.DayName = dateTime.ToString("dddd", culture);
+                }
+                else
+                {
+                    futureDay.DayName = day.Datetime;
+                }
+
+                futureDay.IconPath = $"pack://application:,,,/Images/WeatherStatus/{day.Icon}.png";
+                futureDay.MinMaxTemperature = $"{Math.Round(day.Tempmin)}℃ ~ {Math.Round(day.Tempmax)}℃";
+
+                futureDays.Add(futureDay);
+            }
+            mainWindow.SetFutureDays(futureDays);
+        }
+
+        private void StartTimer()
+        {
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -114,6 +144,13 @@ namespace WeatherPlusZero
         DayName,
         Month,
         Year
+    }
+
+    public class FutureDay
+    {
+        public string DayName { get; set; }
+        public string IconPath { get; set; }
+        public string MinMaxTemperature { get; set; }
     }
 
 
