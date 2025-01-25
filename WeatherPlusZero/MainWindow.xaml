@@ -155,7 +155,7 @@
         <!-- Weather Image -->
         <Border x:Name="WeatherIconBorder" Grid.Column="3" Grid.Row="2">
             <Grid>
-                <Image x:Name="WeatherIconIcon"
+                <Image x:Name="WeatherStatusIconImage"
                        Source="Images\WindyCloudySunny.png"
                        Width="100"
                        Height="100"
@@ -442,7 +442,7 @@
                                                      HorizontalAlignment="Center" 
                                                      Canvas.Top="8"/>
 
-                                        <Image x:Name="WeatherStatusIconImage" 
+                                        <Image x:Name="WeatherTimeStatusIconImage" 
                                                Source="Images\SunIcon.png"
                                                Width="20"
                                                Height="20"

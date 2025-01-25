@@ -35,49 +35,48 @@ namespace WeatherPlusZero
             // Veri kaynağını başlat
             WeatherList = new ObservableCollection<DayForecast>
             {
-                new DayForecast
+                 new DayForecast
                 {
                     dayName = "Monday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png", // İkon dosyasının doğru yolunu verin
+                    iconPath =  "pack://application:,,,/Images/Icons/SunIcon.png",
                     minMaxTemperature = "12°C / 20°C"
                 },
                 new DayForecast
                 {
                     dayName = "Tuesday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    iconPath = "pack://application:,,,/Images/Icons/SunIcon.png",
                     minMaxTemperature = "10°C / 18°C"
                 },
-                new DayForecast
+                 new DayForecast
                 {
                     dayName = "Wednesday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    iconPath = "pack://application:,,,/Images/Icons/SunIcon.png",
                     minMaxTemperature = "8°C / 15°C"
                 },
-                new DayForecast
+                  new DayForecast
                 {
                     dayName = "Thursday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    iconPath =  "pack://application:,,,/Images/Icons/SunIcon.png",
                     minMaxTemperature = "10°C / 18°C"
                 },
-                new DayForecast
+                 new DayForecast
                 {
                     dayName = "Tuesday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                   iconPath = "pack://application:,,,/Images/Icons/SunIcon.png",
                     minMaxTemperature = "10°C / 18°C"
                 },
-                new DayForecast
+                 new DayForecast
                 {
                     dayName = "Wednesday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                    iconPath =  "pack://application:,,,/Images/Icons/SunIcon.png",
                     minMaxTemperature = "8°C / 15°C"
                 },
-                new DayForecast
+                 new DayForecast
                 {
-                    dayName = "Thursday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
+                   dayName = "Thursday",
+                   iconPath = "pack://application:,,,/Images/Icons/SunIcon.png",
                     minMaxTemperature = "10°C / 18°C"
                 },
-
             };
 
             SetFutureDays(WeatherItemsControl, WeatherList);
@@ -161,8 +160,12 @@ namespace WeatherPlusZero
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="textBlock"></param>
+        /// <param name="temp"></param>
+        /// <param name="windSpeed"></param>
+        /// <param name="windDir"></param>
+        /// <param name="degrees"></param>
+        /// <param name="humid"></param>
+        /// <param name="pressure"></param>
         /// <returns></returns>
         public bool UpdateMainWeatherParametersText(string temp = null, string windSpeed = null, string windDir = null, string degrees = null, string humid = null, string pressure = null)
         {
@@ -184,6 +187,52 @@ namespace WeatherPlusZero
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="dayNumber"></param>
+        /// <param name="dayName"></param>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <param name="hour"></param>
+        /// <param name="minute"></param>
+        public void UpdateDateTimeText(string dayNumber = null, string dayName = null, string month = null, string year = null, string hour = null, string minute = null)
+        {
+            if (dayNumber != null && month != null)
+                DateTextBlock.Text = $"{month} {dayNumber}";
+
+            if (hour != null && minute != null && dayName != null)
+                TimeAndDayTextBlock.Text = $"{hour}:{minute} {dayName}";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        public void UpdateLocationText(string location = null)
+        {
+            if (location != null)
+                LocationTextBlock.Text = location;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="iconPath"></param>
+        public void UpdateWeatherStatusIcon(string iconPath = null)
+        {
+            if (iconPath != null)
+            {
+                BitmapImage newImage = new BitmapImage();
+                newImage.BeginInit();
+                newImage.UriSource = new Uri(iconPath);
+                newImage.CacheOption = BitmapCacheOption.OnLoad;
+                newImage.EndInit();
+
+                WeatherStatusIconImage.Source = newImage;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="filePath"></param>
         /// <param name="image"></param>
         /// <returns></returns>
@@ -196,7 +245,7 @@ namespace WeatherPlusZero
 
             BitmapImage newImage = new BitmapImage();
             newImage.BeginInit();
-            newImage.UriSource = new Uri($"pack://application:,,,/{filePath}", UriKind.Absolute);
+            newImage.UriSource = new Uri(filePath, UriKind.Absolute);
             newImage.CacheOption = BitmapCacheOption.OnLoad;
             newImage.EndInit();
 
@@ -224,13 +273,13 @@ namespace WeatherPlusZero
             {
                 // ProgressBar değerini güncelle
                 SetDayInformation(hour, TimeDayProgressBar, Colors.DarkBlue);
-                SetIconImage("Images/MoonIcon.png", WeatherStatusIconImage); // Ay resmi
+                SetIconImage("pack://application:,,,/Images/MoonIcon.png", WeatherTimeStatusIconImage); // Ay resmi
             }
             else
             {
                 // ProgressBar değerini güncelle
                 SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
-                SetIconImage("Images/SunIcon.png", WeatherStatusIconImage); // Güneş resmi
+                SetIconImage("pack://application:,,,/Images/SunIcon.png", WeatherTimeStatusIconImage); // Güneş resmi
             }
 
             SetImagePosition(TimeDayProgressBar, WeatherStatusTransform);
@@ -292,9 +341,7 @@ namespace WeatherPlusZero
             itemsControl.ItemsSource = days;
             return true;
         }
-
     }
-
     public class DayForecast
     {
         public string dayName { get; set; }

@@ -3,20 +3,124 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Text.RegularExpressions;
+using System.Windows.Threading;
+using System.Globalization;
 
 namespace WeatherPlusZero
 {
     public class ApplicationProgress()
     {
-        public async void ApplicationStart()
-        {
-            GetWeather getWeather = new GetWeather();
-            WeatherData weatherData = await getWeather.GetWeatherData("Agri");
+        private DispatcherTimer timer;
+        private DateTime targetDateTime;
+        private CultureInfo culture = new CultureInfo("en-US");
 
+        public void ApplicationStart()
+        {
+            GetInitialData();
+
+            // Timer başlatılıyor.
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private async void GetInitialData()
+        {
+            // Json dosyasından şehir bilgisi alınıyor.
+            JsonService jsonService = new JsonService();
+            WeatherData weatherDataJson = await jsonService.GetWeather();
+            string city = weatherDataJson?.Address;
+
+            // Alınan şehir bilgisi ile hava durumu bilgisi alınıyor.
+            GetWeather getWeather = new GetWeather();
+            WeatherData _weatherData = await getWeather.GetWeatherData(city);
+
+            // Alınan hava durumu bilgisi uygulamaya aktarılıyor.
             ApplyDataUIs applyDataUIs = new ApplyDataUIs();
-            applyDataUIs.DataApply(weatherData);
+            applyDataUIs.DataApply(_weatherData);
+
+            // Uygulama ana penceresindeki konum bilgisi güncelleniyor.
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.UpdateLocationText(_weatherData.ResolvedAddress);
+
+            // Hava durumu ikonu güncelleniyor.
+            string iconPath = $"pack://application:,,,/Images/WeatherStatus/{_weatherData.CurrentConditions.Icon}.png";
+            mainWindow.UpdateWeatherStatusIcon(iconPath);
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            UpdateDateTime();
+        }
+
+        private void UpdateDateTime()
+        {
+            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                mainWindow.UpdateDateTimeText(
+                    TimeDateCounter(GetDateTimeType.DayNumber),
+                    TimeDateCounter(GetDateTimeType.DayName),
+                    TimeDateCounter(GetDateTimeType.Month),
+                    TimeDateCounter(GetDateTimeType.Year),
+                    TimeDateCounter(GetDateTimeType.Hour),
+                    TimeDateCounter(GetDateTimeType.Minute)
+                    );
+            });
+        }
+
+        private string TimeDateCounter(GetDateTimeType getDateTimeType)
+        {
+            switch (getDateTimeType)
+            {
+                case GetDateTimeType.Second:
+                    return DateTime.Now.ToString("ss");
+
+                case GetDateTimeType.Minute:
+                    return DateTime.Now.ToString("mm");
+
+                case GetDateTimeType.Hour:
+                    return DateTime.Now.ToString("HH");
+
+                case GetDateTimeType.DayNumber:
+                    return DateTime.Now.ToString("dd");
+
+                case GetDateTimeType.DayName:
+                    DateTime dateTime = DateTime.Now;
+                    DayOfWeek day = dateTime.DayOfWeek;
+                    return day.ToString();
+
+                case GetDateTimeType.Month:
+                    return DateTime.Now.ToString("MMMMMMMM", culture);
+
+                case GetDateTimeType.Year:
+                    return DateTime.Now.ToString("yyyy");
+
+                default:
+                    return null;
+            }
         }
     }
+
+    // Tarih ve saat bilgilerinin alınacağı tip.
+    public enum GetDateTimeType
+    {
+        Second,
+        Minute,
+        Hour,
+        DayNumber,
+        DayName,
+        Month,
+        Year
+    }
+
+
+
+
+
+
 
     public class SearchCity
     {
@@ -81,6 +185,17 @@ namespace WeatherPlusZero
                 .Replace("İ", "I");
         }
     }
+
+
+
+
+
+
+
+
+
+
+
 
     public class ApplyDataUIs
     {

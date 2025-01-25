@@ -164,7 +164,6 @@ namespace WeatherPlusZero
         // API 'den veri çekme işlemi yapılıyor...
         private async Task<WeatherData> ApiWeatherData(string city)
         {
-            MessageBox.Show("API'den veri çekiliyor...");
             WeatherData weatherData = await _apiService.GetWeather(city);
             if (weatherData != null)
             {
@@ -177,7 +176,6 @@ namespace WeatherPlusZero
         // JSON dosyasından veri çekme işlemi yapılıyor...
         private async Task<WeatherData> JsonWeatherData()
         {
-            MessageBox.Show("JSON dosyasından veri çekiliyor...");
             return await _jsonService.GetWeather();
         }
 
