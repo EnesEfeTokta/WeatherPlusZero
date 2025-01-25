@@ -38,7 +38,10 @@ Uygulama, kullanıcı dostu arayüzü ve sezgisel tasarımı ile her yaştan kul
 
 ## GitHub ⛓️‍💥
 
+[Weather Plus Zero GitHub Repo](https://github.com/EnesEfeTokta/WeatherPlusZero)
+
 ## Drawio 🪢
+[Weather Plus Zero Drawio](https://github.com/EnesEfeTokta/WeatherPlusZero/blob/main/WeatherPlusZero/Planning/WeatherPlusZero.drawio)
 
 ## İletişim ☎️
 

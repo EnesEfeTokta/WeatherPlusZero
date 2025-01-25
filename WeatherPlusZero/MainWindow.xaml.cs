@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace WeatherPlusZero
@@ -24,9 +17,6 @@ namespace WeatherPlusZero
         private DispatcherTimer timer { get; set; }
 
         public ObservableCollection<DayForecast> WeatherList { get; set; }
-
-        //WeatherAPI weatherAPI = new WeatherAPI();
-
 
         public MainWindow()
         {
@@ -91,6 +81,14 @@ namespace WeatherPlusZero
             };
 
             SetFutureDays(WeatherItemsControl, WeatherList);
+
+            ApplicationStart();
+        }
+
+        private void ApplicationStart()
+        {
+            ApplicationProgress applicationProgress = new ApplicationProgress();
+            applicationProgress.ApplicationStart();
         }
 
         /// <summary>

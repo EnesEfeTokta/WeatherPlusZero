@@ -10466,7 +10466,7 @@
     "Preciptype": null,
     "Windgust": null,
     "Windspeed": 12.3,
-    "Winddir": 0,
+    "Winddir": 45,
     "Pressure": 1024.5,
     "Visibility": 9.5,
     "Cloudcover": 88.0,

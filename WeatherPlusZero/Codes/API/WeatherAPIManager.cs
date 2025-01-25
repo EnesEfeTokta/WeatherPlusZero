@@ -6,15 +6,26 @@ using Newtonsoft.Json;
 using System.Windows;
 using System.Net.NetworkInformation;
 using System.IO;
+using System.Reflection;
 
 namespace WeatherPlusZero
 {
     public class WeatherService
     {
-        protected const string API_KEY = "AHK6CFQXSP74M46LDVVVESQ4V";
-        protected const string API_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/CITY_NAME?key=YOUR_API_KEY&unitGroup=metric";
-        
-        protected const string JsonFilePath = "WeatherPlusZero.Resources.WeatherData.json";
+        protected internal const string API_KEY = "AHK6CFQXSP74M46LDVVVESQ4V";
+        protected internal const string API_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/CITY_NAME?key=YOUR_API_KEY&unitGroup=metric";
+
+        protected internal static readonly string JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "WeatherPlusZero", "WeatherData.json");
+
+        static WeatherService()
+        {
+            // Klasör yoksa oluştur.
+            string directoryPath = Path.GetDirectoryName(JsonFilePath);
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+        }
     }
 
     public class APIService : WeatherService
@@ -51,8 +62,6 @@ namespace WeatherPlusZero
                     MessageBox.Show($"JSON dönüştürme hatası: {ex.Message}", "Hata");
                     return null;
                 }
-
-
             }
         }
     }
@@ -76,7 +85,6 @@ namespace WeatherPlusZero
                 MessageBox.Show($"Dosya okuma hatası: {ex.Message}", "Hata");
                 return null;
             }
-
 
             if (string.IsNullOrWhiteSpace(json))
                 return null;
@@ -124,7 +132,6 @@ namespace WeatherPlusZero
             _jsonService = new JsonService();
         }
 
-
         public async Task<WeatherData> GetWeatherData(string city, RequestType requestType = RequestType.InstantNot)
         {
             if (string.IsNullOrWhiteSpace(city))
@@ -133,15 +140,18 @@ namespace WeatherPlusZero
             if (requestType == RequestType.Instant)
             {
                 return await ApiWeatherData(city);
+                //return await JsonWeatherData();
             }
 
-            if (await IsCityChangedAsync(city) || await IsTimePassed() && IsConnectedInternet())
+            bool isInternetConnected = IsConnectedInternet();
+
+            if (await IsCityChangedAsync(city) || (await IsTimePassed() && isInternetConnected))
             {
                 // API 'den veri çekme işlemi yapılacak...
                 return await ApiWeatherData(city);
             }
 
-            if (!await IsCityChangedAsync(city) && !await IsTimePassed() || !IsConnectedInternet())
+            if (!await IsCityChangedAsync(city) && !await IsTimePassed() || !isInternetConnected)
             {
                 // JSON dosyasından veri çekme işlemi yapılacak...
                 return await JsonWeatherData();
@@ -154,6 +164,7 @@ namespace WeatherPlusZero
         // API 'den veri çekme işlemi yapılıyor...
         private async Task<WeatherData> ApiWeatherData(string city)
         {
+            MessageBox.Show("API'den veri çekiliyor...");
             WeatherData weatherData = await _apiService.GetWeather(city);
             if (weatherData != null)
             {
@@ -166,6 +177,7 @@ namespace WeatherPlusZero
         // JSON dosyasından veri çekme işlemi yapılıyor...
         private async Task<WeatherData> JsonWeatherData()
         {
+            MessageBox.Show("JSON dosyasından veri çekiliyor...");
             return await _jsonService.GetWeather();
         }
 
@@ -182,8 +194,6 @@ namespace WeatherPlusZero
                 return true;
 
             return city != oldCity;
-
-
         }
 
 
@@ -191,7 +201,8 @@ namespace WeatherPlusZero
         private async Task<bool> IsTimePassed()
         {
             DateTime nowDateTime = DateTime.Now;
-            WeatherData weatherData =  await _jsonService.GetWeather();
+            WeatherData weatherData = await _jsonService.GetWeather();
+
             if (weatherData == null || string.IsNullOrEmpty(weatherData.CurrentConditions.Datetime))
                 return true;
 
@@ -199,7 +210,7 @@ namespace WeatherPlusZero
 
             TimeSpan timeSpan = nowDateTime - oldDateTime;
 
-            double remainingTime = Math.Abs(timeSpan.TotalHours);
+            double remainingTime = timeSpan.TotalHours;
 
             return remainingTime > 5;
         }
@@ -208,18 +219,7 @@ namespace WeatherPlusZero
         // İnternet bağlantısı kontrol ediliyor...
         private bool IsConnectedInternet()
         {
-            try
-            {
-                using (Ping ping = new Ping())
-                {
-                    PingReply reply = ping.Send("www.google.com");
-                    return reply.Status == IPStatus.Success;
-                }
-            }
-            catch
-            {
-                return false;
-            }
+            return NetworkInterface.GetIsNetworkAvailable();
         }
     }
 
@@ -264,6 +264,7 @@ namespace WeatherPlusZero
     }
 
 
+    // Data sınıflarında mantık hatası bulunmuyor, sadece kod okunabilirliği için düzenlemeler yapıldı.
     public class WeatherData
     {
         public int QueryCost { get; set; }
@@ -389,7 +390,7 @@ namespace WeatherPlusZero
         public List<string> Preciptype { get; set; }
         public object Windgust { get; set; }
         public double Windspeed { get; set; }
-        public int Winddir { get; set; }
+        public float Winddir { get; set; }
         public double Pressure { get; set; }
         public double Visibility { get; set; }
         public double Cloudcover { get; set; }
@@ -405,6 +406,5 @@ namespace WeatherPlusZero
         public string Sunset { get; set; }
         public long SunsetEpoch { get; set; }
         public double Moonphase { get; set; }
-
     }
 }
