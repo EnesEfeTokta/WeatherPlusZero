@@ -167,6 +167,14 @@ namespace WeatherPlusZero
             get { return _city; }
         }
 
+        /// <summary>
+        /// Search for a city and get weather information.
+        /// Checks are being made for possible errors.
+        /// Turkish characters are corrected and spaces are replaced with 20%.
+        /// Emoji and special characters are checked.
+        /// </summary>
+        /// <param name="city">It is called the city to be searched.</param>
+        /// <returns>Returns True at the end of the search.</returns>
         public async Task<bool> SearchCityName(string city)
         {
             // Gerekli kontroller yapılıyor.

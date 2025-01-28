@@ -140,7 +140,6 @@ namespace WeatherPlusZero
             if (requestType == RequestType.Instant)
             {
                 return await ApiWeatherData(city);
-                //return await JsonWeatherData();
             }
 
             bool isInternetConnected = IsConnectedInternet();
@@ -165,10 +164,10 @@ namespace WeatherPlusZero
         private async Task<WeatherData> ApiWeatherData(string city)
         {
             WeatherData weatherData = await _apiService.GetWeather(city);
-            if (weatherData != null)
-            {
-                await _jsonService.SetJsonDataAsync(weatherData);
-            }
+            //if (weatherData != null)
+            //{
+            //    await _jsonService.SetJsonDataAsync(weatherData);
+            //}
             return weatherData;
         }
 

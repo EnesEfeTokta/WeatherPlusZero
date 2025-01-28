@@ -23,30 +23,16 @@ namespace WeatherPlusZero
 
         public MainWindow()
         {
-            InitializeAsync();
+            Initialize();
         }
 
-        private async void InitializeAsync()
+        private void Initialize()
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(60);
 
             timer.Tick += Timer_Tick;
             timer.Start();
-
-            DataBase data = new DataBase();
-
-            User newUser = new User
-            {
-                userid = 16558,
-                namesurname = "John Doe",
-                email = "example__@gmail.com",
-                password = "123445",
-                registrationdate = DateTime.Now
-            };
-
-            User user = await data.TAsyncGetRowById<User>(3236);
-            MessageBox.Show(user.namesurname);
 
             ApplicationStart();
         }
