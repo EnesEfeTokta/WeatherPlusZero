@@ -5,171 +5,176 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
 namespace WeatherPlusZero
 {
     public class DataBase
     {
-        protected const string supabaseUrl = "https://szqsnyrrzydtgzqxwfwt.supabase.co";
-        protected const string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6cXNueXJyenlkdGd6cXh3Znd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2OTc3NzMsImV4cCI6MjA0OTI3Mzc3M30.AJDtWaNxLLjGPRsecSqG7Cmf7KRiQaA6QgRxWwoNatk";
-    }
+        private readonly Supabase.Client supabase;
 
-    public class SetData : DataBase
-    {
-        public async Task<bool> SetAddRow(object newRow, string tableName)
+        public DataBase()
         {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}";
-                var json = JsonSerializer.Serialize(newRow);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-                client.DefaultRequestHeaders.Add("Prefer", "return=minimal");
-
-                HttpResponseMessage response = await client.PostAsync(endpoint, content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Ekleme Hatası: {response.StatusCode} - {errorMessage}", "Hata");
-                    return false;
-                }
-
-                return response.IsSuccessStatusCode;
-            }
+            var url = "https://szqsnyrrzydtgzqxwfwt.supabase.co";
+            var key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6cXNueXJyenlkdGd6cXh3Znd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2OTc3NzMsImV4cCI6MjA0OTI3Mzc3M30.AJDtWaNxLLjGPRsecSqG7Cmf7KRiQaA6QgRxWwoNatk";
+            supabase = new Supabase.Client(url, key);
         }
 
-        public async Task<bool> SetDeleteRow(int primaryKey, string primaryColumnName, string tableName)
+
+
+        // İlgili tabloya yeni satır ekler.
+        public async Task<T> TAsyncAddRow<T>(T newRow) where T : BaseModel, new()
         {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?{primaryColumnName}=eq.{primaryKey}";
+            var response = await supabase.From<T>().Insert(newRow);
 
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-                HttpResponseMessage response = await client.DeleteAsync(endpoint);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Silme Hatası: {response.StatusCode} - {errorMessage}", "Hata");
-                    return false;
-                }
-
-                return response.IsSuccessStatusCode;
-            }
+            return response.Models[0];
         }
 
-        public async Task<bool> SetEditRow(object updatedRow, string tableName, string primaryColumnName, int primaryKey)
+        // İlgili tablodaki satırı günceller.
+        public async Task<T> TAsyncUpdateRow<T>(T updatedRow) where T : BaseModel, new()
         {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?{primaryColumnName}=eq.{primaryKey}";
-                var json = JsonSerializer.Serialize(updatedRow);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await supabase.From<T>().Update(updatedRow);
 
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-                client.DefaultRequestHeaders.Add("Prefer", "return=minimal");
+            return response.Models[0];
+        }
 
-                HttpResponseMessage response = await client.PatchAsync(endpoint, content);
+        // İlgili tablodaki satırı siler.
+        public async Task<bool> TAsyncDeleteRow<T>(int rowId) where T : BaseModel, IEntity, new()
+        {
+            var temp = new T();
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Güncelleme Hatası: {response.StatusCode} - {errorMessage}", "Hata");
-                    return false;
-                }
+            await supabase
+              .From<T>()
+              .Where(x => ((IEntity)x).GetPrimaryKey() == rowId)
+              .Delete();
 
-                return response.IsSuccessStatusCode;
-            }
+            return true;
+        }
+
+        // İlgili tablodaki belirli bir satırı getirir.
+        public async Task<T> TAsyncGetRowById<T>(int rowId) where T : BaseModel, IEntity, new()
+        {
+            var response = await supabase.From<T>()
+                                          .Where(x => ((IEntity)x).GetPrimaryKey() == rowId)
+                                          .Single();
+
+            return response;
+        }
+
+        // İlgili tablodaki tüm satırları getirir.
+        public async Task<List<T>> TAsyncGetAllRows<T>() where T : BaseModel, new()
+        {
+            var response = await supabase.From<T>().Get();
+
+            return response.Models;
         }
     }
 
-    public class GetData : DataBase
+    public interface IEntity
     {
-        public async Task<string> GetRow(string tableName, string primaryColumnName, int primaryKey)
-        {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?{primaryColumnName}=eq.{primaryKey}";
-
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-                HttpResponseMessage response = await client.GetAsync(endpoint);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Okuma Hatası: {response.StatusCode} - {errorMessage}", "Hata");
-                    return null;
-                }
-
-                return await response.Content.ReadAsStringAsync();
-            }
-        }
-
-        public async Task<int> GetPrimaryKeyByEmail(string tableName, string primaryColumnName, string email, string emailColumnName)
-        {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?select={primaryColumnName}&{emailColumnName}=eq.{email}";
-
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-                HttpResponseMessage response = await client.GetAsync(endpoint);
-                string content = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    MessageBox.Show($"Okuma Hatası: {response.StatusCode} - {content}", "Hata");
-                    return -1;
-                }
-
-                using (JsonDocument document = JsonDocument.Parse(content))
-                {
-                    JsonElement root = document.RootElement;
-
-                    if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
-                    {
-                        JsonElement firstElement = root[0];
-                        if (firstElement.TryGetProperty(primaryColumnName, out JsonElement primaryKeyElement))
-                        {
-                            return primaryKeyElement.GetInt32();
-                        }
-                    }
-                }
-            }
-
-            return -1;
-        }
+        int GetPrimaryKey();
     }
 
-
-
-    public class User
+    [Table("users")]
+    public class User : BaseModel, IEntity
     {
+        [PrimaryKey("userid")]
+        public int userid { get; set; }
+
+        [Column("namesurname")]
         public string namesurname { get; set; }
+
+        [Column("email")]
         public string email { get; set; }
+
+        [Column("password")]
         public string password { get; set; }
+
+        [Column("registrationdate")]
         public DateTime registrationdate { get; set; }
+
+        public int GetPrimaryKey()
+        {
+            return userid;
+        }
     }
 
-    public class City
+    [Table("cities")]
+    public class City : BaseModel, IEntity
     {
+        [PrimaryKey("cityid")]
+        public int cityid { get; set; }
+
+        [Column("cityname")]
         public string cityname { get; set; }
+
+        [Column("countryname")]
         public string countryname { get; set; }
+
+        public int GetPrimaryKey()
+        {
+            return cityid;
+        }
     }
 
+    [Table("weather")]
+    public class Weather : BaseModel, IEntity
+    {
+        [PrimaryKey("weatherid")]
+        public int weatherid { get; set; }
 
+        [Column("cityid")]
+        public int cityid { get; set; }
+
+        [Column("weatherdata")]
+        public WeatherData weatherdata { get; set; }
+
+        public int GetPrimaryKey()
+        {
+            return weatherid;
+        }
+    }
+
+    [Table("usercities")]
+    public class UserCity : BaseModel, IEntity
+    {
+        [PrimaryKey("recordid")]
+        public int recordid { get; set; }
+
+        [Column("userid")]
+        public int userid { get; set; }
+
+        [Column("notificationpreference")]
+        public bool notificationpreference { get; set; }
+
+        public int GetPrimaryKey()
+        {
+            return recordid;
+        }
+    }
+
+    [Table("notifications")]
+    public class Notification : BaseModel, IEntity
+    {
+        [PrimaryKey("notificationid")]
+        public int notificationid { get; set; }
+
+        [Column("userid")]
+        public int userid { get; set; }
+
+        [Column("notificationtype")]
+        public string notificationtype { get; set; }
+
+        [Column("notificationmessage")]
+        public string notificationmessage { get; set; }
+
+        [Column("notificationdatetime")]
+        public DateTime notificationdatetime { get; set; }
+
+        public int GetPrimaryKey()
+        {
+            return notificationid;
+        }
+    }
 }

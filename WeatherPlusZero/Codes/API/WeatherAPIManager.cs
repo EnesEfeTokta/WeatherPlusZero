@@ -221,6 +221,7 @@ namespace WeatherPlusZero
         }
     }
 
+    // API 'dan direk bilgi alıp almayacağımızı belirleyen enum...
     public enum RequestType
     {
         Instant,
@@ -261,8 +262,7 @@ namespace WeatherPlusZero
         }
     }
 
-
-    // Data sınıflarında mantık hatası bulunmuyor, sadece kod okunabilirliği için düzenlemeler yapıldı.
+    // API 'dan alınan bilgiler.
     public class WeatherData
     {
         public int QueryCost { get; set; }

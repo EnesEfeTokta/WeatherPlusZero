@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Supabase.Gotrue;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -25,13 +26,27 @@ namespace WeatherPlusZero
             InitializeAsync();
         }
 
-        private void InitializeAsync()
+        private async void InitializeAsync()
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(60);
 
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            DataBase data = new DataBase();
+
+            User newUser = new User
+            {
+                userid = 16558,
+                namesurname = "John Doe",
+                email = "example__@gmail.com",
+                password = "123445",
+                registrationdate = DateTime.Now
+            };
+
+            User user = await data.TAsyncGetRowById<User>(3236);
+            MessageBox.Show(user.namesurname);
 
             ApplicationStart();
         }
@@ -119,7 +134,7 @@ namespace WeatherPlusZero
         /// <param name="humid"></param>
         /// <param name="pressure"></param>
         /// <returns></returns>
-        public bool UpdateMainWeatherParametersText(string temp = null, string windSpeed = null, string windDir = null, string degrees = null, string humid = null, string pressure = null)
+        public void UpdateMainWeatherParametersText(string temp = null, string windSpeed = null, string windDir = null, string degrees = null, string humid = null, string pressure = null)
         {
             if (temp != null)
                 TemperatureValueTextBlock.Text = $"{temp}℃";
@@ -132,8 +147,6 @@ namespace WeatherPlusZero
 
             if (pressure != null)
                 PressureValueTextBlock.Text = $"{pressure} hPa/mb";
-
-            return true;
         }
 
         /// <summary>
@@ -201,7 +214,6 @@ namespace WeatherPlusZero
             newImage.CacheOption = BitmapCacheOption.OnLoad;
             newImage.EndInit();
 
-            image.Source = newImage;
             return true;
         }
 
