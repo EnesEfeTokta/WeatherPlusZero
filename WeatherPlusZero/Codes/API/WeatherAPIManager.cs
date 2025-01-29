@@ -3,229 +3,185 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Windows;
 using System.Net.NetworkInformation;
 using System.IO;
-using System.Reflection;
 
 namespace WeatherPlusZero
 {
-    public class WeatherService
+    public abstract class WeatherServiceBase
     {
-        protected internal const string API_KEY = "AHK6CFQXSP74M46LDVVVESQ4V";
-        protected internal const string API_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/CITY_NAME?key=YOUR_API_KEY&unitGroup=metric";
+        protected const string API_KEY = "AHK6CFQXSP74M46LDVVVESQ4V";
+        protected const string API_BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{0}?key={1}&unitGroup=metric";
 
-        protected internal static readonly string JsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "WeatherPlusZero", "WeatherData.json");
+        protected static readonly string AppDataPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "WeatherPlusZero"
+        );
 
-        static WeatherService()
+        protected static readonly string JsonFilePath = Path.Combine(AppDataPath, "WeatherData.json");
+
+        static WeatherServiceBase()
         {
-            // Klasör yoksa oluştur.
-            string directoryPath = Path.GetDirectoryName(JsonFilePath);
-            if (!Directory.Exists(directoryPath))
+            Directory.CreateDirectory(AppDataPath);
+        }
+
+        protected string BuildApiUrl(string city) =>
+            string.Format(API_BASE_URL, Uri.EscapeDataString(city), API_KEY);
+    }
+
+
+
+
+
+    public interface IWeatherProvider
+    {
+        public Task<WeatherData> GetWeatherDataAsync(string city);
+        public Task SaveWeatherDataAsync(WeatherData data);
+    }
+
+
+
+
+
+    public class ApiService : WeatherServiceBase, IWeatherProvider
+    {
+        private readonly HttpClient httpClient = new HttpClient();
+
+        // Fetches weather data from the API.
+        public async Task<WeatherData> GetWeatherDataAsync(string city)
+        {
+            var response = await httpClient.GetStringAsync(BuildApiUrl(city));
+            return DeserializeWeatherData(response);
+        }
+
+        // Saves the weather data to the json file.
+        public async Task SaveWeatherDataAsync(WeatherData data)
+        {
+            data.CurrentConditions.Datetime = DateTime.Now.ToString();
+            await File.WriteAllTextAsync(JsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+        }
+
+        // Deserializes the json string to the WeatherData object.
+        private WeatherData DeserializeWeatherData(string json)
+        {
+            var settings = new JsonSerializerSettings
             {
-                Directory.CreateDirectory(directoryPath);
-            }
+                Error = HandleDeserializationError,
+                Converters = { new IntConverter() }
+            };
+
+            return JsonConvert.DeserializeObject<WeatherData>(json, settings);
+        }
+
+        // Handles deserialization errors.
+        private void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+        {
+            args.ErrorContext.Handled = true;
+            Console.WriteLine($"Deserialization Error: {args.ErrorContext.Error.Message}");
         }
     }
 
-    public class APIService : WeatherService
+
+
+
+
+    public class JsonService : WeatherServiceBase, IWeatherProvider
     {
-        public async Task<WeatherData> GetWeather(string city)
+        /// <summary>
+        /// Fetches weather information from the json file.
+        /// </summary>
+        /// <param name="city">The city they want to bring.</param>
+        /// <returns>Fetched weather information.</returns>
+        public async Task<WeatherData> GetWeatherDataAsync(string city = null)
         {
-            string url = API_URL.Replace("CITY_NAME", city).Replace("YOUR_API_KEY", API_KEY);
+            if (!File.Exists(JsonFilePath)) return null;
 
-            using (HttpClient client = new HttpClient())
+            var json = await File.ReadAllTextAsync(JsonFilePath);
+            return JsonConvert.DeserializeObject<WeatherData>(json, new IntConverter());
+        }
+
+        /// <summary>
+        /// Saves the weather information to the json file.
+        /// </summary>
+        /// <param name="data">Weather information to be recorded.</param>
+        /// <returns>Registration status.</returns>
+        public Task SaveWeatherDataAsync(WeatherData data) => Task.CompletedTask;
+    }
+
+
+
+
+
+    public class WeatherManager
+    {
+        private readonly IWeatherProvider _apiProvider; // = new ApiService();
+        private readonly IWeatherProvider _jsonProvider; // = new JsonService();
+        private readonly NetworkChecker _networkChecker; // = new NetworkChecker();
+
+        // Dependency injection for testing purposes.
+        public WeatherManager()
+        {
+            _apiProvider = new ApiService();
+            _jsonProvider = new JsonService();
+            _networkChecker = new NetworkChecker();
+        }
+
+        /// <summary>
+        /// Gets weather data for the specified city.
+        /// </summary>
+        /// <param name="city">The name of the city to be searched.</param>
+        /// <param name="forceRefresh">'True' for calling data directly from the API, 'False' for normal calls.</param>
+        /// <returns></returns>
+        public async Task<WeatherData> GetWeatherDataAsync(string city, bool forceRefresh = false)
+        {
+            if (string.IsNullOrWhiteSpace(city)) return null;
+
+            // If the 'forceRefresh' parameter is true, it pulls data from the API and returns it without saving.
+            if (forceRefresh)
             {
-                HttpResponseMessage response = await client.GetAsync(url);
+                WeatherData apiData = await _apiProvider.GetWeatherDataAsync(city);
+                return apiData;
+            }
 
-                if (!response.IsSuccessStatusCode)
+            // If the 'forceRefresh' parameter is false, it first pulls data from json and returns if there is data.
+            WeatherData jsonWeatherData = await _jsonProvider.GetWeatherDataAsync(city);
+
+            // If data could not be retrieved from json or the data is old, it pulls data from the API and saves it.
+            // If the last data extraction was more than 5 hours ago, extracts data from the API and saves it.
+            // If data cannot be retrieved from the API, it returns the data from json.
+            if (_networkChecker.IsConnected && (jsonWeatherData == null || IsDataExpired(jsonWeatherData)))
+            {
+                WeatherData freshData = await _apiProvider.GetWeatherDataAsync(city);
+                if (freshData != null)
                 {
-                    MessageBox.Show($"API'dan hava durumu bilgisi alınamadı: {response.StatusCode} - {response.ReasonPhrase}", "Hata");
-                    return null;
-                }
-
-                string jsonResponse = await response.Content.ReadAsStringAsync();
-                try
-                {
-                    var settings = new JsonSerializerSettings
-                    {
-                        Error = (sender, args) =>
-                        {
-                            Console.WriteLine($"Dönüştürme Hatası: {args.ErrorContext.Error.Message}, path: {args.ErrorContext.Path}");
-                            args.ErrorContext.Handled = true;
-                        }
-                    };
-                    return JsonConvert.DeserializeObject<WeatherData>(jsonResponse, settings);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"JSON dönüştürme hatası: {ex.Message}", "Hata");
-                    return null;
+                    await _apiProvider.SaveWeatherDataAsync(freshData);
+                    return freshData;
                 }
             }
+
+            return jsonWeatherData;
+        }
+
+        // Checks if the data is older than 5 hours.
+        private bool IsDataExpired(WeatherData data)
+        {
+            if (data?.CurrentConditions == null) return true;
+
+            DateTime lastUpdated = DateTime.Parse(data.CurrentConditions.Datetime);
+            return (DateTime.UtcNow - lastUpdated).TotalHours > 5;
         }
     }
 
-    public class JsonService : WeatherService
+
+
+
+
+    public class NetworkChecker
     {
-        // JSON dosyasını WeatherData sınıfına dönüştürüyor ve veriyor...
-        public async Task<WeatherData> GetWeather()
-        {
-            if (!File.Exists(JsonFilePath))
-                return null;
-
-            string json = string.Empty;
-
-            try
-            {
-                json = await File.ReadAllTextAsync(JsonFilePath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Dosya okuma hatası: {ex.Message}", "Hata");
-                return null;
-            }
-
-            if (string.IsNullOrWhiteSpace(json))
-                return null;
-
-            try
-            {
-                return JsonConvert.DeserializeObject<WeatherData>(json);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"JSON dönüştürme hatası: {ex.Message}", "Hata");
-                return null;
-            }
-        }
-
-        // JSON dosyasına dönüştürme işlemi ve kayıt etme...
-        public async Task<bool> SetJsonDataAsync(WeatherData weatherData)
-        {
-            if (weatherData == null)
-                return false;
-            try
-            {
-                weatherData.CurrentConditions.Datetime = DateTime.Now.ToString();
-                string json = JsonConvert.SerializeObject(weatherData, Formatting.Indented);
-                await File.WriteAllTextAsync(JsonFilePath, json);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"JSON Kayıt Hatası: {ex.Message}", "Hata");
-                return false;
-            }
-        }
+        public bool IsConnected => NetworkInterface.GetIsNetworkAvailable();
     }
 
 
-    public class GetWeather
-    {
-        private readonly APIService _apiService;
-        private readonly JsonService _jsonService;
-
-        public GetWeather()
-        {
-            _apiService = new APIService();
-            _jsonService = new JsonService();
-        }
-
-        public async Task<WeatherData> GetWeatherData(string city, RequestType requestType = RequestType.InstantNot)
-        {
-            if (string.IsNullOrWhiteSpace(city))
-                return null;
-
-            if (requestType == RequestType.Instant)
-            {
-                return await ApiWeatherData(city);
-            }
-
-            bool isInternetConnected = IsConnectedInternet();
-
-            if (await IsCityChangedAsync(city) || (await IsTimePassed() && isInternetConnected))
-            {
-                // API 'den veri çekme işlemi yapılacak...
-                return await ApiWeatherData(city);
-            }
-
-            if (!await IsCityChangedAsync(city) && !await IsTimePassed() || !isInternetConnected)
-            {
-                // JSON dosyasından veri çekme işlemi yapılacak...
-                return await JsonWeatherData();
-            }
-
-            return null;
-        }
-
-
-        // API 'den veri çekme işlemi yapılıyor...
-        private async Task<WeatherData> ApiWeatherData(string city)
-        {
-            WeatherData weatherData = await _apiService.GetWeather(city);
-            //if (weatherData != null)
-            //{
-            //    await _jsonService.SetJsonDataAsync(weatherData);
-            //}
-            return weatherData;
-        }
-
-
-        // JSON dosyasından veri çekme işlemi yapılıyor...
-        private async Task<WeatherData> JsonWeatherData()
-        {
-            return await _jsonService.GetWeather();
-        }
-
-
-        // Şehir isminin değişikliği kontrol ediliyor...
-        private async Task<bool> IsCityChangedAsync(string city)
-        {
-            WeatherData weatherData = await _jsonService.GetWeather();
-            if (weatherData == null)
-                return true;
-
-            string oldCity = weatherData.Address;
-            if (string.IsNullOrEmpty(oldCity))
-                return true;
-
-            return city != oldCity;
-        }
-
-
-        // JSON dosyasının zaman aşımına uğramışlığı kontrol ediliyor...
-        private async Task<bool> IsTimePassed()
-        {
-            DateTime nowDateTime = DateTime.Now;
-            WeatherData weatherData = await _jsonService.GetWeather();
-
-            if (weatherData == null || string.IsNullOrEmpty(weatherData.CurrentConditions.Datetime))
-                return true;
-
-            DateTime oldDateTime = DateTime.Parse(weatherData.CurrentConditions.Datetime);
-
-            TimeSpan timeSpan = nowDateTime - oldDateTime;
-
-            double remainingTime = timeSpan.TotalHours;
-
-            return remainingTime > 5;
-        }
-
-
-        // İnternet bağlantısı kontrol ediliyor...
-        private bool IsConnectedInternet()
-        {
-            return NetworkInterface.GetIsNetworkAvailable();
-        }
-    }
-
-    // API 'dan direk bilgi alıp almayacağımızı belirleyen enum...
-    public enum RequestType
-    {
-        Instant,
-        InstantNot
-    }
 
 
     public class IntConverter : JsonConverter
@@ -261,7 +217,6 @@ namespace WeatherPlusZero
         }
     }
 
-    // API 'dan alınan bilgiler.
     public class WeatherData
     {
         public int QueryCost { get; set; }
@@ -350,6 +305,7 @@ namespace WeatherPlusZero
         public List<string> Stations { get; set; }
         public string Source { get; set; }
     }
+    
     public class Stations
     {
         [JsonProperty("LTCB")]
@@ -359,6 +315,7 @@ namespace WeatherPlusZero
         [JsonProperty("LTCT")]
         public Station LTCT { get; set; }
     }
+    
     public class Station
     {
         public double Distance { get; set; }
