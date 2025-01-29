@@ -10,140 +10,205 @@ using System.Reactive.Linq;
 
 namespace WeatherPlusZero
 {
-    public class ApplicationProgress()
+    public class ApplicationProgress
     {
-        private DispatcherTimer timer;
-        private DateTime targetDateTime;
-        private CultureInfo culture = new CultureInfo("en-US");
+        public const string ImageBasePath = "pack://application:,,,/Images/WeatherStatus/";
+        private const string CultureName = "en-US";
+        private readonly CultureInfo _culture = new CultureInfo(CultureName);
+        private DispatcherTimer _timer;
+        private WeatherData _weatherData;
+        private readonly MainWindow _mainWindow;
+
+        public ApplicationProgress()
+        {
+            _mainWindow = (MainWindow)Application.Current.MainWindow;
+        }
 
         public void ApplicationStart()
         {
-            GetInitialData();
-
-            // Timer başlatılıyor.
-            StartTimer();
+            InitializeApplication();
         }
 
-        private async void GetInitialData()
+        private async void InitializeApplication()
         {
-            // Json dosyasından şehir bilgisi alınıyor.
-            JsonService jsonService = new JsonService();
-            WeatherData weatherDataJson = await jsonService.GetWeather();
-            string city = weatherDataJson?.Address;
+            await LoadInitialData();
+            InitializeTimer();
+        }
 
-            // Alınan şehir bilgisi ile hava durumu bilgisi alınıyor.
-            GetWeather getWeather = new GetWeather();
-            WeatherData _weatherData = await getWeather.GetWeatherData(city);
-
-            // Alınan hava durumu bilgisi uygulamaya aktarılıyor.
-            ApplyDataUIs applyDataUIs = new ApplyDataUIs();
-            applyDataUIs.DataApply(_weatherData);
-
-            // Uygulama ana penceresindeki konum bilgisi güncelleniyor.
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-            mainWindow.UpdateLocationText(_weatherData.ResolvedAddress);
-
-            // Hava durumu ikonu güncelleniyor.
-            string iconPath = $"pack://application:,,,/Images/WeatherStatus/{_weatherData.CurrentConditions.Icon}.png";
-            mainWindow.UpdateWeatherStatusIcon(iconPath);
-
-            // Gelecek hava durumu tahminleri alınıyor.
-            List<Day> days = _weatherData.Days;
-            ObservableCollection<FutureDay> futureDays = new ObservableCollection<FutureDay>();
-            foreach (Day day in days)
+        private async Task LoadInitialData()
+        {
+            _weatherData = await FetchWeatherData();
+            if (_weatherData != null)
             {
-                FutureDay futureDay = new FutureDay();
-
-                if (DateTime.TryParse(day.Datetime, out DateTime dateTime))
-                {
-                    futureDay.DayName = dateTime.ToString("dddd", culture);
-                }
-                else
-                {
-                    futureDay.DayName = day.Datetime;
-                }
-
-                futureDay.IconPath = $"pack://application:,,,/Images/WeatherStatus/{day.Icon}.png";
-                futureDay.MinMaxTemperature = $"{Math.Round(day.Tempmin)}℃ ~ {Math.Round(day.Tempmax)}℃";
-
-                futureDays.Add(futureDay);
+                UpdateUI();
             }
-            mainWindow.SetFutureDays(futureDays);
         }
 
-        private void StartTimer()
+        private void UpdateUI()
         {
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
-            timer.Start();
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            UpdateDateTime();
-        }
-
-        private void UpdateDateTime()
-        {
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-
             Application.Current.Dispatcher.Invoke(() =>
             {
-                mainWindow.UpdateDateTimeText(
-                    TimeDateCounter(GetDateTimeType.DayNumber),
-                    TimeDateCounter(GetDateTimeType.DayName),
-                    TimeDateCounter(GetDateTimeType.Month),
-                    TimeDateCounter(GetDateTimeType.Year),
-                    TimeDateCounter(GetDateTimeType.Hour),
-                    TimeDateCounter(GetDateTimeType.Minute)
-                    );
+                new UiUpdater().UpdateAllComponents(_weatherData, _mainWindow);
             });
         }
 
-        private string TimeDateCounter(GetDateTimeType getDateTimeType)
+        private void InitializeTimer()
         {
-            switch (getDateTimeType)
+            _timer = new DispatcherTimer
             {
-                case GetDateTimeType.Second:
-                    return DateTime.Now.ToString("ss");
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _timer.Tick += TimerTickHandler;
+            _timer.Start();
+        }
 
-                case GetDateTimeType.Minute:
-                    return DateTime.Now.ToString("mm");
+        private void TimerTickHandler(object sender, EventArgs e) => UpdateDateTime();
 
-                case GetDateTimeType.Hour:
-                    return DateTime.Now.ToString("HH");
+        private void UpdateDateTime()
+        {
+            var currentTime = DateTime.Now;
+            _mainWindow.Dispatcher.Invoke(() =>
+            {
+                _mainWindow.UpdateDateTimeText(
+                    currentTime.ToString("dd", _culture),
+                    currentTime.DayOfWeek.ToString(),
+                    currentTime.ToString("MMMM", _culture),
+                    currentTime.ToString("yyyy", _culture),
+                    currentTime.ToString("HH", _culture),
+                    currentTime.ToString("mm", _culture)
+                );
+            });
+        }
 
-                case GetDateTimeType.DayNumber:
-                    return DateTime.Now.ToString("dd");
+        private async Task<WeatherData> FetchWeatherData()
+        {
+            var jsonService = new JsonService();
+            var weatherDataJson = await jsonService.GetWeather();
+            var city = weatherDataJson?.Address;
 
-                case GetDateTimeType.DayName:
-                    DateTime dateTime = DateTime.Now;
-                    DayOfWeek day = dateTime.DayOfWeek;
-                    return day.ToString();
-
-                case GetDateTimeType.Month:
-                    return DateTime.Now.ToString("MMMMMMMM", culture);
-
-                case GetDateTimeType.Year:
-                    return DateTime.Now.ToString("yyyy");
-
-                default:
-                    return null;
-            }
+            var weatherService = new GetWeather();
+            return await weatherService.GetWeatherData(city);
         }
     }
 
-    // Tarih ve saat bilgilerinin alınacağı tip.
-    public enum GetDateTimeType
+    public class SearchCity
     {
-        Second,
-        Minute,
-        Hour,
-        DayNumber,
-        DayName,
-        Month,
-        Year
+        private const string SpecialCharactersPattern = @"[!@#$%^&*()_+=\[{\]};:<>|./?,\d-]";
+        private static readonly Regex SpecialCharRegex = new Regex(SpecialCharactersPattern, RegexOptions.Compiled);
+        private static readonly Regex EmojiRegex = new Regex(@"\p{Cs}", RegexOptions.Compiled);
+
+        public string City { get; private set; }
+
+        public async Task<bool> SearchCityName(string city)
+        {
+            if (IsInvalidCityName(city)) return false;
+
+            City = NormalizeCityName(city);
+
+            var weatherService = new GetWeather();
+            var weatherData = await weatherService.GetWeatherData(City, RequestType.Instant);
+
+            if (weatherData == null) return false;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                new UiUpdater().UpdateAllComponents(weatherData);
+            });
+
+            return true;
+        }
+
+        private bool IsInvalidCityName(string city)
+        {
+            return string.IsNullOrWhiteSpace(city) || ContainsEmoji(city) || ContainsSpecialCharacters(city);
+        }
+
+        private bool ContainsEmoji(string input) => EmojiRegex.IsMatch(input);
+
+        private bool ContainsSpecialCharacters(string input) => SpecialCharRegex.IsMatch(input);
+
+        private string NormalizeCityName(string input)
+        {
+            input = char.ToUpper(input[0]) + input.Substring(1).ToLower();
+
+            input.Replace(" ", "%20").Replace("ç", "c")
+                 .Replace("ğ", "g").Replace("ö", "o")
+                 .Replace("ş", "s").Replace("ü", "u")
+                 .Replace("ı", "i").Replace("Ç", "C")
+                 .Replace("Ğ", "G").Replace("Ö", "O")
+                 .Replace("Ş", "S").Replace("Ü", "U")
+                 .Replace("İ", "I");
+
+            return input;
+        }
+    }
+
+    public class UiUpdater
+    {
+        private static readonly string[] WindDirections = { "N", "NH", "E", "SH", "S", "SW", "W", "NW" };
+
+        public void UpdateAllComponents(WeatherData weatherData, MainWindow mainWindow = null)
+        {
+            mainWindow ??= (MainWindow)Application.Current.MainWindow;
+
+            if (weatherData?.CurrentConditions == null) return;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                UpdateMainWeatherParameters(weatherData, mainWindow);
+                UpdateWeatherIcon(weatherData.CurrentConditions.Icon, mainWindow);
+                UpdateLocationDisplay(weatherData.ResolvedAddress, mainWindow);
+                UpdateFutureWeatherForecast(weatherData, mainWindow);
+            });
+        }
+
+        private void UpdateMainWeatherParameters(WeatherData data, MainWindow window)
+        {
+            var current = data.CurrentConditions;
+            var windDirection = ConvertWindDirection(current.Winddir);
+
+            window.UpdateMainWeatherParametersText(
+                Math.Round(Convert.ToDecimal(current.Temp)).ToString(),
+                current.Windspeed.ToString(),
+                windDirection,
+                current.Winddir.ToString(),
+                Math.Round(Convert.ToDecimal(current.Humidity)).ToString(),
+                current.Pressure.ToString()
+            );
+        }
+
+        private string ConvertWindDirection(double degrees)
+        {
+            degrees = (degrees % 360 + 360) % 360;
+            return WindDirections[(int)Math.Round(degrees / 45.0) % 8];
+        }
+
+        private void UpdateLocationDisplay(string address, MainWindow window) =>
+            window.UpdateLocationText(address);
+
+        private void UpdateWeatherIcon(string icon, MainWindow window) =>
+            window.UpdateWeatherStatusIcon($"{ApplicationProgress.ImageBasePath}{icon}.png");
+
+        private void UpdateFutureWeatherForecast(WeatherData data, MainWindow window)
+        {
+            if (data?.Days == null) return;
+
+            var forecastDays = new ObservableCollection<FutureDay>();
+            foreach (var day in data.Days)
+            {
+                var date = DateTime.TryParse(day.Datetime, out var dateTime)
+                    ? dateTime
+                    : DateTime.Now;
+
+                forecastDays.Add(new FutureDay
+                {
+                    DayName = date.ToString("dddd"),
+                    IconPath = $"{ApplicationProgress.ImageBasePath}{day.Icon}.png",
+                    MinMaxTemperature = $"{Math.Round(day.Tempmin)}℃ ~ {Math.Round(day.Tempmax)}℃"
+                });
+            }
+            window.SetFutureDays(forecastDays);
+        }
     }
 
     public class FutureDay
@@ -151,127 +216,5 @@ namespace WeatherPlusZero
         public string DayName { get; set; }
         public string IconPath { get; set; }
         public string MinMaxTemperature { get; set; }
-    }
-
-
-
-
-
-
-
-    public class SearchCity
-    {
-        private string _city;
-        public string City
-        {
-            get { return _city; }
-        }
-
-        /// <summary>
-        /// Search for a city and get weather information.
-        /// Checks are being made for possible errors.
-        /// Turkish characters are corrected and spaces are replaced with 20%.
-        /// Emoji and special characters are checked.
-        /// </summary>
-        /// <param name="city">It is called the city to be searched.</param>
-        /// <returns>Returns True at the end of the search.</returns>
-        public async Task<bool> SearchCityName(string city)
-        {
-            // Gerekli kontroller yapılıyor.
-            if (string.IsNullOrEmpty(city) || ContainsEmoji(city) || ContainsSpecialChar(city))
-                return false;
-
-            // Şehir ismi büyük harfle başlayacak ve geri kalanı küçük harf olacak şekilde düzenleniyor.
-            city = char.ToUpper(city[0]) + city.Substring(1).ToLower();
-
-            // Türkçe karakterlerin düzeltilmesi ve boşlukların %20 ile değiştirilmesi işlemi yapılıyor.
-            city = ReplaceTurkishChars(city);
-            _city = city;
-
-            GetWeather getWeather = new GetWeather();
-            WeatherData weatherData = await getWeather.GetWeatherData(city, RequestType.Instant);
-
-            ApplyDataUIs applyDataUIs = new ApplyDataUIs();
-            applyDataUIs.DataApply(weatherData);
-
-            return true;
-        }
-
-        // Emoji girilme durumu kontrol ediliyor.
-        private bool ContainsEmoji(string city)
-        {
-            Regex emojiRegex = new Regex(@"\p{Cs}");
-            return emojiRegex.IsMatch(city);
-        }
-
-        // Özel karakter girilme durumu kontrol ediliyor.
-        private bool ContainsSpecialChar(string city)
-        {
-            Regex specialCharRegex = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-,\d]");
-            return specialCharRegex.IsMatch(city);
-        }
-
-        // Türkçe karakterlerin düzeltilmesi ve boşlukların %20 ile değiştirilmesi işlemi yapılıyor.
-        private string ReplaceTurkishChars(string city)
-        {
-            return city
-                .Replace(" ", "%20")
-                .Replace("ç", "c")
-                .Replace("ğ", "g")
-                .Replace("ö", "o")
-                .Replace("ş", "s")
-                .Replace("ü", "u")
-                .Replace("ı", "i")
-                .Replace("Ç", "C")
-                .Replace("Ğ", "G")
-                .Replace("Ö", "O")
-                .Replace("Ş", "S")
-                .Replace("Ü", "U")
-                .Replace("İ", "I");
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    public class ApplyDataUIs
-    {
-        public void DataApply(WeatherData weatherData)
-        {
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-
-            string nowTemp = Math.Round(Convert.ToDecimal(weatherData.CurrentConditions.Temp)).ToString();
-
-            string nowWind = weatherData.CurrentConditions.Windspeed.ToString();
-            float degrees = weatherData.CurrentConditions.Winddir;
-            string nowWindAngle = degrees.ToString();
-            string nowWindDir = ConvertDegreeToDirection(degrees);
-
-            string nowHumidity = Math.Round(Convert.ToDecimal(weatherData.CurrentConditions.Humidity)).ToString();
-            string nowPressure = weatherData.CurrentConditions.Pressure.ToString();
-
-            string nowIcon = weatherData.CurrentConditions.Icon;
-
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                mainWindow.UpdateMainWeatherParametersText(nowTemp, nowWind, nowWindDir, nowWindAngle, nowHumidity, nowPressure);
-            });
-        }
-
-        private string ConvertDegreeToDirection(double degrees)
-        {
-            degrees = (degrees % 360 + 360) % 360;
-            string[] directions = { "N", "NH", "E", "SH", "S", "SW", "W", "NW" };
-            int index = (int)Math.Round(degrees / 45.0) % 8;
-            return directions[index];
-        }
     }
 }
