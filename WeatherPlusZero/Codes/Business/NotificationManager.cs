@@ -11,7 +11,7 @@ using Notification.Wpf;
 
 namespace WeatherPlusZero
 {
-    public class Notification_
+    public class NotificationManagement
     {
         public void ShowNotification(string title, string message, NotificationType notificationType = NotificationType.Information)
         {

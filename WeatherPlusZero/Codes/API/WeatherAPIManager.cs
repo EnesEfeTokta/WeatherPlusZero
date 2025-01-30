@@ -10,21 +10,26 @@ namespace WeatherPlusZero
 {
     public abstract class WeatherServiceBase
     {
+        // API key and base URL.
         protected const string API_KEY = "AHK6CFQXSP74M46LDVVVESQ4V";
         protected const string API_BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{0}?key={1}&unitGroup=metric";
 
+        // Path to the application data folder.
         protected static readonly string AppDataPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "WeatherPlusZero"
         );
 
+        // Path to the json file.
         protected static readonly string JsonFilePath = Path.Combine(AppDataPath, "WeatherData.json");
 
+        // Path to the application data folder.
         static WeatherServiceBase()
         {
             Directory.CreateDirectory(AppDataPath);
         }
 
+        // Builds the API URL.
         protected string BuildApiUrl(string city) =>
             string.Format(API_BASE_URL, Uri.EscapeDataString(city), API_KEY);
     }
@@ -35,7 +40,9 @@ namespace WeatherPlusZero
 
     public interface IWeatherProvider
     {
+        // Receives weather data.
         public Task<WeatherData> GetWeatherDataAsync(string city);
+        // Records weather data.
         public Task SaveWeatherDataAsync(WeatherData data);
     }
 
@@ -45,6 +52,7 @@ namespace WeatherPlusZero
 
     public class ApiService : WeatherServiceBase, IWeatherProvider
     {
+        // HttpClient instance for making requests.
         private readonly HttpClient httpClient = new HttpClient();
 
         // Fetches weather data from the API.
@@ -77,7 +85,6 @@ namespace WeatherPlusZero
         private void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
         {
             args.ErrorContext.Handled = true;
-            Console.WriteLine($"Deserialization Error: {args.ErrorContext.Error.Message}");
         }
     }
 
@@ -178,6 +185,7 @@ namespace WeatherPlusZero
 
     public class NetworkChecker
     {
+        // Checks if the device is connected to the internet.
         public bool IsConnected => NetworkInterface.GetIsNetworkAvailable();
     }
 

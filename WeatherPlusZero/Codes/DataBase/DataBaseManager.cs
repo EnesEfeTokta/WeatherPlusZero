@@ -15,6 +15,8 @@ namespace WeatherPlusZero
         private readonly Supabase.Client supabase;
         private readonly Dictionary<Type, PropertyInfo> primaryKeyCache;
 
+        public User user { get; set; }
+
         public DataBase()
         {
             var url = "https://szqsnyrrzydtgzqxwfwt.supabase.co";
@@ -43,6 +45,78 @@ namespace WeatherPlusZero
 
             return primaryKeyCache[type];
         }
+
+        #region Supabase Auth Methods
+        public async Task RegisterUserSupabaseAuth(string email, string password)
+        {
+            await supabase.Auth.SignUp(email, password);
+        }
+
+        public async Task LoginUserSupabaseAuth(string email, string password)
+        {
+            await supabase.Auth.SignIn(email, password);
+        }
+
+        public async Task LogoutUserSupabaseAuth()
+        {
+            await supabase.Auth.SignOut();
+        }
+
+        public void CheckUserSessionSupabaseAuth()
+        {
+            var user = supabase.Auth.CurrentUser;
+        }
+        #endregion
+
+        #region Own Auth Methods
+        public async Task<bool> RegisterUserOwnAuth(User user)
+        {
+            try
+            {
+                var response = await supabase.From<User>().Insert(user);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> LoginUserOwnAuth(string email, string password)
+        {
+            try
+            {
+                User response = await supabase.From<User>()
+                    .Filter("email", Operator.Equals, email)
+                    .Filter("password", Operator.Equals, password)
+                    .Single();
+
+                if (response == null)
+                    return false;
+
+                user = response;
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public bool LogoutUserOwnAuth()
+        {
+            try
+            {
+                user = null;
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Asynchronously adds a new row to the corresponding Supabase table. 

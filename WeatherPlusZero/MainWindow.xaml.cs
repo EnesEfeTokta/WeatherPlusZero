@@ -23,6 +23,7 @@ namespace WeatherPlusZero
 
         public MainWindow()
         {
+            InitializeComponent();
             Initialize();
         }
 

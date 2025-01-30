@@ -7,6 +7,7 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="EmailIcon.png" />
     <None Remove="Images\WeatherStatus\clear-day.png" />
     <None Remove="Images\WeatherStatus\clear-night.png" />
     <None Remove="Images\WeatherStatus\cloudy.png" />
@@ -28,8 +29,10 @@
     <None Remove="Images\WeatherStatus\thunder-showers-day.png" />
     <None Remove="Images\WeatherStatus\thunder-showers-night.png" />
     <None Remove="Images\WeatherStatus\wind.png" />
+    <None Remove="UserProfileIcon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="EmailIcon.png" />
     <Resource Include="Images\AppLogo.png" />
     <Resource Include="Images\CloudyWeather.jpg" />
     <Resource Include="Images\DayIcon.png" />
@@ -66,6 +69,7 @@
     <Resource Include="Images\WeatherStatus\wind.png" />
     <Resource Include="Images\WindIcon.png" />
     <Resource Include="Images\WindyCloudySunny.png" />
+    <Resource Include="UserProfileIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

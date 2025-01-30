@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Threading;
 using System.Globalization;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace WeatherPlusZero
 {
@@ -25,7 +26,16 @@ namespace WeatherPlusZero
         /// </summary>
         public ApplicationProgress()
         {
-            _mainWindow = (MainWindow)Application.Current.MainWindow;
+            //_mainWindow = (MainWindow)Application.Current.MainWindow;
+            // Tüm açık pencereler arasından MainWindow'u bul
+            _mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+
+            // Eğer MainWindow henüz yoksa yeni örnek oluştur
+            if (_mainWindow == null)
+            {
+                _mainWindow = new MainWindow();
+                _mainWindow.Show(); // Gizli olarak açmak için .Show() yerine başka strateji kullanabilirsiniz
+            }
         }
 
         /// <summary>
@@ -95,8 +105,9 @@ namespace WeatherPlusZero
         /// </summary>
         private void UpdateDateTime()
         {
+            var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
             DateTime currentTime = DateTime.Now;
-            _mainWindow.Dispatcher.Invoke(() =>
+            mainWindow.Dispatcher.Invoke(() =>
             {
                 _mainWindow.UpdateDateTimeText( // Updates the date and time texts.
                     currentTime.ToString("dd", _culture), // Day
@@ -220,7 +231,8 @@ namespace WeatherPlusZero
         /// <param name="mainWindow">Main window object (optional).</param>
         public void UpdateAllComponents(WeatherData weatherData, MainWindow mainWindow = null)
         {
-            mainWindow ??= (MainWindow)Application.Current.MainWindow;
+            //mainWindow ??= (MainWindow)Application.Current.MainWindow;
+            mainWindow ??= Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
 
             if (weatherData?.CurrentConditions == null) return;
 
