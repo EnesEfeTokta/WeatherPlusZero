@@ -34,31 +34,21 @@ namespace WeatherPlusZero
             string.Format(API_BASE_URL, Uri.EscapeDataString(city), API_KEY);
     }
 
-
-
-
-
     public interface IWeatherProvider
     {
-        // Receives weather data.
-        public Task<WeatherData> GetWeatherDataAsync(string city);
-        // Records weather data.
-        public Task SaveWeatherDataAsync(WeatherData data);
+        public Task<WeatherData> GetWeatherDataAsync(string city); // Receives weather data.
+        public Task SaveWeatherDataAsync(WeatherData data); // Records weather data.
     }
-
-
-
-
 
     public class ApiService : WeatherServiceBase, IWeatherProvider
     {
         // HttpClient instance for making requests.
-        private readonly HttpClient httpClient = new HttpClient();
+        private readonly HttpClient _httpClient = new HttpClient();
 
         // Fetches weather data from the API.
         public async Task<WeatherData> GetWeatherDataAsync(string city)
         {
-            var response = await httpClient.GetStringAsync(BuildApiUrl(city));
+            var response = await _httpClient.GetStringAsync(BuildApiUrl(city));
             return DeserializeWeatherData(response);
         }
 
@@ -75,7 +65,7 @@ namespace WeatherPlusZero
             var settings = new JsonSerializerSettings
             {
                 Error = HandleDeserializationError,
-                Converters = { new IntConverter() }
+                Converters = { new SmartIntConverter() }
             };
 
             return JsonConvert.DeserializeObject<WeatherData>(json, settings);
@@ -88,42 +78,26 @@ namespace WeatherPlusZero
         }
     }
 
-
-
-
-
     public class JsonService : WeatherServiceBase, IWeatherProvider
     {
-        /// <summary>
-        /// Fetches weather information from the json file.
-        /// </summary>
-        /// <param name="city">The city they want to bring.</param>
-        /// <returns>Fetched weather information.</returns>
+        // Fetches weather information from the json file.
         public async Task<WeatherData> GetWeatherDataAsync(string city = null)
         {
             if (!File.Exists(JsonFilePath)) return null;
 
             var json = await File.ReadAllTextAsync(JsonFilePath);
-            return JsonConvert.DeserializeObject<WeatherData>(json, new IntConverter());
+            return JsonConvert.DeserializeObject<WeatherData>(json, new SmartIntConverter());
         }
 
-        /// <summary>
-        /// Saves the weather information to the json file.
-        /// </summary>
-        /// <param name="data">Weather information to be recorded.</param>
-        /// <returns>Registration status.</returns>
+        // Saves the weather data to the json file.
         public Task SaveWeatherDataAsync(WeatherData data) => Task.CompletedTask;
     }
 
-
-
-
-
     public class WeatherManager
     {
-        private readonly IWeatherProvider _apiProvider; // = new ApiService();
-        private readonly IWeatherProvider _jsonProvider; // = new JsonService();
-        private readonly NetworkChecker _networkChecker; // = new NetworkChecker();
+        private readonly IWeatherProvider _apiProvider;
+        private readonly IWeatherProvider _jsonProvider;
+        private readonly NetworkChecker _networkChecker;
 
         // Dependency injection for testing purposes.
         public WeatherManager()
@@ -133,12 +107,7 @@ namespace WeatherPlusZero
             _networkChecker = new NetworkChecker();
         }
 
-        /// <summary>
-        /// Gets weather data for the specified city.
-        /// </summary>
-        /// <param name="city">The name of the city to be searched.</param>
-        /// <param name="forceRefresh">'True' for calling data directly from the API, 'False' for normal calls.</param>
-        /// <returns></returns>
+        // Gets weather data for the specified city.
         public async Task<WeatherData> GetWeatherDataAsync(string city, bool forceRefresh = false)
         {
             if (string.IsNullOrWhiteSpace(city)) return null;
@@ -146,8 +115,7 @@ namespace WeatherPlusZero
             // If the 'forceRefresh' parameter is true, it pulls data from the API and returns it without saving.
             if (forceRefresh)
             {
-                WeatherData apiData = await _apiProvider.GetWeatherDataAsync(city);
-                return apiData;
+                return await _apiProvider.GetWeatherDataAsync(city);
             }
 
             // If the 'forceRefresh' parameter is false, it first pulls data from json and returns if there is data.
@@ -179,62 +147,65 @@ namespace WeatherPlusZero
         }
     }
 
-
-
-
-
     public class NetworkChecker
     {
         // Checks if the device is connected to the internet.
         public bool IsConnected => NetworkInterface.GetIsNetworkAvailable();
     }
 
-
-
-
-    public class IntConverter : JsonConverter
+    public class SmartIntConverter : JsonConverter
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(int);
-        }
+        public override bool CanConvert(Type objectType) =>
+            objectType == typeof(short);
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            if (reader.Value == null)
-                return 0;
+            if (reader.Value == null) return (short)0;
 
-            if (reader.Value is string stringValue)
+            try
             {
-                if (int.TryParse(stringValue, out int result))
-                    return result;
-                if (double.TryParse(stringValue, out double resultDouble))
+                // Handle various input types
+                switch (reader.Value)
                 {
-                    return Convert.ToInt32(resultDouble);
+                    case string stringValue:
+                        if (short.TryParse(stringValue, out short resultShort))
+                            return resultShort;
+                        if (int.TryParse(stringValue, out int resultInt))
+                            return (short)resultInt;
+                        if (double.TryParse(stringValue, out double resultDouble))
+                            return (short)resultDouble;
+                        return (short)0;
 
+                    case int intValue:
+                        return (short)intValue;
+
+                    case double doubleValue:
+                        return (short)doubleValue;
+
+                    default:
+                        return Convert.ToInt16(reader.Value);
                 }
-                return 0;
             }
-
-            return Convert.ToInt32(reader.Value);
+            catch
+            {
+                return (short)0;
+            }
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>
             writer.WriteValue(value.ToString());
-        }
     }
 
     public class WeatherData
     {
-        public int QueryCost { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public short QueryCost { get; set; }
+        public float Latitude { get; set; }
+        public float intitude { get; set; }
         public string ResolvedAddress { get; set; }
         public string Address { get; set; }
         public string Timezone { get; set; }
-        [JsonConverter(typeof(IntConverter))]
-        public int Tzoffset { get; set; }
+        [JsonConverter(typeof(SmartIntConverter))]
+        public short Tzoffset { get; set; }
         public string Description { get; set; }
         public List<Day> Days { get; set; }
         public List<object> Alerts { get; set; }
@@ -245,37 +216,37 @@ namespace WeatherPlusZero
     public class Day
     {
         public string Datetime { get; set; }
-        public long DatetimeEpoch { get; set; }
-        public double Tempmax { get; set; }
-        public double Tempmin { get; set; }
-        public double Temp { get; set; }
-        public double Feelslikemax { get; set; }
-        public double Feelslikemin { get; set; }
-        public double Feelslike { get; set; }
-        public double Dew { get; set; }
-        public double Humidity { get; set; }
-        public double Precip { get; set; }
-        [JsonConverter(typeof(IntConverter))]
-        public int Precipprob { get; set; }
-        public double Precipcover { get; set; }
+        public int DatetimeEpoch { get; set; }
+        public float Tempmax { get; set; }
+        public float Tempmin { get; set; }
+        public float Temp { get; set; }
+        public float Feelslikemax { get; set; }
+        public float Feelslikemin { get; set; }
+        public float Feelslike { get; set; }
+        public float Dew { get; set; }
+        public float Humidity { get; set; }
+        public float Precip { get; set; }
+        [JsonConverter(typeof(SmartIntConverter))]
+        public short Precipprob { get; set; }
+        public float Precipcover { get; set; }
         public List<string> Preciptype { get; set; }
-        public double Snow { get; set; }
-        public double? Snowdepth { get; set; }
-        public double Windgust { get; set; }
-        public double Windspeed { get; set; }
-        public double Winddir { get; set; }
-        public double Pressure { get; set; }
-        public double Cloudcover { get; set; }
-        public double Visibility { get; set; }
-        public double Solarradiation { get; set; }
-        public double Solarenergy { get; set; }
-        public int Uvindex { get; set; }
-        public int Severerisk { get; set; }
+        public float Snow { get; set; }
+        public float? Snowdepth { get; set; }
+        public float Windgust { get; set; }
+        public float Windspeed { get; set; }
+        public float Winddir { get; set; }
+        public float Pressure { get; set; }
+        public float Cloudcover { get; set; }
+        public float Visibility { get; set; }
+        public float Solarradiation { get; set; }
+        public float Solarenergy { get; set; }
+        public short Uvindex { get; set; }
+        public short Severerisk { get; set; }
         public string Sunrise { get; set; }
-        public long SunriseEpoch { get; set; }
+        public int SunriseEpoch { get; set; }
         public string Sunset { get; set; }
-        public long SunsetEpoch { get; set; }
-        public double Moonphase { get; set; }
+        public int SunsetEpoch { get; set; }
+        public float Moonphase { get; set; }
         public string Conditions { get; set; }
         public string Description { get; set; }
         public string Icon { get; set; }
@@ -287,33 +258,33 @@ namespace WeatherPlusZero
     public class Hour
     {
         public string Datetime { get; set; }
-        public long DatetimeEpoch { get; set; }
-        public double Temp { get; set; }
-        public double Feelslike { get; set; }
-        public double Humidity { get; set; }
-        public double Dew { get; set; }
-        public double Precip { get; set; }
-        [JsonConverter(typeof(IntConverter))]
-        public int Precipprob { get; set; }
-        public double Snow { get; set; }
-        public double? Snowdepth { get; set; }
+        public int DatetimeEpoch { get; set; }
+        public float Temp { get; set; }
+        public float Feelslike { get; set; }
+        public float Humidity { get; set; }
+        public float Dew { get; set; }
+        public float Precip { get; set; }
+        [JsonConverter(typeof(SmartIntConverter))]
+        public short Precipprob { get; set; }
+        public float Snow { get; set; }
+        public float? Snowdepth { get; set; }
         public List<string> Preciptype { get; set; }
-        public double Windgust { get; set; }
-        public double Windspeed { get; set; }
-        public double Winddir { get; set; }
-        public double Pressure { get; set; }
-        public double Visibility { get; set; }
-        public double Cloudcover { get; set; }
-        public double Solarradiation { get; set; }
-        public double Solarenergy { get; set; }
-        public int Uvindex { get; set; }
-        public double Severerisk { get; set; }
+        public float Windgust { get; set; }
+        public float Windspeed { get; set; }
+        public float Winddir { get; set; }
+        public float Pressure { get; set; }
+        public float Visibility { get; set; }
+        public float Cloudcover { get; set; }
+        public float Solarradiation { get; set; }
+        public float Solarenergy { get; set; }
+        public short Uvindex { get; set; }
+        public float Severerisk { get; set; }
         public string Conditions { get; set; }
         public string Icon { get; set; }
         public List<string> Stations { get; set; }
         public string Source { get; set; }
     }
-    
+
     public class Stations
     {
         [JsonProperty("LTCB")]
@@ -323,50 +294,50 @@ namespace WeatherPlusZero
         [JsonProperty("LTCT")]
         public Station LTCT { get; set; }
     }
-    
+
     public class Station
     {
-        public double Distance { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public int UseCount { get; set; }
+        public float Distance { get; set; }
+        public float Latitude { get; set; }
+        public float intitude { get; set; }
+        public short UseCount { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
-        public int Quality { get; set; }
-        public int Contribution { get; set; }
+        public short Quality { get; set; }
+        public short Contribution { get; set; }
     }
 
     public class CurrentConditions
     {
         public string Datetime { get; set; }
-        public long DatetimeEpoch { get; set; }
-        public double? Temp { get; set; }
-        public double? Feelslike { get; set; }
-        public double? Humidity { get; set; }
-        public double? Dew { get; set; }
+        public int DatetimeEpoch { get; set; }
+        public float? Temp { get; set; }
+        public float? Feelslike { get; set; }
+        public float? Humidity { get; set; }
+        public float? Dew { get; set; }
         public object Precip { get; set; }
-        [JsonConverter(typeof(IntConverter))]
-        public int Precipprob { get; set; }
-        public int Snow { get; set; }
-        public double? Snowdepth { get; set; }
+        [JsonConverter(typeof(SmartIntConverter))]
+        public short Precipprob { get; set; }
+        public short Snow { get; set; }
+        public float? Snowdepth { get; set; }
         public List<string> Preciptype { get; set; }
         public object Windgust { get; set; }
-        public double Windspeed { get; set; }
+        public float Windspeed { get; set; }
         public float Winddir { get; set; }
-        public double Pressure { get; set; }
-        public double Visibility { get; set; }
-        public double Cloudcover { get; set; }
-        public double Solarradiation { get; set; }
-        public double Solarenergy { get; set; }
-        public int Uvindex { get; set; }
+        public float Pressure { get; set; }
+        public float Visibility { get; set; }
+        public float Cloudcover { get; set; }
+        public float Solarradiation { get; set; }
+        public float Solarenergy { get; set; }
+        public short Uvindex { get; set; }
         public string Conditions { get; set; }
         public string Icon { get; set; }
         public List<string> Stations { get; set; }
         public string Source { get; set; }
         public string Sunrise { get; set; }
-        public long SunriseEpoch { get; set; }
+        public int SunriseEpoch { get; set; }
         public string Sunset { get; set; }
-        public long SunsetEpoch { get; set; }
-        public double Moonphase { get; set; }
+        public int SunsetEpoch { get; set; }
+        public float Moonphase { get; set; }
     }
 }
