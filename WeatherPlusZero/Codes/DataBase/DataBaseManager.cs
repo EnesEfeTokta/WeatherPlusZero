@@ -46,6 +46,7 @@ namespace WeatherPlusZero
             return primaryKeyCache[type];
         }
 
+
         #region Supabase Auth Methods
         public async Task RegisterUserSupabaseAuth(string email, string password)
         {
@@ -117,6 +118,7 @@ namespace WeatherPlusZero
             }
         }
         #endregion
+
 
         /// <summary>
         /// Asynchronously adds a new row to the corresponding Supabase table. 

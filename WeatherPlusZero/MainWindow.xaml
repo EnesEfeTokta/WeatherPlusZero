@@ -197,10 +197,10 @@
                             <Grid>
                                 <Image x:Name="TemperatureIconImage" 
                                        Source="Images\TemperatureIcon.png" 
-                                       Width="15"
+                                       Width="14"
                                        Height="15"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center" Margin="18,0,0,0"/>
 
                                 <TextBlock x:Name="TemperatureTitleTextBlock" 
                                 Text="Temperature" 
@@ -246,10 +246,10 @@
                             <Grid>
                                 <Image x:Name="HumidIconImage" 
                                        Source="Images\HumidIcon.png" 
-                                       Width="15"
-                                       Height="15"
+                                       Width="13"
+                                       Height="14"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Top" Margin="33,5,0,0"/>
 
                                 <TextBlock x:Name="HumidName" 
                                 Text="Humid" 
@@ -295,10 +295,10 @@
                             <Grid>
                                 <Image x:Name="WindIconImage" 
                                        Source="Images\WindIcon.png" 
-                                       Width="15"
-                                       Height="15"
+                                       Width="13"
+                                       Height="14"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center" Margin="37,0,0,0"/>
 
                                 <TextBlock x:Name="WindName" 
                                 Text="Wind" 
@@ -345,10 +345,10 @@
                             <Grid>
                                 <Image x:Name="PressureIconImage" 
                                        Source="Images\PressureIcon.png" 
-                                       Width="15"
-                                       Height="15"
+                                       Width="13"
+                                       Height="14"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Top" Margin="29,5,0,0"/>
 
                                 <TextBlock x:Name="PressureTitleTextBlock" 
                                 Text="Pressure" 
@@ -413,7 +413,7 @@
                                 <Image x:Name="DayScheduleIconImage" 
                                        Source="Images\DayIcon.png"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center" Margin="175,0,0,0" Height="16" Width="17"/>
                             </Grid>
                         </Border>
 

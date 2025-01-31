@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using System.Globalization;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Media;
 
 namespace WeatherPlusZero
 {
@@ -26,15 +27,12 @@ namespace WeatherPlusZero
         /// </summary>
         public ApplicationProgress()
         {
-            //_mainWindow = (MainWindow)Application.Current.MainWindow;
-            // Tüm açık pencereler arasından MainWindow'u bul
             _mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
 
-            // Eğer MainWindow henüz yoksa yeni örnek oluştur
             if (_mainWindow == null)
             {
                 _mainWindow = new MainWindow();
-                _mainWindow.Show(); // Gizli olarak açmak için .Show() yerine başka strateji kullanabilirsiniz
+                _mainWindow.Show();
             }
         }
 
@@ -97,7 +95,24 @@ namespace WeatherPlusZero
         /// Method to be executed each time the timer ticks.
         /// Updates the date and time.
         /// </summary>
-        private void TimerTickHandler(object sender, EventArgs e) => UpdateDateTime();
+        private void TimerTickHandler(object sender, EventArgs e)
+        {
+            UpdateDayNightBar();
+            UpdateDateTime(); 
+        }
+
+
+        /// <summary>
+        /// Updates the day-night bar in the UI.
+        /// </summary>
+        private void UpdateDayNightBar()
+        {
+            DateTime now = DateTime.Now;
+
+            double hour = now.Hour + now.Minute / 60.0;
+
+            _mainWindow.UpdateDayNightBar(hour);
+        }
 
         /// <summary>
         /// Updates the date and time information in the UI.

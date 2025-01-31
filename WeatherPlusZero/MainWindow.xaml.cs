@@ -29,12 +29,6 @@ namespace WeatherPlusZero
 
         private void Initialize()
         {
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(60);
-
-            timer.Tick += Timer_Tick;
-            timer.Start();
-
             ApplicationStart();
         }
 
@@ -207,38 +201,6 @@ namespace WeatherPlusZero
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            //==== BURASI İŞ KATMANI OLUŞTURULANA KADAR BÖYLE KACAKTIR ====
-
-            // Cihazın mevcut saatini al
-            DateTime now = DateTime.Now;
-
-            // Günün saatini 0-24 aralığında al
-            double hour = now.Hour + now.Minute / 60.0; // Dakikaları saate çevir
-
-            // Gün batımı kontrolü ve resmin değiştirilmesi
-            if (hour >= 16 || hour < 6) // Gece veya gün batımı
-            {
-                // ProgressBar değerini güncelle
-                SetDayInformation(hour, TimeDayProgressBar, Colors.DarkBlue);
-                SetIconImage("pack://application:,,,/Images/MoonIcon.png", WeatherTimeStatusIconImage); // Ay resmi
-            }
-            else
-            {
-                // ProgressBar değerini güncelle
-                SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
-                SetIconImage("pack://application:,,,/Images/SunIcon.png", WeatherTimeStatusIconImage); // Güneş resmi
-            }
-
-            SetImagePosition(TimeDayProgressBar, WeatherStatusTransform);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="value"></param>
         /// <param name="progressBar"></param>
         /// <returns></returns>
@@ -260,20 +222,24 @@ namespace WeatherPlusZero
         /// <param name="value"></param>
         /// <param name="transform"></param>
         /// <returns></returns>
-        public bool SetImagePosition(ProgressBar progressBar, TranslateTransform transform)
+        public void UpdateDayNightBar(double hour)
         {
-            if (progressBar == null || transform == null)
+            if (hour >= 16 || hour < 6)
             {
-                return false;
+                SetDayInformation(hour, TimeDayProgressBar, Colors.DarkBlue);
+                SetIconImage("pack://application:,,,/Images/MoonIcon.png", WeatherTimeStatusIconImage); // Ay resmi
+            }
+            else
+            {
+                SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
+                SetIconImage("pack://application:,,,/Images/SunIcon.png", WeatherTimeStatusIconImage); // Güneş resmi
             }
 
-            double progressWidth = progressBar.ActualWidth;
+            double progressWidth = TimeDayProgressBar.ActualWidth;
 
-            double imagePosition = (progressBar.Value / progressBar.Maximum) * progressWidth;
+            double imagePosition = (TimeDayProgressBar.Value / TimeDayProgressBar.Maximum) * progressWidth;
 
-            transform.X = imagePosition - (WeatherStatusIconImage.Width / 2);
-
-            return true;
+            WeatherStatusTransform.X = imagePosition - (WeatherStatusIconImage.Width / 2);
         }
 
         /// <summary>

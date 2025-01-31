@@ -7,15 +7,15 @@
         mc:Ignorable="d"
         Title="Weather Plus Zero"
         Height="460"
-        Width="800"
+        Width="400"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Icon="Images/AppLogo.png">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130*"/>
-            <ColumnDefinition Width="130*"/>
-            <ColumnDefinition Width="130*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="80*"/>
