@@ -72,50 +72,29 @@ namespace WeatherPlusZero
         #region Own Auth Methods
         public async Task<bool> RegisterUserOwnAuth(User user)
         {
-            try
-            {
-                var response = await supabase.From<User>().Insert(user);
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
+            var response = await supabase.From<User>().Insert(user);
+            return true;
         }
 
         public async Task<bool> LoginUserOwnAuth(string email, string password)
         {
-            try
-            {
-                User response = await supabase.From<User>()
-                    .Filter("email", Operator.Equals, email)
-                    .Filter("password", Operator.Equals, password)
-                    .Single();
+            User response = await supabase.From<User>()
+                .Filter("email", Operator.Equals, email)
+                .Filter("password", Operator.Equals, password)
+                .Single();
 
-                if (response == null)
-                    return false;
-
-                user = response;
-
-                return true;
-            }
-            catch (Exception e)
-            {
+            if (response == null)
                 return false;
-            }
+
+            user = response;
+
+            return true;
         }
 
         public bool LogoutUserOwnAuth()
         {
-            try
-            {
-                user = null;
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
+            user = null;
+            return true;
         }
         #endregion
 

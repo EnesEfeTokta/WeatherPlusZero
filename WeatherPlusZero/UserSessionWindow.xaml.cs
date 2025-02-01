@@ -23,17 +23,53 @@ namespace WeatherPlusZero
         {
             userManager = new UserManager();
             InitializeComponent();
+
+            ApplicationStart();
+        }
+
+        private void ApplicationStart()
+        {
+            LoginPanelBackgroundBorder.Visibility = Visibility.Visible;
+
+            RegisterPanelBackgroundBorder.Visibility = Visibility.Collapsed;
+
+            EmailVerificationPanelBackgroundBorder.Visibility = Visibility.Collapsed;
+
+            ChangePasswordPanelBackgroundBorder.Visibility = Visibility.Collapsed;
         }
 
         private void LogInClickButton(object sender, RoutedEventArgs e)
         {
             User user = new User
             {
-                email = EmailTextBox.Text,
-                password = PasswordTextBox.Password
+                email = Login_EmailTextBox.Text,
+                password = Login_PasswordTextBox.Password
             };
 
             userManager.LogIn(user);
+        }
+
+        private void RegisterClickButton(object sender, RoutedEventArgs e)
+        {
+            User user = new User
+            {
+                email = Register_EmailTextBox.Text,
+                password = Register_PasswordTextBox.Password
+            };
+
+            userManager.Register(user);
+        }
+
+        private void RegisterPanelClickButton(object sender, RoutedEventArgs e)
+        {
+            RegisterPanelBackgroundBorder.Visibility = Visibility.Visible;
+            LoginPanelBackgroundBorder.Visibility = Visibility.Collapsed;
+        }
+
+        private void LogInPanelClickButton(object sender, RoutedEventArgs e)
+        {
+            LoginPanelBackgroundBorder.Visibility = Visibility.Visible;
+            RegisterPanelBackgroundBorder.Visibility = Visibility.Collapsed;
         }
     }
 }
