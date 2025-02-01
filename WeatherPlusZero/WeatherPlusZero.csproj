@@ -9,10 +9,13 @@
   <ItemGroup>
     <None Remove="EmailIcon.png" />
     <None Remove="Images\EmailIcon.png" />
+    <None Remove="Images\EmailVerificationPanelIcon.png" />
     <None Remove="Images\ErrorIcon.png" />
+    <None Remove="Images\ForgotProfileIcon.png" />
     <None Remove="Images\KeyCodeIcon.png" />
     <None Remove="Images\LockIcon.png" />
     <None Remove="Images\NamesurnameIcon.png" />
+    <None Remove="Images\RegisterProfileIcon.png" />
     <None Remove="Images\TickIcon.png" />
     <None Remove="Images\WeatherStatus\clear-day.png" />
     <None Remove="Images\WeatherStatus\clear-night.png" />
@@ -43,7 +46,9 @@
     <Resource Include="Images\CloudyWeather.jpg" />
     <Resource Include="Images\DayIcon.png" />
     <Resource Include="Images\EmailIcon.png" />
+    <Resource Include="Images\EmailVerificationPanelIcon.png" />
     <Resource Include="Images\ErrorIcon.png" />
+    <Resource Include="Images\ForgotProfileIcon.png" />
     <Resource Include="Images\HumidIcon.png" />
     <Resource Include="Images\KeyCodeIcon.png" />
     <Resource Include="Images\LocationIcon.png" />
@@ -52,6 +57,7 @@
     <Resource Include="Images\NamesurnameIcon.png" />
     <Resource Include="Images\PressureIcon.png" />
     <Resource Include="Images\RainyWeatherInTheEvening.jpg" />
+    <Resource Include="Images\RegisterProfileIcon.png" />
     <Resource Include="Images\SnowyWeather.jpg" />
     <Resource Include="Images\StormWeather.jpg" />
     <Resource Include="Images\SunIcon.png" />
