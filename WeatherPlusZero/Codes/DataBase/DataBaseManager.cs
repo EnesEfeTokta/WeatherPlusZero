@@ -7,6 +7,8 @@ using Supabase.Postgrest.Models;
 using System.Reflection;
 using System.Linq;
 using static Supabase.Postgrest.Constants;
+using Supabase.Postgrest.Exceptions;
+using Notification.Wpf;
 
 namespace WeatherPlusZero
 {
@@ -72,8 +74,18 @@ namespace WeatherPlusZero
         #region Own Auth Methods
         public async Task<bool> RegisterUserOwnAuth(User user)
         {
-            var response = await supabase.From<User>().Insert(user);
-            return true;
+            try
+            {
+                var response = await supabase.From<User>().Insert(user);
+                return true;
+            }
+            catch (PostgrestException ex)
+            {
+                // todo: UNIQE olan E-Posta adresi için hata mesajı verilecek. Ancak tam anlamıyla düzgün çalışmıyor.
+                if (ex.Message.Contains("duplicate key value violates unique constraint \"users_email_key\""))
+                    NotificationManagement.ShowNotification("Register Error", "This email is already in use. Please use another valid email.", NotificationType.Error);
+                return false;
+            }
         }
 
         public async Task<bool> LoginUserOwnAuth(string email, string password)

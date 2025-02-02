@@ -19,6 +19,7 @@ namespace WeatherPlusZero
         private readonly CultureInfo _culture = new CultureInfo(CultureName); // Creates CultureInfo object.
         private DispatcherTimer _timer; // Timer for updating the UI at regular intervals.
         private WeatherData _weatherData; // Field to store weather data.
+        
         private readonly MainWindow _mainWindow; // Main window object.
 
         /// <summary>
@@ -120,9 +121,8 @@ namespace WeatherPlusZero
         /// </summary>
         private void UpdateDateTime()
         {
-            var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
             DateTime currentTime = DateTime.Now;
-            mainWindow.Dispatcher.Invoke(() =>
+            _mainWindow.Dispatcher.Invoke(() =>
             {
                 _mainWindow.UpdateDateTimeText( // Updates the date and time texts.
                     currentTime.ToString("dd", _culture), // Day

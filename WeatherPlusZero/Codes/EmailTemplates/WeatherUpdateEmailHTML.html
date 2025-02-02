@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Update</title>
+    <style type="text/css">
+        /* Base Styles */
+        body, table, td, p, a, h1, h2, h3 {
+            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: none;
+        }
+
+        body {
+            width: 100% !important;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            -webkit-text-size-adjust: none;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        /* Email Wrapper */
+        .email-wrapper {
+            width: 100%;
+            background-color: #f4f4f4;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .email-header {
+            padding: 30px;
+            text-align: center;
+            background-color: #e8f2fc;
+        }
+
+            .email-header a {
+                font-size: 20px;
+                font-weight: bold;
+                color: #333;
+                text-decoration: none;
+            }
+
+        /* Body */
+        .email-body {
+            padding: 30px;
+        }
+
+            .email-body h1 {
+                font-size: 24px;
+                font-weight: bold;
+                color: #2c3e50;
+                margin-bottom: 20px;
+            }
+
+            .email-body h2 {
+                font-size: 20px;
+                font-weight: bold;
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .email-body h3 {
+                font-size: 18px;
+                font-weight: bold;
+                color: #2c3e50;
+                margin-bottom: 10px;
+            }
+
+            .email-body p {
+                font-size: 16px;
+                color: #555;
+                margin-bottom: 15px;
+                line-height: 1.7;
+            }
+
+        /* Weather Details */
+        .weather-details {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .weather-detail-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+            .weather-detail-item span {
+                margin-bottom: 10px;
+                color: #555;
+                display: block;
+            }
+
+            .weather-detail-item strong {
+                color: #333;
+            }
+        /* Forecast */
+        .forecast {
+            margin-bottom: 20px;
+        }
+
+        .forecast-list {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .forecast-item {
+            padding: 10px;
+            text-align: center;
+            min-width: 100px;
+        }
+
+            .forecast-item span {
+                display: block;
+                font-size: 14px;
+                color: #555;
+            }
+
+            .forecast-item .weather-icon {
+                font-size: 30px;
+                margin: 0 auto 5px;
+            }
+
+        /* Footer */
+        .email-footer {
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+            .email-footer p {
+                color: #777;
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            .email-footer a {
+                color: #777;
+                font-size: 14px;
+                text-decoration: underline;
+            }
+
+        /* Responsive */
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 95%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .email-body {
+                padding: 20px;
+            }
+
+            .email-header {
+                padding: 20px;
+            }
+        }
+
+        .weather-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <table class="email-container" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td class="email-header">
+                            <a href="#">Weather Zero Plus</a> <!--Application Name Here-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="email-body">
+                            <h1>Weather Update</h1> <!--Email Title Here-->
+                            <p>Hello, [User Name]! Here is your weather information for [User Location]:</p>
+
+                            <h2>General Weather Summary</h2>
+                            <p><i class="weather-icon">☀️</i> <strong>25°C</strong>, [City Name], Partly Sunny</p>
+
+                            <h2>Detailed Weather Information</h2>
+                            <div class="weather-details">
+                                <div class="weather-detail-item">
+                                    <span>Feels Like:</span>
+                                    <strong>27°C</strong>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <span>Humidity:</span>
+                                    <strong>%60</strong>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <span>Wind Speed and Direction:</span>
+                                    <strong>15 km/h, South</strong>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <span>Pressure:</span>
+                                    <strong>1012 hPa</strong>
+                                </div>
+                            </div>
+
+                            <div class="forecast">
+                                <h3>Hourly Forecast</h3>
+                                <div class="forecast-list">
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">🌧️</i>
+                                        <span>12:00</span>
+                                        <span>24°C</span>
+                                    </div>
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">☁️</i>
+                                        <span>13:00</span>
+                                        <span>23°C</span>
+                                    </div>
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">☀️</i>
+                                        <span>14:00</span>
+                                        <span>26°C</span>
+                                    </div>
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">🌧️</i>
+                                        <span>15:00</span>
+                                        <span>21°C</span>
+                                    </div>
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">🌤️</i>
+                                        <span>16:00</span>
+                                        <span>22°C</span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="forecast">
+                                <h3>Daily Forecast</h3>
+                                <div class="forecast-list">
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">🌧️</i>
+                                        <span>Mon</span>
+                                        <span>20°C</span>
+                                    </div>
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">🌤️</i>
+                                        <span>Tue</span>
+                                        <span>24°C</span>
+                                    </div>
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">☀️</i>
+                                        <span>Wed</span>
+                                        <span>26°C</span>
+                                    </div>
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">🌥️</i>
+                                        <span>Thu</span>
+                                        <span>23°C</span>
+                                    </div>
+                                    <div class="forecast-item">
+                                        <i class="weather-icon">☁️</i>
+                                        <span>Fri</span>
+                                        <span>19°C</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="weather-details">
+                                <div class="weather-detail-item">
+                                    <span>UV Index:</span>
+                                    <strong>5</strong>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <span>Air Quality:</span>
+                                    <strong>Good</strong>
+                                </div>
+                            </div>
+
+
+                            <p>Thank you for using Weather Zero Plus!</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="email-footer">
+                            <p>Weather Zero Plus</p>  <!--Application Name Here-->
+                            <p>Türkiye Ağrı Merkez 709 St. Co. 04100</p>  <!--Company Address Here-->
+                            <p><a href="#">Github</a> | <a href="#">Contact</a></p>  <!--Github & Contact Links Here-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

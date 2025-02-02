@@ -91,7 +91,7 @@
                             </Grid.ColumnDefinitions>
                             <Image x:Name="Login_PasswordIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
                             <TextBox x:Name="Login_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_PasswordTextBox_TextChanged"/>
-                            <Image x:Name="Login_PasswordStatusIconImage" Source="Images/ErrorIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                            <Image x:Name="Login_PasswordStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -194,7 +194,7 @@
                             </Grid.ColumnDefinitions>
                             <Image x:Name="Register_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
                             <TextBox x:Name="Register_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_EmailTextBox_TextChanged"/>
-                            <Image x:Name="Register_EmailStatusIconImage" Source="Images/ErrorIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                            <Image x:Name="Register_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -217,7 +217,7 @@
                             </Grid.ColumnDefinitions>
                             <Image x:Name="Register_PasswordIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
                             <TextBox x:Name="Register_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_PasswordTextBox_TextChanged"/>
-                            <Image x:Name="Register_PasswordStatusIconImage" Source="Images/ErrorIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                            <Image x:Name="Register_PasswordStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -309,7 +309,7 @@
                             </Grid.ColumnDefinitions>
                             <Image x:Name="Forgot_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
                             <TextBox x:Name="Forgot_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_EmailTextBox_TextChanged"/>
-                            <Image x:Name="Forgot_EmailStatusIconImage" Source="Images/ErrorIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                            <Image x:Name="Forgot_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                         </Grid>
                     </Border>
                 </Grid>
