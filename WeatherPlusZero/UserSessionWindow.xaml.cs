@@ -8,14 +8,21 @@ namespace WeatherPlusZero
 {
     public partial class UserSessionWindow : Window
     {
-        private readonly UserManager _userManager;
         private readonly Dictionary<Panels, Border> panelBorders;
         private readonly BitmapImage tickIcon;
         private readonly BitmapImage errorIcon;
 
+        private readonly UserManager _userManager;
+        private readonly AuthService authService;
+
+        private readonly TextBox[] textBoxes;
+
+        private Panels isEmailVerificationPanelFrom = Panels.Login;
+
         public UserSessionWindow()
         {
-            _userManager = new UserManager();
+            authService = new AuthService();
+            _userManager = new UserManager(authService);
             tickIcon = new BitmapImage(new Uri("Images/TickIcon.png", UriKind.Relative));
             errorIcon = new BitmapImage(new Uri("Images/ErrorIcon.png", UriKind.Relative));
 
@@ -30,6 +37,19 @@ namespace WeatherPlusZero
                 { Panels.ChangePassword, ChangePasswordPanelBackgroundBorder }
             };
 
+            textBoxes = new TextBox[]
+            {
+                Login_EmailTextBox,
+                Login_PasswordTextBox,
+                Register_NamesurnameTextBox,
+                Register_EmailTextBox,
+                Register_PasswordTextBox,
+                Forgot_NamesurnameTextBox,
+                Forgot_EmailTextBox,
+                EmailVerification_KeyCodeTextBox,
+                ChangePassword_ChangePasswordTextBox
+            };
+
             ApplicationStart();
         }
 
@@ -41,17 +61,22 @@ namespace WeatherPlusZero
         private async void RegisterClickButton(object sender, RoutedEventArgs e)
             => await _userManager.Register(new User { namesurname = Register_NamesurnameTextBox.Text, email = Register_EmailTextBox.Text, password = Register_PasswordTextBox.Text });
 
+        private async void ForgotClickButton(object sender, RoutedEventArgs e)
+            => await _userManager.Forgot(new User { namesurname = Forgot_NamesurnameTextBox.Text, email = Forgot_EmailTextBox.Text });
+
         // todo: Kullanıcı postasına gelen kodu doğrulamaya çalışıyor.
         // toto: EmailVerificationClickButton metodu hem yeni üyelerde hemde şifresini unutanlarda da ynı amaçla çalışacak şekilde değiştirilmeli.
-        private void EmailVerificationClickButton(object sender, RoutedEventArgs e)
+        private async void EmailVerificationClickButton(object sender, RoutedEventArgs e)
         {
-            string inputCode = EmailVerification_KeyCodeTextBox.Text;
-            AuthService authService = new AuthService();
-            bool status = authService.AccountVerify(inputCode);
-            if (status)
-                PanelTransition(Panels.Login);
-            else
-                NotificationManagement.ShowNotification("Error", "Invalid code");
+            switch (isEmailVerificationPanelFrom)
+            {
+                case Panels.Register:
+                    await authService.RegisterVerificationCode(EmailVerification_KeyCodeTextBox.Text);
+                    break;
+                case Panels.Forgot:
+                    authService.ForgotVerificationCode(EmailVerification_KeyCodeTextBox.Text);
+                    break;
+            }
         }
 
         private void Login_EmailTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -116,9 +141,6 @@ namespace WeatherPlusZero
         private void ForgotPasswordClickButton(object sender, RoutedEventArgs e) 
             => PanelTransition(Panels.Forgot);
 
-        private void ForgotClickButton(object sender, RoutedEventArgs e) 
-            => PanelTransition(Panels.EmailVerification);
-
         private void ChangePasswordClickButton(object sender, RoutedEventArgs e) 
             => PanelTransition(Panels.Login);
 
@@ -128,6 +150,26 @@ namespace WeatherPlusZero
             {
                 panel.Value.Visibility = panel.Key == panelToShow ? Visibility.Visible : Visibility.Collapsed;
             }
+
+            switch (panelToShow)
+            {
+                case Panels.Register:
+                    isEmailVerificationPanelFrom = Panels.Register;
+                    Register_NamesurnameTextBox.Focus();
+                    break;
+                case Panels.Forgot:
+                    isEmailVerificationPanelFrom = Panels.Forgot;
+                    Forgot_NamesurnameTextBox.Focus();
+                    break;
+                case Panels.EmailVerification:
+                    EmailVerification_KeyCodeTextBox.Focus();
+                    break;
+                case Panels.ChangePassword:
+                    ChangePassword_ChangePasswordTextBox.Focus();
+                    break;
+            }
+
+            ResetTextBoxes();
         }
 
         private void TextBoxInputIcon(Panels panel, TextBoxInputIconType iconType, bool iconStatus)
@@ -152,15 +194,27 @@ namespace WeatherPlusZero
                 case (Panels.Register, TextBoxInputIconType.Email): return Register_EmailStatusIconImage;
                 case (Panels.Register, TextBoxInputIconType.Password): return Register_PasswordStatusIconImage;
                 case (Panels.Register, TextBoxInputIconType.Namesurname): return Register_NamesurnameStatusIconImage;
+                case (Panels.Forgot, TextBoxInputIconType.Namesurname): return Forgot_NamesurnameStatusIconImage;
                 case (Panels.Forgot, TextBoxInputIconType.Email): return Forgot_EmailStatusIconImage;
                 case (Panels.ChangePassword, TextBoxInputIconType.Password): return ChangePassword_StatusIconImage;
                 default: return null;
             }
         }
 
-        // todo: TextBoxInputIconStatus ile ValidateType aynı enumlardır. O yüzden birleştirilebilir.
-        public enum TextBoxInputIconType { Email, Password, Namesurname }
+        public void UpdateTimerText(string timer) 
+            => EmailVerification_TimerTextBlock.Text = timer;
+
+        private void ResetTextBoxes()
+        {
+            foreach (var textBox in textBoxes)
+            {
+                textBox.Text = "";
+            }
+        }
     }
+
+    // todo: TextBoxInputIconStatus ile ValidateType aynı enumlardır. O yüzden birleştirilebilir.
+    public enum TextBoxInputIconType { Email, Password, Namesurname }
 
     public enum Panels { Login, Register, Forgot, EmailVerification, ChangePassword }
 }

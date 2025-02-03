@@ -108,6 +108,18 @@ namespace WeatherPlusZero
             user = null;
             return true;
         }
+
+        public async Task<bool> ForgotUserOwnAuth(User user)
+        {
+            User response = await supabase.From<User>()
+                .Filter("email", Operator.Equals, user.email)
+                .Single();
+
+            if (response == null)
+                return false;
+
+            return true;
+        }
         #endregion
 
 

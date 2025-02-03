@@ -8,6 +8,9 @@ using System.Windows;
 using System.IO;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using System.Timers;
+using System.Net;
+using System.Windows.Media.Animation;
 
 namespace WeatherPlusZero
 {
@@ -19,12 +22,15 @@ namespace WeatherPlusZero
         private readonly AuthService authService;
         private readonly UserSessionWindow userSessionWindow;
 
-        public UserManager()
+        public User user { get; set; }
+
+        public UserManager(AuthService authService)
         {
             dataBase = new DataBase();
             notificationManagement = new NotificationManagement();
             authenticationValidator = new AuthenticationValidator();
-            authService = new AuthService();
+            this.authService = authService;
+            this.authService.userManager = this;
 
             userSessionWindow = Application.Current.Windows.OfType<UserSessionWindow>().FirstOrDefault();
         }
@@ -105,51 +111,80 @@ namespace WeatherPlusZero
 
         public async Task Register(User user)
         {
-            try
+            if (!authenticationValidator.ValidateNameSurname(user.namesurname))
             {
-                if (!authenticationValidator.ValidateNameSurname(user.namesurname))
-                {
-                    NotificationManagement.ShowNotification("Format Error", "Please enter the name in the correct format. At least five characters please...", NotificationType.Error);
-                    return;
-                }
-
-                if (!authenticationValidator.ValidateEmail(user.email))
-                {
-                    NotificationManagement.ShowNotification("Format Error", "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", NotificationType.Error);
-                    return;
-                }
-
-                if (!authenticationValidator.ValidatePassword(user.password))
-                {
-                    NotificationManagement.ShowNotification("Format Error", "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", NotificationType.Error);
-                    return;
-                }
-
-                // todo: E-Posta kodu doğrulandıktan sonra kullanıcı kayıt olacak.
-                bool registerStatus = await dataBase.RegisterUserOwnAuth(user);
-
-                if (registerStatus)
-                {
-                    // Register successful
-                    NotificationManagement.ShowNotification("Verification Code", $"We have sent a six-digit verification code to {user.email}. Please enter the code...", NotificationType.Information);
-                    await authService.SendVerificationEmail(user.email);
-                    userSessionWindow.PanelTransition(Panels.EmailVerification);
-                }
-                else
-                {
-                    // Register failed
-                    NotificationManagement.ShowNotification("Register Error", "Registration failed. Please try again to enter the information...", NotificationType.Error);
-                }
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please enter the name in the correct format. At least five characters please...", 
+                    NotificationType.Error);
+                return;
             }
-            catch (Exception ex)
+
+            if (!authenticationValidator.ValidateEmail(user.email))
             {
-                NotificationManagement.ShowNotification("Error", $"An error occurred during registration: {ex.Message}", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", 
+                    NotificationType.Error);
+                return;
             }
+
+            if (!authenticationValidator.ValidatePassword(user.password))
+            {
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", 
+                    NotificationType.Error);
+                return;
+            }
+
+            this.user = user;
+
+            await authService.AccountVerify(user, EmailSendType.UserVerificationEmail);
         }
 
-        public void ChangePassword(User user, string newPassword)
+        public async Task RegisterUser()
         {
-            user.password = newPassword;
+            await dataBase.RegisterUserOwnAuth(this.user);
+        }
+
+        public async Task Forgot(User user)
+        {
+            if (!authenticationValidator.ValidateNameSurname(user.namesurname))
+            {
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please enter the name in the correct format. At least five characters please...", 
+                    NotificationType.Error);
+                return;
+            }
+
+            if (!authenticationValidator.ValidateEmail(user.email))
+            {
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", 
+                    NotificationType.Error);
+                return;
+            }
+
+            if (!await dataBase.ForgotUserOwnAuth(user))
+            {
+                NotificationManagement.ShowNotification(
+                    "Error",
+                    "The user with the entered e-mail address does not exist. Please check your e-mail address and try again...",
+                    NotificationType.Error);
+                return;
+            }
+            NotificationManagement.ShowNotification(
+                "Error",
+                "Verification code sent to your email address.Please check your email and enter the code here.",
+                NotificationType.Information);
+            await authService.AccountVerify(user, EmailSendType.PasswordResetEmail);
+        }
+
+        public void ChangePassword(string newPassword = null)
+        {
         }
 
         public void ChangeEmail(User user, string newEmail)
@@ -210,45 +245,147 @@ namespace WeatherPlusZero
 
     public class AuthService
     {
+        private readonly UserSessionWindow userSessionWindow;
+        public UserManager userManager { get; set; }
         public EmailService emailService;
-        public int verificationCode;
+        public int verificationCode { get; set; }
+
+        private Timer timer;
+
+        private int counter = 300;
 
         public AuthService()
         {
             emailService = new EmailService();
+            userSessionWindow = Application.Current.Windows.OfType<UserSessionWindow>().FirstOrDefault();
         }
 
         public int GenerateVerificationCode()
         {
             Random random = new Random();
-            verificationCode = random.Next(100000, 999999);
-            return verificationCode;
+            return random.Next(100000, 999999);
         }
 
-        public bool AccountVerify(string inputCode)
+        public async Task AccountVerify(User user, EmailSendType emailSendType)
         {
-            return inputCode == verificationCode.ToString();
+            verificationCode = GenerateVerificationCode();
+            if(EmailSendType.UserVerificationEmail == emailSendType) 
+                await SendVerificationEmail(user.email, verificationCode.ToString());
+            else
+                await SendPasswordResetEmail(user, verificationCode.ToString());
+            NotificationManagement.ShowNotification(
+                "E-Mail Sent", 
+                $"The verification code has been sent to your {user.email} e-mail address. Please check your email and enter the code here.", 
+                NotificationType.Information);
+            userSessionWindow.PanelTransition(Panels.EmailVerification);
+
+            if (!ValidateTimer())
+                return;
+            else
+                StartTimer();
         }
 
-        public async Task SendVerificationEmail(string email)
+        private bool CodeVerify(string inputCode)
         {
-            await emailService.SendMail_SendGrid(new User { email = email }, EmailSendType.UserVerificationEmail, null, GenerateVerificationCode().ToString());
+            if (verificationCode.ToString() == inputCode)
+                return true;
+            return false;
         }
+
+        public async Task RegisterVerificationCode(string inputCode)
+        {
+            if (CodeVerify(inputCode))
+            {
+                NotificationManagement.ShowNotification(
+                    "Success", 
+                    "Your account has been successfully created. You can now log in with your account.", 
+                    NotificationType.Success);
+                
+                await userManager.RegisterUser();
+                userSessionWindow.PanelTransition(Panels.Login);
+                return;
+            }
+
+            NotificationManagement.ShowNotification(
+                "Error", 
+                "Invalid code", 
+                NotificationType.Error);
+        }
+
+        public void ForgotVerificationCode(string inputCode)
+        {
+            if (CodeVerify(inputCode))
+            {
+                userManager.ChangePassword();
+                userSessionWindow.PanelTransition(Panels.ChangePassword);
+                NotificationManagement.ShowNotification(
+                    "Success", 
+                    "Email verification completed. Please set a password...", 
+                    NotificationType.Success);
+                return;
+            }
+
+            NotificationManagement.ShowNotification(
+                "Error", 
+                "Invalid code", 
+                NotificationType.Error);
+        }
+
+        private bool ValidateTimer()
+        {
+            if (counter >= 0)
+                return true;
+            return false;
+        }
+
+        private void StartTimer()
+        {
+            timer = new System.Timers.Timer(1000);
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
+
+        }
+
+        private void StopTimer()
+        {
+            timer.Stop();
+            timer.Dispose();
+            timer = null;
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (counter > 0)
+            {
+                counter--;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    int minutes = counter / 60;
+                    int seconds = counter % 60;
+                    userSessionWindow.UpdateTimerText($"{minutes}:{seconds}".ToString());
+                });
+
+            }
+            else
+            {
+                NotificationManagement.ShowNotification("Error", "Time is up. Please try again.", NotificationType.Error);
+                StopTimer();
+            }
+        }
+
+        public async Task SendVerificationEmail(string email, string code)
+            => await emailService.SendMail_SendGrid(new User { email = email }, EmailSendType.UserVerificationEmail, null, code);
 
         public async Task SendWeatherUpdateEmail(User user, WeatherData weatherData)
         {
             await emailService.SendMail_SendGrid(user, EmailSendType.WeatherUpdateEmail, weatherData);
         }
 
-        public async Task SendPasswordResetEmail(User user)
-        {
-            await emailService.SendMail_SendGrid(user, EmailSendType.PasswordResetEmail);
-        }
+        public async Task SendPasswordResetEmail(User user, string code)
+            => await emailService.SendMail_SendGrid(user, EmailSendType.PasswordResetEmail, null, code);
 
         public async Task SendEmergencyWeatherAlertEmail(User user, WeatherData weatherData)
-        {
-            await emailService.SendMail_SendGrid(user, EmailSendType.EmergencyWeatherAlertEmail, weatherData);
-        }
+            => await emailService.SendMail_SendGrid(user, EmailSendType.EmergencyWeatherAlertEmail, weatherData);
     }
     public class EmailService
     {
@@ -259,9 +396,8 @@ namespace WeatherPlusZero
                 @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\PasswordResetEmailHTML.html",
                 @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\EmergencyWeatherAlertEmailHTML.html"
           };
-        private const string sendGridApiKey = "API_KEY";
+        private const string sendGridApiKey = "";
 
-        #region SendMail_v3 SendGrid
         public async Task SendMail_SendGrid(User user, EmailSendType emailSendType, WeatherData weatherData = null, string code = null)
         {
             try
@@ -280,27 +416,17 @@ namespace WeatherPlusZero
                 NotificationManagement.ShowNotification("Email Send Error" ,$"An error occurred while sending email: {ex.Message}", NotificationType.Error);
             }
         }
-        #endregion
 
         private string GenerateEmailBody(User user, EmailSendType emailSendType, string code = null)
         {
-            switch (emailSendType)
+            return emailSendType switch
             {
-                case EmailSendType.UserVerificationEmail:
-                    return GenerateUserVerificationEmailBody(code, user.email);
-
-                case EmailSendType.WeatherUpdateEmail:
-                    return GenerateWeatherUpdateEmailBody(user);
-
-                case EmailSendType.PasswordResetEmail:
-                    return GeneratePasswordResetEmailBody(user, code);
-
-                case EmailSendType.EmergencyWeatherAlertEmail:
-                    return GenerateEmergencyWeatherAlertEmailBody(user);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(emailSendType), emailSendType, null);
-
-            }
+                EmailSendType.UserVerificationEmail => GenerateUserVerificationEmailBody(code, user.email),
+                EmailSendType.WeatherUpdateEmail => GenerateWeatherUpdateEmailBody(user),
+                EmailSendType.PasswordResetEmail => GeneratePasswordResetEmailBody(user.namesurname, code),
+                EmailSendType.EmergencyWeatherAlertEmail => GenerateEmergencyWeatherAlertEmailBody(user),
+                _ => throw new ArgumentOutOfRangeException(nameof(emailSendType), emailSendType, null),
+            };
         }
 
         private string GenerateUserVerificationEmailBody(string code, string toEmail)
@@ -318,14 +444,15 @@ namespace WeatherPlusZero
             htmlCode = htmlCode.Replace("[USERNAME]", user.namesurname);
             return htmlCode;
         }
-        private string GeneratePasswordResetEmailBody(User user, string code)
+
+        private string GeneratePasswordResetEmailBody(string namesurname, string code)
         {
             string htmlCode = ReadHTML(EmailSendType.PasswordResetEmail);
-            htmlCode = htmlCode.Replace("[USER_NAME]", user.namesurname)
+            htmlCode = htmlCode.Replace("[USER_NAME]", namesurname)
                 .Replace("[VERIFICATION_CODE]", code);
             return htmlCode;
-
         }
+
         private string GenerateEmergencyWeatherAlertEmailBody(User user)
         {
             string htmlCode = ReadHTML(EmailSendType.EmergencyWeatherAlertEmail);
