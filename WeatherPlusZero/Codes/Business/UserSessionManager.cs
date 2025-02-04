@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Notification.Wpf;
-using System.Windows;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows;
+using Notification.Wpf;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.Timers;
 
 namespace WeatherPlusZero
 {
@@ -35,7 +34,8 @@ namespace WeatherPlusZero
             notificationManagement = new NotificationManagement();
             authenticationValidator = new AuthenticationValidator();
             this.authService = authService;
-            this.authService.userManager = this;
+            // Atama: AuthService içindeki UserManager property’sine bu örneği atıyoruz.
+            this.authService.UserManager = this;
 
             userSessionWindow = Application.Current.Windows.OfType<UserSessionWindow>().FirstOrDefault();
         }
@@ -85,14 +85,11 @@ namespace WeatherPlusZero
 
                 if (loginStatus)
                 {
-                    // Login successful
                     NotificationManagement.ShowNotification("Login Successful", "Entry is successful. You will soon be redirected to the main screen...", NotificationType.Success);
-
                     Application.Current.Dispatcher.Invoke(() => WindowTransition());
                 }
                 else
                 {
-                    // Login failed
                     NotificationManagement.ShowNotification("Login Error", "Entry failed. Please try again to enter the information...", NotificationType.Error);
                 }
             }
@@ -122,46 +119,31 @@ namespace WeatherPlusZero
             });
         }
 
-        //public void LogOut(User user)
-        //{
-        //   // LogOut Method for the future implementations
-        //}
-
         /// <summary>
         /// Handles the registration process for a new user.
         /// </summary>
         /// <param name="user">The user's registration details.</param>
-        public async Task Register(User user)
+        public async void Register(User user)
         {
             if (!authenticationValidator.ValidateNameSurname(user.namesurname))
             {
-                NotificationManagement.ShowNotification(
-                    "Format Error", 
-                    "Please enter the name in the correct format. At least five characters please...", 
-                    NotificationType.Error);
+                NotificationManagement.ShowNotification("Format Error", "Please enter the name in the correct format. At least five characters please...", NotificationType.Error);
                 return;
             }
 
             if (!authenticationValidator.ValidateEmail(user.email))
             {
-                NotificationManagement.ShowNotification(
-                    "Format Error", 
-                    "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", 
-                    NotificationType.Error);
+                NotificationManagement.ShowNotification("Format Error", "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", NotificationType.Error);
                 return;
             }
 
             if (!authenticationValidator.ValidatePassword(user.password))
             {
-                NotificationManagement.ShowNotification(
-                    "Format Error", 
-                    "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", 
-                    NotificationType.Error);
+                NotificationManagement.ShowNotification("Format Error", "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", NotificationType.Error);
                 return;
             }
 
             this.user = user;
-
             await authService.AccountVerify(user, EmailSendType.UserVerificationEmail);
         }
 
@@ -181,38 +163,25 @@ namespace WeatherPlusZero
         {
             if (!authenticationValidator.ValidateNameSurname(user.namesurname))
             {
-                NotificationManagement.ShowNotification(
-                    "Format Error", 
-                    "Please enter the name in the correct format. At least five characters please...", 
-                    NotificationType.Error);
+                NotificationManagement.ShowNotification("Format Error", "Please enter the name in the correct format. At least five characters please...", NotificationType.Error);
                 return;
             }
 
             if (!authenticationValidator.ValidateEmail(user.email))
             {
-                NotificationManagement.ShowNotification(
-                    "Format Error", 
-                    "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", 
-                    NotificationType.Error);
+                NotificationManagement.ShowNotification("Format Error", "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", NotificationType.Error);
                 return;
             }
 
             if (!await dataBase.ForgotUserOwnAuth(user))
             {
-                NotificationManagement.ShowNotification(
-                    "Error",
-                    "The user with the entered e-mail address does not exist. Please check your e-mail address and try again...",
-                    NotificationType.Error);
+                NotificationManagement.ShowNotification("Error", "The user with the entered e-mail address does not exist. Please check your e-mail address and try again...", NotificationType.Error);
                 return;
             }
 
-            NotificationManagement.ShowNotification(
-                "Error",
-                "Verification code sent to your email address.Please check your email and enter the code here.",
-                NotificationType.Information);
+            NotificationManagement.ShowNotification("Information", "Verification code sent to your email address. Please check your email and enter the code here.", NotificationType.Information);
 
             this.user = user;
-
             await authService.AccountVerify(user, EmailSendType.PasswordResetEmail);
         }
 
@@ -224,42 +193,14 @@ namespace WeatherPlusZero
         {
             if (!authenticationValidator.ValidatePassword(newPassword))
             {
-                NotificationManagement.ShowNotification(
-                    "Format Error",
-                    "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.",
-                    NotificationType.Error);
+                NotificationManagement.ShowNotification("Format Error", "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", NotificationType.Error);
                 return;
             }
 
-            MessageBox.Show(user.email);
             await dataBase.ChangePasswordOwnAuth(user.email, newPassword);
 
-            NotificationManagement.ShowNotification(
-                "Change Successful",
-                "Your new password has been registered. Please log in...",
-                NotificationType.Success);
-
+            NotificationManagement.ShowNotification("Change Successful", "Your new password has been registered. Please log in...", NotificationType.Success);
             userSessionWindow.PanelTransition(Panels.Login);
-        }
-
-        /// <summary>
-        /// Changes the email for the current user.
-        /// </summary>
-        /// <param name="user">The user object to change email.</param>
-        /// <param name="newEmail">The new email to set.</param>
-        public void ChangeEmail(User user, string newEmail)
-        {
-            user.email = newEmail;
-        }
-
-        /// <summary>
-        /// Changes the namesurname for the current user.
-        /// </summary>
-        /// <param name="user">The user object to change namesurname.</param>
-        /// <param name="newNamesurname">The new namesurname to set.</param>
-        public void ChangeNamesurname(User user, string newNamesurname)
-        {
-            user.namesurname = newNamesurname;
         }
     }
 
@@ -269,7 +210,7 @@ namespace WeatherPlusZero
     public class AuthenticationValidator
     {
         private readonly char[] specialCharacters = new char[] { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '{', '}', '[', ']', '|', '\\', ':', ';', '"', '\'', '<', '>', ',', '.', '?', '/' };
-        private readonly char[] numberCharcters = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        private readonly char[] numberCharacters = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
         /// <summary>
         /// Validates that the given name or surname meets the minimum length requirement.
@@ -278,7 +219,7 @@ namespace WeatherPlusZero
         /// <returns>True if the name or surname is valid; otherwise, false.</returns>
         public bool ValidateNameSurname(string nameSurname)
         {
-            return nameSurname.Length >= 5;
+            return !string.IsNullOrEmpty(nameSurname) && nameSurname.Length >= 5;
         }
 
         /// <summary>
@@ -288,7 +229,7 @@ namespace WeatherPlusZero
         /// <returns>True if the email address is valid; otherwise, false.</returns>
         public bool ValidateEmail(string email)
         {
-            return email.Contains("@") && email.Length >= 5;
+            return !string.IsNullOrEmpty(email) && email.Contains("@") && email.Length >= 5;
         }
 
         /// <summary>
@@ -296,48 +237,42 @@ namespace WeatherPlusZero
         /// </summary>
         /// <param name="password">The password to validate.</param>
         /// <returns>True if the password is valid; otherwise, false.</returns>
-        // todo: Kullanıcı şifresi 256 bit şifreleme ile şifrelenecek...
         public bool ValidatePassword(string password)
         {
-            int specialCharactersCount = 0;
-            int numberCharactersCount = 0;
-            int upperCaseCount = 0;
+            if (string.IsNullOrEmpty(password))
+                return false;
 
-            for (int i = 0; i < specialCharacters.Length; i++)
-            {
-                if (password.Contains(specialCharacters[i]))
-                    specialCharactersCount++;
-            }
+            int specialCount = 0, numberCount = 0, upperCaseCount = 0;
 
-            for (int i = 0; i < numberCharcters.Length; i++)
+            foreach (char c in password)
             {
-                if (password.Contains(numberCharcters[i]))
-                    numberCharactersCount++;
-            }
-
-            for (int i = 0; i < password.Length; i++)
-            {
-                if (char.IsUpper(password[i]))
+                if (specialCharacters.Contains(c))
+                    specialCount++;
+                if (numberCharacters.Contains(c))
+                    numberCount++;
+                if (char.IsUpper(c))
                     upperCaseCount++;
             }
 
-            return specialCharactersCount >= 2 && numberCharactersCount >= 2 && password.Length >= 8 && upperCaseCount >= 2;
+            return specialCount >= 2 && numberCount >= 2 && password.Length >= 8 && upperCaseCount >= 2;
         }
     }
 
     /// <summary>
-    /// Provides authentication-related services, including generating verification codes and sending emails.
+    /// Provides authentication-related services, including generating verification codes, sending emails, and managing timers.
     /// </summary>
     public class AuthService
     {
         private readonly UserSessionWindow userSessionWindow;
-        public UserManager userManager { get; set; }
-        public EmailService emailService;
+        private readonly HTMLReadService readService;
+        private readonly EmailService emailService;
+
+        // Bu property, dışarıdan atanarak UserManager örneğini tutar.
+        public UserManager UserManager { get; set; }
+
         public int verificationCode { get; set; }
-
         private Timer timer;
-
-        private int counter = 300;
+        private int counter = 300; // Örneğin 300 saniye = 5 dakika
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthService"/> class.
@@ -345,6 +280,7 @@ namespace WeatherPlusZero
         public AuthService()
         {
             emailService = new EmailService();
+            readService = new HTMLReadService();
             userSessionWindow = Application.Current.Windows.OfType<UserSessionWindow>().FirstOrDefault();
         }
 
@@ -362,18 +298,32 @@ namespace WeatherPlusZero
         /// Handles the account verification process, sending a verification code to the user's email address.
         /// </summary>
         /// <param name="user">The user to verify.</param>
-        /// <param name="emailSendType">The type of email to send (e.g., user verification, password reset).</param>
+        /// <param name="emailSendType">The type of email to send (user verification or password reset).</param>
         public async Task AccountVerify(User user, EmailSendType emailSendType)
         {
             verificationCode = GenerateVerificationCode();
-            if(EmailSendType.UserVerificationEmail == emailSendType) 
-                await SendVerificationEmail(user.email, verificationCode.ToString());
-            else
-                await SendPasswordResetEmail(user, verificationCode.ToString());
+
+            string htmlCode = readService.ReadHTML(emailSendType);
+
+            switch (emailSendType)
+            {
+                case EmailSendType.UserVerificationEmail:
+                    htmlCode = htmlCode.Replace("[VERIFICATION_CODE]", verificationCode.ToString());
+                    htmlCode = htmlCode.Replace("[TO_EMAIL]", user.email);
+                    break;
+                case EmailSendType.PasswordResetEmail:
+                    htmlCode = htmlCode.Replace("[VERIFICATION_CODE]", verificationCode.ToString());
+                    htmlCode = htmlCode.Replace("[USER_NAME]", user.namesurname);
+                    break;
+            }
+
+            await emailService.SendMail_SendGrid(user, htmlCode);
+
             NotificationManagement.ShowNotification(
-                "E-Mail Sent", 
-                $"The verification code has been sent to your {user.email} e-mail address. Please check your email and enter the code here.", 
+                "E-Mail Sent",
+                $"The verification code has been sent to your {user.email} e-mail address. Please check your email and enter the code here.",
                 NotificationType.Information);
+
             userSessionWindow.PanelTransition(Panels.EmailVerification);
 
             if (!ValidateTimer())
@@ -389,9 +339,7 @@ namespace WeatherPlusZero
         /// <returns>True if the codes match; otherwise, false.</returns>
         private bool CodeVerify(string inputCode)
         {
-            if (verificationCode.ToString() == inputCode)
-                return true;
-            return false;
+            return verificationCode.ToString() == inputCode;
         }
 
         /// <summary>
@@ -403,19 +351,16 @@ namespace WeatherPlusZero
             if (CodeVerify(inputCode))
             {
                 NotificationManagement.ShowNotification(
-                    "Success", 
-                    "Your account has been successfully created. You can now log in with your account.", 
+                    "Success",
+                    "Your account has been successfully created. You can now log in with your account.",
                     NotificationType.Success);
-                
-                await userManager.RegisterUser();
+
+                await UserManager.RegisterUser();
                 userSessionWindow.PanelTransition(Panels.Login);
                 return;
             }
 
-            NotificationManagement.ShowNotification(
-                "Error", 
-                "Invalid code", 
-                NotificationType.Error);
+            NotificationManagement.ShowNotification("Error", "Invalid code", NotificationType.Error);
         }
 
         /// <summary>
@@ -428,16 +373,13 @@ namespace WeatherPlusZero
             {
                 userSessionWindow.PanelTransition(Panels.ChangePassword);
                 NotificationManagement.ShowNotification(
-                    "Success", 
-                    "Email verification completed. Please set a password...", 
+                    "Success",
+                    "Email verification completed. Please set a password...",
                     NotificationType.Success);
                 return;
             }
 
-            NotificationManagement.ShowNotification(
-                "Error", 
-                "Invalid code", 
-                NotificationType.Error);
+            NotificationManagement.ShowNotification("Error", "Invalid code", NotificationType.Error);
         }
 
         /// <summary>
@@ -446,9 +388,7 @@ namespace WeatherPlusZero
         /// <returns>True if the timer has not expired; otherwise, false.</returns>
         private bool ValidateTimer()
         {
-            if (counter >= 0)
-                return true;
-            return false;
+            return counter >= 0;
         }
 
         /// <summary>
@@ -459,7 +399,6 @@ namespace WeatherPlusZero
             timer = new Timer(1000);
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
-
         }
 
         /// <summary>
@@ -475,8 +414,6 @@ namespace WeatherPlusZero
         /// <summary>
         /// Handles the elapsed event for the timer.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="ElapsedEventArgs"/> instance containing the event data.</param>
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (counter > 0)
@@ -486,9 +423,8 @@ namespace WeatherPlusZero
                 {
                     int minutes = counter / 60;
                     int seconds = counter % 60;
-                    userSessionWindow.UpdateTimerText($"{minutes}:{seconds}".ToString());
+                    userSessionWindow.UpdateTimerText($"{minutes}:{seconds:D2}");
                 });
-
             }
             else
             {
@@ -496,40 +432,6 @@ namespace WeatherPlusZero
                 StopTimer();
             }
         }
-
-        /// <summary>
-        /// Sends a verification email to the specified email address.
-        /// </summary>
-        /// <param name="email">The recipient's email address.</param>
-        /// <param name="code">The verification code to include in the email.</param>
-        public async Task SendVerificationEmail(string email, string code)
-            => await emailService.SendMail_SendGrid(new User { email = email }, EmailSendType.UserVerificationEmail, null, code);
-
-        /// <summary>
-        /// Sends a weather update email to the specified user.
-        /// </summary>
-        /// <param name="user">The recipient user.</param>
-        /// <param name="weatherData">The weather data to include in the email.</param>
-        public async Task SendWeatherUpdateEmail(User user, WeatherData weatherData)
-        {
-            await emailService.SendMail_SendGrid(user, EmailSendType.WeatherUpdateEmail, weatherData);
-        }
-
-        /// <summary>
-        /// Sends a password reset email to the specified user.
-        /// </summary>
-        /// <param name="user">The recipient user.</param>
-        /// <param name="code">The verification code to include in the email.</param>
-        public async Task SendPasswordResetEmail(User user, string code)
-            => await emailService.SendMail_SendGrid(user, EmailSendType.PasswordResetEmail, null, code);
-
-        /// <summary>
-        /// Sends an emergency weather alert email to the specified user.
-        /// </summary>
-        /// <param name="user">The recipient user.</param>
-        /// <param name="weatherData">The weather data to include in the email.</param>
-        public async Task SendEmergencyWeatherAlertEmail(User user, WeatherData weatherData)
-            => await emailService.SendMail_SendGrid(user, EmailSendType.EmergencyWeatherAlertEmail, weatherData);
     }
 
     /// <summary>
@@ -537,119 +439,56 @@ namespace WeatherPlusZero
     /// </summary>
     public class EmailService
     {
-        private static readonly string[] htmlFilePaths = new string[]
-          {
-                @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\UserVerificationEmailHTML.html",
-                @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\WeatherUpdateEmailHTML.html",
-                @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\PasswordResetEmailHTML.html",
-                @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\EmergencyWeatherAlertEmailHTML.html"
-          };
         private const string sendGridApiKey = "";
+        private readonly HTMLReadService htmlReadService;
+
+        public EmailService()
+        {
+            htmlReadService = new HTMLReadService();
+        }
 
         /// <summary>
         /// Sends an email using SendGrid.
         /// </summary>
         /// <param name="user">The recipient user.</param>
-        /// <param name="emailSendType">The type of email to send.</param>
-        /// <param name="weatherData">Optional weather data for the email.</param>
-        /// <param name="code">Optional verification code for the email.</param>
-        public async Task SendMail_SendGrid(User user, EmailSendType emailSendType, WeatherData weatherData = null, string code = null)
+        /// <param name="htmlCode">The HTML content of the email.</param>
+        public async Task SendMail_SendGrid(User user, string htmlCode)
         {
             try
             {
-                SendGridClient client = new SendGridClient(sendGridApiKey);
-                EmailAddress from = new EmailAddress("enesefetokta009@gmail.com", "Weather Zero Plus");
-                EmailAddress to = new EmailAddress(user.email, user.namesurname);
-                string plainTextContent = "Bu e-posta düz metin olarak gönderilmiştir.";
-                string htmlContent = GenerateEmailBody(user, emailSendType, code);
-                var msg = MailHelper.CreateSingleEmail(from, to, "Email from Weather Zero Plus...", plainTextContent, htmlContent);
-
-                var response = await client.SendEmailAsync(msg);
+                var client = new SendGridClient(sendGridApiKey);
+                var from = new EmailAddress("enesefetokta009@gmail.com", "Weather Zero Plus");
+                var to = new EmailAddress(user.email, user.namesurname);
+                string plainTextContent = "This email was sent as plain text.";
+                var msg = MailHelper.CreateSingleEmail(from, to, "Email from Weather Zero Plus...", plainTextContent, htmlCode);
+                await client.SendEmailAsync(msg);
             }
             catch (Exception ex)
             {
-                NotificationManagement.ShowNotification("Email Send Error" ,$"An error occurred while sending email: {ex.Message}", NotificationType.Error);
+                NotificationManagement.ShowNotification("Email Send Error", $"An error occurred while sending email: {ex.Message}", NotificationType.Error);
             }
         }
+    }
 
-        /// <summary>
-        /// Generates the HTML email body based on the specified email type.
-        /// </summary>
-        /// <param name="user">The recipient user.</param>
-        /// <param name="emailSendType">The type of email to generate.</param>
-        /// <param name="code">Optional verification code.</param>
-        /// <returns>The generated HTML email body.</returns>
-        private string GenerateEmailBody(User user, EmailSendType emailSendType, string code = null)
+    /// <summary>
+    /// Provides methods for reading HTML files.
+    /// </summary>
+    public class HTMLReadService
+    {
+        private static readonly string[] htmlFilePaths = new string[]
         {
-            return emailSendType switch
-            {
-                EmailSendType.UserVerificationEmail => GenerateUserVerificationEmailBody(code, user.email),
-                EmailSendType.WeatherUpdateEmail => GenerateWeatherUpdateEmailBody(user),
-                EmailSendType.PasswordResetEmail => GeneratePasswordResetEmailBody(user.namesurname, code),
-                EmailSendType.EmergencyWeatherAlertEmail => GenerateEmergencyWeatherAlertEmailBody(user),
-                _ => throw new ArgumentOutOfRangeException(nameof(emailSendType), emailSendType, null),
-            };
-        }
-
-        /// <summary>
-        /// Generates the HTML body for a user verification email.
-        /// </summary>
-        /// <param name="code">The verification code.</param>
-        /// <param name="toEmail">The recipient's email address.</param>
-        /// <returns>The generated HTML body for the user verification email.</returns>
-        private string GenerateUserVerificationEmailBody(string code, string toEmail)
-        {
-            string htmlCode = ReadHTML(EmailSendType.UserVerificationEmail);
-            htmlCode =
-                htmlCode.Replace("[VERIFICATION_CODE]", code)
-                .Replace("[TO_EMAIL]", toEmail);
-            return htmlCode;
-        }
-
-        /// <summary>
-        /// Generates the HTML body for a weather update email.
-        /// </summary>
-        /// <param name="user">The recipient user.</param>
-        /// <returns>The generated HTML body for the weather update email.</returns>
-        private string GenerateWeatherUpdateEmailBody(User user)
-        {
-            string htmlCode = ReadHTML(EmailSendType.WeatherUpdateEmail);
-            htmlCode = htmlCode.Replace("[USERNAME]", user.namesurname);
-            return htmlCode;
-        }
-
-        /// <summary>
-        /// Generates the HTML body for a password reset email.
-        /// </summary>
-        /// <param name="namesurname">The recipient's name.</param>
-        /// <param name="code">The verification code.</param>
-        /// <returns>The generated HTML body for the password reset email.</returns>
-        private string GeneratePasswordResetEmailBody(string namesurname, string code)
-        {
-            string htmlCode = ReadHTML(EmailSendType.PasswordResetEmail);
-            htmlCode = htmlCode.Replace("[USER_NAME]", namesurname)
-                .Replace("[VERIFICATION_CODE]", code);
-            return htmlCode;
-        }
-
-        /// <summary>
-        /// Generates the HTML body for an emergency weather alert email.
-        /// </summary>
-        /// <param name="user">The recipient user.</param>
-        /// <returns>The generated HTML body for the emergency weather alert email.</returns>
-        private string GenerateEmergencyWeatherAlertEmailBody(User user)
-        {
-            string htmlCode = ReadHTML(EmailSendType.EmergencyWeatherAlertEmail);
-            htmlCode = htmlCode.Replace("[USER_NAME]", user.namesurname);
-            return htmlCode;
-        }
+            @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\UserVerificationEmailHTML.html",
+            @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\WeatherUpdateEmailHTML.html",
+            @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\PasswordResetEmailHTML.html",
+            @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\EmergencyWeatherAlertEmailHTML.html"
+        };
 
         /// <summary>
         /// Reads the content of an HTML file based on the specified email type.
         /// </summary>
         /// <param name="emailSendType">The type of email to read the HTML for.</param>
-        /// <returns>The HTML content of the specified email type.</returns>
-        private string ReadHTML(EmailSendType emailSendType)
+        /// <returns>The HTML content as a string.</returns>
+        public string ReadHTML(EmailSendType emailSendType)
         {
             try
             {
@@ -657,26 +496,21 @@ namespace WeatherPlusZero
                 {
                     case EmailSendType.UserVerificationEmail:
                         return File.ReadAllText(htmlFilePaths[0]);
-
                     case EmailSendType.WeatherUpdateEmail:
                         return File.ReadAllText(htmlFilePaths[1]);
-
                     case EmailSendType.PasswordResetEmail:
                         return File.ReadAllText(htmlFilePaths[2]);
-
                     case EmailSendType.EmergencyWeatherAlertEmail:
                         return File.ReadAllText(htmlFilePaths[3]);
                     default:
                         throw new ArgumentOutOfRangeException(nameof(emailSendType), emailSendType, "Invalid email send type");
                 }
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while reading html file: {ex.Message}");
+                Console.WriteLine($"An error occurred while reading HTML file: {ex.Message}");
                 throw;
             }
-
         }
     }
 

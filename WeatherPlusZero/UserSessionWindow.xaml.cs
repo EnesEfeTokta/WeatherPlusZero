@@ -17,7 +17,7 @@ namespace WeatherPlusZero
 
         private readonly TextBox[] textBoxes;
 
-        private Panels isActivePanel;
+        private Panels isEmailVerificationPanelFrom;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserSessionWindow"/> class.
@@ -60,8 +60,13 @@ namespace WeatherPlusZero
         /// <summary>
         /// Initializes the application by transitioning to the login panel.
         /// </summary>
-        private void ApplicationStart() 
+        private void ApplicationStart()
             => PanelTransition(Panels.Login);
+        //{
+        //    WeatherReportGenerator weatherReportGenerator = new WeatherReportGenerator();
+        //    weatherReportGenerator.SendWeatherReportEmail();
+        //}
+        //=> PanelTransition(Panels.Login);
 
         /// <summary>
         /// Handles the login process when the login button is clicked.
@@ -72,8 +77,8 @@ namespace WeatherPlusZero
         /// <summary>
         /// Handles the registration process when the register button is clicked.
         /// </summary>
-        private async void RegisterClickButton(object sender, RoutedEventArgs e)
-            => await _userManager.Register(new User { namesurname = Register_NamesurnameTextBox.Text, email = Register_EmailTextBox.Text, password = Register_PasswordTextBox.Text });
+        private void RegisterClickButton(object sender, RoutedEventArgs e)
+            => _userManager.Register(new User { namesurname = Register_NamesurnameTextBox.Text, email = Register_EmailTextBox.Text, password = Register_PasswordTextBox.Text });
 
         /// <summary>
         /// Handles the forgot password process when the forgot button is clicked.
@@ -86,7 +91,7 @@ namespace WeatherPlusZero
         /// </summary>
         private async void EmailVerificationClickButton(object sender, RoutedEventArgs e)
         {
-            switch (isActivePanel)
+            switch (isEmailVerificationPanelFrom)
             {
                 case Panels.Register:
                     await authService.RegisterVerificationCode(EmailVerification_KeyCodeTextBox.Text);
@@ -96,6 +101,12 @@ namespace WeatherPlusZero
                     break;
             }
         }
+
+        /// <summary>
+        /// Transitions the UI to the login panel.
+        /// </summary>
+        private async void ChangePasswordClickButton(object sender, RoutedEventArgs e)
+            => await _userManager.ChangePassword(ChangePassword_ChangePasswordTextBox.Text);
 
         /// <summary>
         /// Updates the input icon based on the validation status of the email text box in the login panel.
@@ -196,12 +207,6 @@ namespace WeatherPlusZero
             => PanelTransition(Panels.Forgot);
 
         /// <summary>
-        /// Transitions the UI to the login panel.
-        /// </summary>
-        private void ChangePasswordClickButton(object sender, RoutedEventArgs e)
-            => PanelTransition(Panels.Login);
-
-        /// <summary>
         /// Transitions the UI to the specified panel and resets the text boxes.
         /// </summary>
         /// <param name="panelToShow">The panel to transition to.</param>
@@ -210,6 +215,24 @@ namespace WeatherPlusZero
             foreach (var panel in panelBorders)
             {
                 panel.Value.Visibility = panel.Key == panelToShow ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            switch (panelToShow)
+            {
+                case Panels.Register:
+                    isEmailVerificationPanelFrom = Panels.Register;
+                    Register_NamesurnameTextBox.Focus();
+                    break;
+                case Panels.Forgot:
+                    isEmailVerificationPanelFrom = Panels.Forgot;
+                    Forgot_NamesurnameTextBox.Focus();
+                    break;
+                case Panels.EmailVerification:
+                    EmailVerification_KeyCodeTextBox.Focus();
+                    break;
+                case Panels.ChangePassword:
+                    ChangePassword_ChangePasswordTextBox.Focus();
+                    break;
             }
 
             ResetTextBoxes();
@@ -249,6 +272,7 @@ namespace WeatherPlusZero
                 case (Panels.Register, TextBoxInputIconType.Email): return Register_EmailStatusIconImage;
                 case (Panels.Register, TextBoxInputIconType.Password): return Register_PasswordStatusIconImage;
                 case (Panels.Register, TextBoxInputIconType.Namesurname): return Register_NamesurnameStatusIconImage;
+                case (Panels.Forgot, TextBoxInputIconType.Namesurname): return Forgot_NamesurnameStatusIconImage;
                 case (Panels.Forgot, TextBoxInputIconType.Email): return Forgot_EmailStatusIconImage;
                 case (Panels.ChangePassword, TextBoxInputIconType.Password): return ChangePassword_StatusIconImage;
                 default: return null;

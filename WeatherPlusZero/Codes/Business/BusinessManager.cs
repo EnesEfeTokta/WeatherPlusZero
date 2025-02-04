@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
+using System.Text.Json.Serialization;
 
 namespace WeatherPlusZero
 {
@@ -347,5 +348,30 @@ namespace WeatherPlusZero
         public string DayName { get; set; } // Day of the week name.
         public string IconPath { get; set; } // Icon path.
         public string MinMaxTemperature { get; set; } // Min-Max temperature values.
+    }
+
+    // Burası uygulamanın yürütlme ayarlarını içeriyor...
+    public class ApplicationActivityData
+    {
+        public User LoggedInUser { get; set; }
+
+        public bool IsLoggedIn { get; set; }
+        public string FirstOpeningDateTimeOfTheDay {  get; set; }
+        public string LastOpeningDateTimeOfTheDay { get; set; }
+
+        public bool IsInAppNotificationOn { get; set; }
+        public bool IsDailyWeatherEmailsOpen { get; set; }
+        public bool IsImportantWeatherEmailsOn { get; set; }
+
+        public WeatherData WeatherData { get; set; }
+
+        public short ApplicationVersion { get; set; }
+    }
+
+    // BU bir deneme
+    public class SelectCity
+    {
+        public City City { get; set; }
+        WeatherData WeatherData { get; set; }
     }
 }
