@@ -9,6 +9,7 @@ using System.Linq;
 using static Supabase.Postgrest.Constants;
 using Supabase.Postgrest.Exceptions;
 using Notification.Wpf;
+using System.Runtime.InteropServices;
 
 namespace WeatherPlusZero
 {
@@ -119,6 +120,15 @@ namespace WeatherPlusZero
                 return false;
 
             return true;
+        }
+
+        public async Task ChangePasswordOwnAuth(string email, string newPassword)
+        {
+            User response = await TAsyncGetUserByEmail(email);
+
+            response.password = newPassword;
+
+            await supabase.From<User>().Update(response);
         }
         #endregion
 

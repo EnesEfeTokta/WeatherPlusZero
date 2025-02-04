@@ -18,7 +18,7 @@
             width: 100% !important;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #f9f9f9; /* Açık gri arka plan */
             color: #333;
             line-height: 1.6;
             -webkit-text-size-adjust: none;
@@ -32,7 +32,7 @@
         /* Email Wrapper */
         .email-wrapper {
             width: 100%;
-            background-color: #f4f4f4;
+            background-color: #f9f9f9;
         }
 
         .email-container {
@@ -42,19 +42,21 @@
             background-color: #fff;
             border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
         }
 
         /* Header */
         .email-header {
             padding: 30px;
             text-align: center;
-            background-color: #e8f2fc;
+            background-color: #3498db; /* Mavi başlık */
+            color: #fff;
         }
 
             .email-header a {
-                font-size: 20px;
+                font-size: 24px;
                 font-weight: bold;
-                color: #333;
+                color: #fff;
                 text-decoration: none;
             }
 
@@ -64,21 +66,21 @@
         }
 
             .email-body h1 {
-                font-size: 24px;
+                font-size: 28px;
                 font-weight: bold;
                 color: #2c3e50;
                 margin-bottom: 20px;
             }
 
             .email-body h2 {
-                font-size: 20px;
+                font-size: 22px;
                 font-weight: bold;
                 color: #2c3e50;
                 margin-bottom: 15px;
             }
 
             .email-body h3 {
-                font-size: 18px;
+                font-size: 20px;
                 font-weight: bold;
                 color: #2c3e50;
                 margin-bottom: 10px;
@@ -97,6 +99,7 @@
             padding: 20px;
             border: 1px solid #eee;
             border-radius: 5px;
+            background-color: #f9f9f9; /* Açık gri arka plan */
         }
 
         .weather-detail-item {
@@ -113,6 +116,7 @@
             .weather-detail-item strong {
                 color: #333;
             }
+
         /* Forecast */
         .forecast {
             margin-bottom: 20px;
@@ -193,97 +197,127 @@
                 <table class="email-container" width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                         <td class="email-header">
-                            <a href="#">Weather Zero Plus</a> <!--Application Name Here-->
+                            <a href="#">Weather Zero Plus</a>
                         </td>
                     </tr>
                     <tr>
                         <td class="email-body">
-                            <h1>Weather Update</h1> <!--Email Title Here-->
-                            <p>Hello, [User Name]! Here is your weather information for [User Location]:</p>
+                            <h1>Weather Update</h1>
+                            <p>Hello, <span data-var="userName">[User Name]</span>! Here is your weather information for <span data-var="userLocation">[User Location]</span>:</p>
 
                             <h2>General Weather Summary</h2>
-                            <p><i class="weather-icon">☀️</i> <strong>25°C</strong>, [City Name], Partly Sunny</p>
+                            <p><i class="weather-icon">☀️</i> <strong data-var="currentTemp">25°C</strong>, <span data-var="cityName">[City Name]</span>, <span data-var="weatherDescription">Partly Sunny</span></p>
+
+                            <!-- Hava Durumu Uyarısı (Özelleştirilmiş) -->
+                            <div data-var="weatherAlert" style="margin-bottom: 20px; padding: 15px; background-color: #fce588; border-radius: 5px;">
+                                <strong style="color: #d93025;">Weather Alert:</strong> <span data-var="alertMessage">[Weather Alert Message]</span>
+                            </div>
 
                             <h2>Detailed Weather Information</h2>
                             <div class="weather-details">
                                 <div class="weather-detail-item">
                                     <span>Feels Like:</span>
-                                    <strong>27°C</strong>
+                                    <strong data-var="feelsLike">27°C</strong>
                                 </div>
                                 <div class="weather-detail-item">
                                     <span>Humidity:</span>
-                                    <strong>%60</strong>
+                                    <strong data-var="humidity">%60</strong>
                                 </div>
                                 <div class="weather-detail-item">
                                     <span>Wind Speed and Direction:</span>
-                                    <strong>15 km/h, South</strong>
+                                    <strong data-var="windSpeed">15 km/h, South</strong>
                                 </div>
                                 <div class="weather-detail-item">
                                     <span>Pressure:</span>
-                                    <strong>1012 hPa</strong>
+                                    <strong data-var="pressure">1012 hPa</strong>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <span>Sunrise:</span>
+                                    <strong data-var="sunrise">06:15 AM</strong>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <span>Sunset:</span>
+                                    <strong data-var="sunset">08:30 PM</strong>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <span>Wind Chill:</span>
+                                    <strong data-var="windChill">24°C</strong>
                                 </div>
                             </div>
+
+                            <!-- Hava Kalitesi Bilgileri -->
+                            <h2>Air Quality</h2>
+                            <div class="weather-details">
+                                <div class="weather-detail-item">
+                                    <span>Air Quality Index (AQI):</span>
+                                    <strong data-var="aqiValue">75 (Moderate)</strong>
+                                </div>
+                                <div class="weather-detail-item">
+                                    <span>Primary Pollutant:</span>
+                                    <strong data-var="primaryPollutant">PM2.5</strong>
+                                </div>
+                                <p data-var="airQualityDescription">Air quality is acceptable; However, for some pollutants, there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.</p>
+                            </div>
+
 
                             <div class="forecast">
                                 <h3>Hourly Forecast</h3>
                                 <div class="forecast-list">
                                     <div class="forecast-item">
                                         <i class="weather-icon">🌧️</i>
-                                        <span>12:00</span>
-                                        <span>24°C</span>
+                                        <span data-var="hour1Time">12:00</span>
+                                        <span data-var="hour1Temp">24°C</span>
                                     </div>
                                     <div class="forecast-item">
                                         <i class="weather-icon">☁️</i>
-                                        <span>13:00</span>
-                                        <span>23°C</span>
+                                        <span data-var="hour2Time">13:00</span>
+                                        <span data-var="hour2Temp">23°C</span>
                                     </div>
                                     <div class="forecast-item">
                                         <i class="weather-icon">☀️</i>
-                                        <span>14:00</span>
-                                        <span>26°C</span>
+                                        <span data-var="hour3Time">14:00</span>
+                                        <span data-var="hour3Temp">26°C</span>
                                     </div>
                                     <div class="forecast-item">
                                         <i class="weather-icon">🌧️</i>
-                                        <span>15:00</span>
-                                        <span>21°C</span>
+                                        <span data-var="hour4Time">15:00</span>
+                                        <span data-var="hour4Temp">21°C</span>
                                     </div>
                                     <div class="forecast-item">
                                         <i class="weather-icon">🌤️</i>
-                                        <span>16:00</span>
-                                        <span>22°C</span>
+                                        <span data-var="hour5Time">16:00</span>
+                                        <span data-var="hour5Temp">22°C</span>
                                     </div>
-
                                 </div>
                             </div>
-
 
                             <div class="forecast">
                                 <h3>Daily Forecast</h3>
                                 <div class="forecast-list">
                                     <div class="forecast-item">
                                         <i class="weather-icon">🌧️</i>
-                                        <span>Mon</span>
-                                        <span>20°C</span>
+                                        <span data-var="day1Name">Mon</span>
+                                        <span data-var="day1Temp">20°C</span>
                                     </div>
                                     <div class="forecast-item">
                                         <i class="weather-icon">🌤️</i>
-                                        <span>Tue</span>
-                                        <span>24°C</span>
+                                        <span data-var="day2Name">Tue</span>
+                                        <span data-var="day2Temp">24°C</span>
                                     </div>
                                     <div class="forecast-item">
                                         <i class="weather-icon">☀️</i>
-                                        <span>Wed</span>
-                                        <span>26°C</span>
+                                        <span data-var="day3Name">Wed</span>
+                                        <span data-var="day3Temp">26°C</span>
                                     </div>
                                     <div class="forecast-item">
                                         <i class="weather-icon">🌥️</i>
-                                        <span>Thu</span>
-                                        <span>23°C</span>
+                                        <span data-var="day4Name">Thu</span>
+                                        <span data-var="day4Temp">23°C</span>
                                     </div>
                                     <div class="forecast-item">
                                         <i class="weather-icon">☁️</i>
-                                        <span>Fri</span>
-                                        <span>19°C</span>
+                                        <span data-var="day5Name">Fri</span>
+                                        <span data-var="day5Temp">19°C</span>
                                     </div>
                                 </div>
                             </div>
@@ -291,13 +325,20 @@
                             <div class="weather-details">
                                 <div class="weather-detail-item">
                                     <span>UV Index:</span>
-                                    <strong>5</strong>
+                                    <strong data-var="uvIndex">5</strong>
                                 </div>
                                 <div class="weather-detail-item">
-                                    <span>Air Quality:</span>
-                                    <strong>Good</strong>
+                                    <span>Weather Map:</span>
+                                    <a href="#" data-var="weatherMapLink">View Weather Map</a>
                                 </div>
                             </div>
+
+                            <!-- Kişiselleştirilmiş Tavsiye -->
+                            <p data-var="personalizedAdvice">Based on the forecast, remember to bring an umbrella tomorrow.</p>
+
+
+                            <!-- Daha fazla bilgi için web sitesine bağlantı -->
+                            <p><a href="#" data-var="moreInfoLink">Click here for more detailed weather information.</a></p>
 
 
                             <p>Thank you for using Weather Zero Plus!</p>
@@ -305,9 +346,9 @@
                     </tr>
                     <tr>
                         <td class="email-footer">
-                            <p>Weather Zero Plus</p>  <!--Application Name Here-->
-                            <p>Türkiye Ağrı Merkez 709 St. Co. 04100</p>  <!--Company Address Here-->
-                            <p><a href="#">Github</a> | <a href="#">Contact</a></p>  <!--Github & Contact Links Here-->
+                            <p>Weather Zero Plus</p>
+                            <p>Türkiye Ağrı Merkez 709 St. Co. 04100</p>
+                            <p><a href="#">Github</a> | <a href="#">Contact</a></p>
                         </td>
                     </tr>
                 </table>
