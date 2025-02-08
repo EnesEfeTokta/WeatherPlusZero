@@ -143,7 +143,7 @@ namespace WeatherPlusZero
         /// <summary>
         /// Starts the process of sending the weather report email.
         /// </summary>
-        public async void SendWeatherReportEmail()
+        public async void SendWeatherReportEmail(string sendEmail)
         {
             await PopulateWeatherDataAsync();
             string emailHTML = _htmlReadService.ReadHTML(EmailSendType.WeatherUpdateEmail);
@@ -154,7 +154,7 @@ namespace WeatherPlusZero
             }
 
             User user = new User();
-            user.email = "enesefetokta41@gmail.com";
+            user.email = sendEmail;
 
             await _emailService.SendMail_SendGrid(user, emailHTML);
         }

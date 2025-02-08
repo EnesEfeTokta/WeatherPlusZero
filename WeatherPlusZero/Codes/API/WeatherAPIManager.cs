@@ -106,7 +106,7 @@ namespace WeatherPlusZero
             _jsonProvider = new JsonService();
             _networkChecker = new NetworkChecker();
         }
-
+        
         // Gets weather data for the specified city.
         public async Task<WeatherData> GetWeatherDataAsync(string city, bool forceRefresh = false)
         {

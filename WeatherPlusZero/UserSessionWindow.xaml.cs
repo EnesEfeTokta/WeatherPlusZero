@@ -62,11 +62,6 @@ namespace WeatherPlusZero
         /// </summary>
         private void ApplicationStart()
             => PanelTransition(Panels.Login);
-        //{
-        //    WeatherReportGenerator weatherReportGenerator = new WeatherReportGenerator();
-        //    weatherReportGenerator.SendWeatherReportEmail();
-        //}
-        //=> PanelTransition(Panels.Login);
 
         /// <summary>
         /// Handles the login process when the login button is clicked.
