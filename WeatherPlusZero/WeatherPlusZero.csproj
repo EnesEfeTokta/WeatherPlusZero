@@ -12,11 +12,13 @@
     <None Remove="Images\EmailVerificationPanelIcon.png" />
     <None Remove="Images\ErrorIcon.png" />
     <None Remove="Images\ForgotProfileIcon.png" />
+    <None Remove="Images\HappyIcon.png" />
     <None Remove="Images\KeyCodeIcon.png" />
     <None Remove="Images\LockIcon.png" />
     <None Remove="Images\NamesurnameIcon.png" />
     <None Remove="Images\RegisterProfileIcon.png" />
     <None Remove="Images\TickIcon.png" />
+    <None Remove="Images\UserProfileIcon.png" />
     <None Remove="Images\WeatherStatus\clear-day.png" />
     <None Remove="Images\WeatherStatus\clear-night.png" />
     <None Remove="Images\WeatherStatus\cloudy.png" />
@@ -41,7 +43,6 @@
     <None Remove="UserProfileIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="EmailIcon.png" />
     <Resource Include="Images\AppLogo.png" />
     <Resource Include="Images\CloudyWeather.jpg" />
     <Resource Include="Images\DayIcon.png" />
@@ -49,6 +50,7 @@
     <Resource Include="Images\EmailVerificationPanelIcon.png" />
     <Resource Include="Images\ErrorIcon.png" />
     <Resource Include="Images\ForgotProfileIcon.png" />
+    <Resource Include="Images\HappyIcon.png" />
     <Resource Include="Images\HumidIcon.png" />
     <Resource Include="Images\KeyCodeIcon.png" />
     <Resource Include="Images\LocationIcon.png" />
@@ -64,6 +66,7 @@
     <Resource Include="Images\SunnyWeather.jpg" />
     <Resource Include="Images\TemperatureIcon.png" />
     <Resource Include="Images\TickIcon.png" />
+    <Resource Include="Images\UserProfileIcon.png" />
     <Resource Include="Images\WeatherStatus\clear-day.png" />
     <Resource Include="Images\WeatherStatus\clear-night.png" />
     <Resource Include="Images\WeatherStatus\cloudy.png" />
@@ -87,7 +90,6 @@
     <Resource Include="Images\WeatherStatus\wind.png" />
     <Resource Include="Images\WindIcon.png" />
     <Resource Include="Images\WindyCloudySunny.png" />
-    <Resource Include="UserProfileIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Mailjet.Api" Version="3.0.0" />

@@ -169,12 +169,24 @@ namespace WeatherPlusZero
             switch (iconCode)
             {
                 case "rain": return "🌧️";
+                case "rain-showers-day": return "🌦️";
                 case "clear-day": return "☀️";
                 case "clear-night": return "🌙";
                 case "partly-cloudy-day": return "🌤️";
                 case "partly-cloudy-night": return "🌃";
                 case "cloudy": return "☁️";
                 case "wind": return "🌬️";
+                case "fog": return "🌫️";
+                case "snow": return "❄️";
+                case "sleet": return "🌨️";
+                case "thunder-storm-day": return "⛈️";
+                case "thunder-storm-night": return "⛈️";
+                case "tornado": return "🌪️";
+                case "hail": return "🌨️";
+                case "snow-showers-day": return "🌨️";
+                case "snow-showers-night": return "🌨️";
+                case "showers-day": return "🌧️";
+                case "showers-night": return "🌧️";
                 default: return "❓";
             }
         }
