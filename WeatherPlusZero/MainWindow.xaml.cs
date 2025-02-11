@@ -37,8 +37,8 @@ namespace WeatherPlusZero
             ApplicationProgress applicationProgress = new ApplicationProgress();
             applicationProgress.ApplicationStart();
 
-            HelloCard helloCard = new HelloCard();
-            helloCard.Show();
+            //HelloCard helloCard = new HelloCard();
+            //helloCard.Show();
         }
 
         /// <summary>

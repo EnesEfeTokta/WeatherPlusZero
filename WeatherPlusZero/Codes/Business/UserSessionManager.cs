@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -163,23 +164,35 @@ namespace WeatherPlusZero
         {
             if (!authenticationValidator.ValidateNameSurname(user.namesurname))
             {
-                NotificationManagement.ShowNotification("Format Error", "Please enter the name in the correct format. At least five characters please...", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please enter the name in the correct format. At least five characters please...", 
+                    NotificationType.Error);
                 return;
             }
 
             if (!authenticationValidator.ValidateEmail(user.email))
             {
-                NotificationManagement.ShowNotification("Format Error", "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", 
+                    NotificationType.Error);
                 return;
             }
 
             if (!await dataBase.ForgotUserOwnAuth(user))
             {
-                NotificationManagement.ShowNotification("Error", "The user with the entered e-mail address does not exist. Please check your e-mail address and try again...", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Error", 
+                    "The user with the entered e-mail address does not exist. Please check your e-mail address and try again...",
+                    NotificationType.Error);
                 return;
             }
 
-            NotificationManagement.ShowNotification("Information", "Verification code sent to your email address. Please check your email and enter the code here.", NotificationType.Information);
+            NotificationManagement.ShowNotification(
+                "Information", 
+                "Verification code sent to your email address. Please check your email and enter the code here.", 
+                NotificationType.Information);
 
             this.user = user;
             await authService.AccountVerify(user, EmailSendType.PasswordResetEmail);
@@ -193,13 +206,19 @@ namespace WeatherPlusZero
         {
             if (!authenticationValidator.ValidatePassword(newPassword))
             {
-                NotificationManagement.ShowNotification("Format Error", "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", 
+                    NotificationType.Error);
                 return;
             }
 
             await dataBase.ChangePasswordOwnAuth(user.email, newPassword);
 
-            NotificationManagement.ShowNotification("Change Successful", "Your new password has been registered. Please log in...", NotificationType.Success);
+            NotificationManagement.ShowNotification(
+                "Change Successful", 
+                "Your new password has been registered. Please log in...", 
+                NotificationType.Success);
             userSessionWindow.PanelTransition(Panels.Login);
         }
     }
@@ -465,7 +484,10 @@ namespace WeatherPlusZero
             }
             catch (Exception ex)
             {
-                NotificationManagement.ShowNotification("Email Send Error", $"An error occurred while sending email: {ex.Message}", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Email Send Error", 
+                    $"An error occurred while sending email: {ex.Message}", 
+                    NotificationType.Error);
             }
         }
     }
@@ -475,14 +497,6 @@ namespace WeatherPlusZero
     /// </summary>
     public class HTMLReadService
     {
-        private static readonly string[] htmlFilePaths = new string[]
-        {
-            @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\UserVerificationEmailHTML.html",
-            @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\WeatherUpdateEmailHTML.html",
-            @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\PasswordResetEmailHTML.html",
-            @"C:\Users\EnesEfeTokta\OneDrive\Belgeler\GitHub\WeatherPlusZeroRepo\WeatherPlusZero\WeatherPlusZero\WeatherPlusZero\Codes\EmailTemplates\EmergencyWeatherAlertEmailHTML.html"
-        };
-
         /// <summary>
         /// Reads the content of an HTML file based on the specified email type.
         /// </summary>
@@ -490,26 +504,13 @@ namespace WeatherPlusZero
         /// <returns>The HTML content as a string.</returns>
         public string ReadHTML(EmailSendType emailSendType)
         {
-            try
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string resourceName = assembly.GetManifestResourceNames().FirstOrDefault(name => name.EndsWith(emailSendType + ".html"));
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
             {
-                switch (emailSendType)
-                {
-                    case EmailSendType.UserVerificationEmail:
-                        return File.ReadAllText(htmlFilePaths[0]);
-                    case EmailSendType.WeatherUpdateEmail:
-                        return File.ReadAllText(htmlFilePaths[1]);
-                    case EmailSendType.PasswordResetEmail:
-                        return File.ReadAllText(htmlFilePaths[2]);
-                    case EmailSendType.EmergencyWeatherAlertEmail:
-                        return File.ReadAllText(htmlFilePaths[3]);
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(emailSendType), emailSendType, "Invalid email send type");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while reading HTML file: {ex.Message}");
-                throw;
+                return reader.ReadToEnd();
             }
         }
     }

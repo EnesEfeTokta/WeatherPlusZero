@@ -7,6 +7,10 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Codes\EmailTemplates\EmergencyWeatherAlertEmail.html" />
+    <None Remove="Codes\EmailTemplates\PasswordResetEmail.html" />
+    <None Remove="Codes\EmailTemplates\UserVerificationEmail.html" />
+    <None Remove="Codes\EmailTemplates\WeatherUpdateEmail.html" />
     <None Remove="EmailIcon.png" />
     <None Remove="Images\EmailIcon.png" />
     <None Remove="Images\EmailVerificationPanelIcon.png" />
@@ -41,6 +45,12 @@
     <None Remove="Images\WeatherStatus\thunder-showers-night.png" />
     <None Remove="Images\WeatherStatus\wind.png" />
     <None Remove="UserProfileIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Codes\EmailTemplates\EmergencyWeatherAlertEmail.html" />
+    <EmbeddedResource Include="Codes\EmailTemplates\PasswordResetEmail.html" />
+    <EmbeddedResource Include="Codes\EmailTemplates\UserVerificationEmail.html" />
+    <EmbeddedResource Include="Codes\EmailTemplates\WeatherUpdateEmail.html" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\AppLogo.png" />
