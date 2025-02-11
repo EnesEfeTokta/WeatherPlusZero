@@ -94,6 +94,30 @@
                         Foreground="White"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
+                
+                <Button x:Name="CancelCitySelectButton" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center" 
+                        Height="25" Width="25">
+                    <Button.BorderBrush>
+                        <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                    </Button.BorderBrush>
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/GarbageIcon.png"/>
+                    </Button.Background>
+                </Button>
+
+                <Button x:Name="AddCitySelectButton" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center" 
+                        Height="25" Width="25">
+                    <Button.BorderBrush>
+                        <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                    </Button.BorderBrush>
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/PlusIcon.png"/>
+                    </Button.Background>
+                </Button>
             </Grid>
         </Border>
 
