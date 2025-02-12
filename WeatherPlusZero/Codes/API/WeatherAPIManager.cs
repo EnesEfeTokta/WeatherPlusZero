@@ -59,6 +59,11 @@ namespace WeatherPlusZero
             await File.WriteAllTextAsync(JsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
         }
 
+        public void AddCity(string city)
+        {
+            // Add city to the list of cities
+        }
+
         // Deserializes the json string to the WeatherData object.
         private WeatherData DeserializeWeatherData(string json)
         {

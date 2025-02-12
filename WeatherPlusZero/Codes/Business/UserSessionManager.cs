@@ -49,17 +49,13 @@ namespace WeatherPlusZero
         /// <returns>True if the value is valid; otherwise, false.</returns>
         public bool ValidateFieldsContinuously(ValidateType validateType, string value)
         {
-            switch (validateType)
+            return validateType switch
             {
-                case ValidateType.NameSurname:
-                    return authenticationValidator.ValidateNameSurname(value);
-                case ValidateType.Email:
-                    return authenticationValidator.ValidateEmail(value);
-                case ValidateType.Password:
-                    return authenticationValidator.ValidatePassword(value);
-                default:
-                    return false;
-            }
+                ValidateType.NameSurname => authenticationValidator.ValidateNameSurname(value),
+                ValidateType.Email => authenticationValidator.ValidateEmail(value),
+                ValidateType.Password => authenticationValidator.ValidatePassword(value),
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -72,13 +68,19 @@ namespace WeatherPlusZero
             {
                 if (!authenticationValidator.ValidateEmail(user.email))
                 {
-                    NotificationManagement.ShowNotification("Format Error", "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", NotificationType.Error);
+                    NotificationManagement.ShowNotification(
+                        "Format Error", 
+                        "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", 
+                        NotificationType.Error);
                     return;
                 }
 
                 if (!authenticationValidator.ValidatePassword(user.password))
                 {
-                    NotificationManagement.ShowNotification("Format Error", "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", NotificationType.Error);
+                    NotificationManagement.ShowNotification(
+                        "Format Error", 
+                        "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", 
+                        NotificationType.Error);
                     return;
                 }
 
@@ -86,12 +88,18 @@ namespace WeatherPlusZero
 
                 if (loginStatus)
                 {
-                    NotificationManagement.ShowNotification("Login Successful", "Entry is successful. You will soon be redirected to the main screen...", NotificationType.Success);
+                    NotificationManagement.ShowNotification(
+                        "Login Successful", 
+                        "Entry is successful. You will soon be redirected to the main screen...", 
+                        NotificationType.Success);
                     Application.Current.Dispatcher.Invoke(() => WindowTransition());
                 }
                 else
                 {
-                    NotificationManagement.ShowNotification("Login Error", "Entry failed. Please try again to enter the information...", NotificationType.Error);
+                    NotificationManagement.ShowNotification(
+                        "Login Error", 
+                        "Entry failed. Please try again to enter the information...", 
+                        NotificationType.Error);
                 }
             }
             catch (Exception ex)
@@ -447,7 +455,10 @@ namespace WeatherPlusZero
             }
             else
             {
-                NotificationManagement.ShowNotification("Error", "Time is up. Please try again.", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Error", 
+                    "Time is up. Please try again.", 
+                    NotificationType.Error);
                 StopTimer();
             }
         }

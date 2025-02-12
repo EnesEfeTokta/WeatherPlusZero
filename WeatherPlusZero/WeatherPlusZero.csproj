@@ -16,10 +16,12 @@
     <None Remove="Images\EmailVerificationPanelIcon.png" />
     <None Remove="Images\ErrorIcon.png" />
     <None Remove="Images\ForgotProfileIcon.png" />
+    <None Remove="Images\GarbageIcon.png" />
     <None Remove="Images\HappyIcon.png" />
     <None Remove="Images\KeyCodeIcon.png" />
     <None Remove="Images\LockIcon.png" />
     <None Remove="Images\NamesurnameIcon.png" />
+    <None Remove="Images\PlusIcon.png" />
     <None Remove="Images\RegisterProfileIcon.png" />
     <None Remove="Images\TickIcon.png" />
     <None Remove="Images\UserProfileIcon.png" />
@@ -60,6 +62,7 @@
     <Resource Include="Images\EmailVerificationPanelIcon.png" />
     <Resource Include="Images\ErrorIcon.png" />
     <Resource Include="Images\ForgotProfileIcon.png" />
+    <Resource Include="Images\GarbageIcon.png" />
     <Resource Include="Images\HappyIcon.png" />
     <Resource Include="Images\HumidIcon.png" />
     <Resource Include="Images\KeyCodeIcon.png" />
@@ -67,6 +70,7 @@
     <Resource Include="Images\LockIcon.png" />
     <Resource Include="Images\MoonIcon.png" />
     <Resource Include="Images\NamesurnameIcon.png" />
+    <Resource Include="Images\PlusIcon.png" />
     <Resource Include="Images\PressureIcon.png" />
     <Resource Include="Images\RainyWeatherInTheEvening.jpg" />
     <Resource Include="Images\RegisterProfileIcon.png" />

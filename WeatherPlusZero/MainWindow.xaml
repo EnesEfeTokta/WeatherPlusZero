@@ -94,11 +94,15 @@
                         Foreground="White"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
-                
+
                 <Button x:Name="CancelCitySelectButton" 
                         HorizontalAlignment="Left" 
                         VerticalAlignment="Center" 
-                        Height="25" Width="25">
+                        Height="25" Width="25"
+                        Click="CanselCitySelectButton_Click">
+                    <Button.Foreground>
+                        <ImageBrush/>
+                    </Button.Foreground>
                     <Button.BorderBrush>
                         <SolidColorBrush Color="#FF707070" Opacity="0"/>
                     </Button.BorderBrush>
@@ -110,7 +114,8 @@
                 <Button x:Name="AddCitySelectButton" 
                         HorizontalAlignment="Left" 
                         VerticalAlignment="Center" 
-                        Height="25" Width="25">
+                        Height="26" Width="25" Margin="30,0,0,0"
+                        Click="AddCitySelectButton_Click">
                     <Button.BorderBrush>
                         <SolidColorBrush Color="#FF707070" Opacity="0"/>
                     </Button.BorderBrush>

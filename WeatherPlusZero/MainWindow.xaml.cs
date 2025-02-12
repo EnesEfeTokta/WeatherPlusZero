@@ -1,5 +1,4 @@
-﻿using Supabase.Gotrue;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -8,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Notification.Wpf;
 
 namespace WeatherPlusZero
 {
@@ -21,8 +21,13 @@ namespace WeatherPlusZero
         private Point _startPoint;
         private bool _isDragging;
 
+        ApplicationProgress applicationProgress;
+        SearchCity searchCity;
+
         public MainWindow()
         {
+            applicationProgress = new ApplicationProgress();
+            searchCity = new SearchCity();
             InitializeComponent();
             Initialize();
         }
@@ -34,11 +39,14 @@ namespace WeatherPlusZero
 
         private void ApplicationStart()
         {
-            ApplicationProgress applicationProgress = new ApplicationProgress();
             applicationProgress.ApplicationStart();
 
             //HelloCard helloCard = new HelloCard();
             //helloCard.Show();
+
+            // Hide the add city and search clear buttons.
+            CancelCitySelectButton.Visibility = Visibility.Hidden;
+            AddCitySelectButton.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -99,13 +107,40 @@ namespace WeatherPlusZero
             if (cityName == "Search for city...")
                 return;
 
-            SearchCity citySearch = new SearchCity();
-            bool successStatus = await citySearch.SearchCityName(cityName);
+            bool successStatus = await searchCity.SearchCityName(cityName);
 
-            if (!successStatus)
+            if (successStatus)
             {
-                MessageBox.Show("Please enter a valid city name. No special characters, emoji and numeric characters.", "Error");
+                AddCitySelectButton.Visibility = Visibility.Visible;
+                CancelCitySelectButton.Visibility = Visibility.Visible;
             }
+            else
+            {
+                NotificationManagement.ShowNotification(
+                    "Error", 
+                    "Please enter a valid city name. No special characters, emoji and numeric characters.", 
+                    NotificationType.Warning);
+            }
+        }
+
+        private async void AddCitySelectButton_Click(object sender, RoutedEventArgs e)
+        {
+            CityButtonOperations();
+            await searchCity.AddSelectCity();
+        }
+
+        private async void CanselCitySelectButton_Click(object sender, RoutedEventArgs e)
+        {
+            CityButtonOperations();
+            await searchCity.CanselCitySelect();
+        }
+
+        private void CityButtonOperations()
+        {
+            AddCitySelectButton.Visibility = Visibility.Hidden;
+            CancelCitySelectButton.Visibility = Visibility.Hidden;
+            CityNameSearchTextBox.Text = "Search for city...";
+            CityNameSearchTextBox.Foreground = Brushes.White;
         }
 
         /// <summary>
@@ -273,11 +308,11 @@ namespace WeatherPlusZero
                 WeatherScrollViewer.ScrollToHorizontalOffset(WeatherScrollViewer.HorizontalOffset + deltaX);
             }
         }
+
         private void WeatherScrollViewer_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _isDragging = false;
             WeatherScrollViewer.ReleaseMouseCapture();
         }
-
     }
 }

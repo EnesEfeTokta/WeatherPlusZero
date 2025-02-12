@@ -6,8 +6,7 @@ using System.Windows.Threading;
 using System.Globalization;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Media;
-using System.Text.Json.Serialization;
+using Notification.Wpf;
 
 namespace WeatherPlusZero
 {
@@ -61,8 +60,9 @@ namespace WeatherPlusZero
         /// Loads the required weather data when the application first opens.
         /// Asynchronously fetches weather data and updates the UI.
         /// </summary>
-        private async Task LoadInitialData()
+        public async Task LoadInitialData()
         {
+            _weatherData = null;
             _weatherData = await FetchWeatherData();
             UpdateUI();
         }
@@ -79,6 +79,7 @@ namespace WeatherPlusZero
             });
         }
 
+        #region UpdateDayBar
         /// <summary>
         /// Initializes the timer to update the UI regularly.
         /// Creates the timer, attaches the Tick event, and starts it.
@@ -115,6 +116,7 @@ namespace WeatherPlusZero
 
             _mainWindow.UpdateDayNightBar(hour);
         }
+        #endregion
 
         /// <summary>
         /// Updates the date and time information in the UI.
@@ -158,6 +160,8 @@ namespace WeatherPlusZero
         private static readonly Regex SpecialCharRegex = new Regex(SpecialCharactersPattern, RegexOptions.Compiled); // Regex for special character check.
         private static readonly Regex EmojiRegex = new Regex(@"\p{Cs}", RegexOptions.Compiled); // Regex for emoji character check.
 
+        private WeatherData _weatherData; // Field to store weather data.
+
         /// <summary>
         /// Property holding the searched city name.
         /// </summary>
@@ -176,16 +180,41 @@ namespace WeatherPlusZero
             City = NormalizeCityName(city); // Normalizes the city name.
 
             WeatherManager weatherService = new WeatherManager();
-            WeatherData weatherData = await weatherService.GetWeatherDataAsync(City, true);
+            _weatherData = await weatherService.GetWeatherDataAsync(City, true);
 
-            if (weatherData == null) return false;
+            if (_weatherData == null) return false;
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                new UiUpdater().UpdateAllComponents(weatherData);
+                new UiUpdater().UpdateAllComponents(_weatherData);
             });
 
             return true;
+        }
+
+        /// <summary>
+        /// The user cancels the searched city and returns to the app.
+        /// </summary>
+        public async Task CanselCitySelect()
+        {
+            ApplicationProgress applicationProgress = new ApplicationProgress();
+            await applicationProgress.LoadInitialData();
+        }
+
+        /// <summary>
+        /// The user adds the selected city to the list of cities.
+        /// </summary>
+        public async Task AddSelectCity()
+        {
+            ApiService apiService = new ApiService();
+            await apiService.SaveWeatherDataAsync(_weatherData);
+
+            await CanselCitySelect();
+
+            NotificationManagement.ShowNotification(
+                "City added to the list.", 
+                "The city has been successfully added to the list of cities.", 
+                NotificationType.Success);
         }
 
         /// <summary>
@@ -340,7 +369,6 @@ namespace WeatherPlusZero
         }
     }
 
-
     // Class representing weather forecasts for future days.
     // Used to display daily forecasts in the UI.
     public class FutureDay
@@ -366,12 +394,5 @@ namespace WeatherPlusZero
         public WeatherData WeatherData { get; set; }
 
         public short ApplicationVersion { get; set; }
-    }
-
-    // BU bir deneme
-    public class SelectCity
-    {
-        public City City { get; set; }
-        WeatherData WeatherData { get; set; }
     }
 }
