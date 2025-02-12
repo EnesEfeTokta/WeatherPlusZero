@@ -7,88 +7,46 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Notification.Wpf;
 
 namespace WeatherPlusZero
 {
     public partial class MainWindow : Window
     {
-        public string cityName { get; set; }
 
         private DispatcherTimer timer { get; set; }
 
-        public ObservableCollection<DayForecast> WeatherList { get; set; }
+        private ObservableCollection<FutureDay> WeatherList { get; set; }
+
+        private Point _startPoint;
+        private bool _isDragging;
+
+        ApplicationProgress applicationProgress;
+        SearchCity searchCity;
 
         public MainWindow()
         {
+            applicationProgress = new ApplicationProgress();
+            searchCity = new SearchCity();
             InitializeComponent();
-            InitializeAsync();
+            Initialize();
         }
 
-        private void InitializeAsync()
+        private void Initialize()
         {
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(60);
-
-            timer.Tick += Timer_Tick;
-            timer.Start();
-
-            // Veri kaynağını başlat
-            WeatherList = new ObservableCollection<DayForecast>
-            {
-                new DayForecast
-                {
-                    dayName = "Monday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png", // İkon dosyasının doğru yolunu verin
-                    minMaxTemperature = "12°C / 20°C"
-                },
-                new DayForecast
-                {
-                    dayName = "Tuesday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    minMaxTemperature = "10°C / 18°C"
-                },
-                new DayForecast
-                {
-                    dayName = "Wednesday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    minMaxTemperature = "8°C / 15°C"
-                },
-                new DayForecast
-                {
-                    dayName = "Thursday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    minMaxTemperature = "10°C / 18°C"
-                },
-                new DayForecast
-                {
-                    dayName = "Tuesday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    minMaxTemperature = "10°C / 18°C"
-                },
-                new DayForecast
-                {
-                    dayName = "Wednesday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    minMaxTemperature = "8°C / 15°C"
-                },
-                new DayForecast
-                {
-                    dayName = "Thursday",
-                    iconPath = "C:\\Users\\EnesEfeTokta\\OneDrive\\Belgeler\\GitHub\\WeatherPlusZeroRepo\\WeatherPlusZero_Demo\\WpfApp1Demo\\Images\\Icons\\SunIcon.png",
-                    minMaxTemperature = "10°C / 18°C"
-                },
-
-            };
-
-            SetFutureDays(WeatherItemsControl, WeatherList);
-
             ApplicationStart();
         }
 
         private void ApplicationStart()
         {
-            ApplicationProgress applicationProgress = new ApplicationProgress();
             applicationProgress.ApplicationStart();
+
+            //HelloCard helloCard = new HelloCard();
+            //helloCard.Show();
+
+            // Hide the add city and search clear buttons.
+            CancelCitySelectButton.Visibility = Visibility.Hidden;
+            AddCitySelectButton.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -149,22 +107,53 @@ namespace WeatherPlusZero
             if (cityName == "Search for city...")
                 return;
 
-            SearchCity citySearch = new SearchCity();
-            bool successStatus = await citySearch.SearchCityName(cityName);
+            bool successStatus = await searchCity.SearchCityName(cityName);
 
-            if (!successStatus)
+            if (successStatus)
             {
-                MessageBox.Show("Please enter a valid city name. No special characters, emoji and numeric characters.", "Error");
+                AddCitySelectButton.Visibility = Visibility.Visible;
+                CancelCitySelectButton.Visibility = Visibility.Visible;
             }
+            else
+            {
+                NotificationManagement.ShowNotification(
+                    "Error", 
+                    "Please enter a valid city name. No special characters, emoji and numeric characters.", 
+                    NotificationType.Warning);
+            }
+        }
+
+        private async void AddCitySelectButton_Click(object sender, RoutedEventArgs e)
+        {
+            CityButtonOperations();
+            await searchCity.AddSelectCity();
+        }
+
+        private async void CanselCitySelectButton_Click(object sender, RoutedEventArgs e)
+        {
+            CityButtonOperations();
+            await searchCity.CanselCitySelect();
+        }
+
+        private void CityButtonOperations()
+        {
+            AddCitySelectButton.Visibility = Visibility.Hidden;
+            CancelCitySelectButton.Visibility = Visibility.Hidden;
+            CityNameSearchTextBox.Text = "Search for city...";
+            CityNameSearchTextBox.Foreground = Brushes.White;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="textBlock"></param>
+        /// <param name="temp"></param>
+        /// <param name="windSpeed"></param>
+        /// <param name="windDir"></param>
+        /// <param name="degrees"></param>
+        /// <param name="humid"></param>
+        /// <param name="pressure"></param>
         /// <returns></returns>
-        public bool UpdateMainWeatherParametersText(string temp = null, string windSpeed = null, string windDir = null, string degrees = null, string humid = null, string pressure = null)
+        public void UpdateMainWeatherParametersText(string temp = null, string windSpeed = null, string windDir = null, string degrees = null, string humid = null, string pressure = null)
         {
             if (temp != null)
                 TemperatureValueTextBlock.Text = $"{temp}℃";
@@ -177,8 +166,52 @@ namespace WeatherPlusZero
 
             if (pressure != null)
                 PressureValueTextBlock.Text = $"{pressure} hPa/mb";
+        }
 
-            return true;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dayNumber"></param>
+        /// <param name="dayName"></param>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <param name="hour"></param>
+        /// <param name="minute"></param>
+        public void UpdateDateTimeText(string dayNumber = null, string dayName = null, string month = null, string year = null, string hour = null, string minute = null)
+        {
+            if (dayNumber != null && month != null)
+                DateTextBlock.Text = $"{month} {dayNumber}";
+
+            if (hour != null && minute != null && dayName != null)
+                TimeAndDayTextBlock.Text = $"{hour}:{minute} {dayName}";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location"></param>
+        public void UpdateLocationText(string location = null)
+        {
+            if (location != null)
+                LocationTextBlock.Text = location;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="iconPath"></param>
+        public void UpdateWeatherStatusIcon(string iconPath = null)
+        {
+            if (iconPath != null)
+            {
+                BitmapImage newImage = new BitmapImage();
+                newImage.BeginInit();
+                newImage.UriSource = new Uri(iconPath);
+                newImage.CacheOption = BitmapCacheOption.OnLoad;
+                newImage.EndInit();
+
+                WeatherStatusIconImage.Source = newImage;
+            }
         }
 
         /// <summary>
@@ -196,44 +229,11 @@ namespace WeatherPlusZero
 
             BitmapImage newImage = new BitmapImage();
             newImage.BeginInit();
-            newImage.UriSource = new Uri($"pack://application:,,,/{filePath}", UriKind.Absolute);
+            newImage.UriSource = new Uri(filePath, UriKind.Absolute);
             newImage.CacheOption = BitmapCacheOption.OnLoad;
             newImage.EndInit();
 
-            image.Source = newImage;
             return true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            //==== BURASI İŞ KATMANI OLUŞTURULANA KADAR BÖYLE KACAKTIR ====
-
-            // Cihazın mevcut saatini al
-            DateTime now = DateTime.Now;
-
-            // Günün saatini 0-24 aralığında al
-            double hour = now.Hour + now.Minute / 60.0; // Dakikaları saate çevir
-
-            // Gün batımı kontrolü ve resmin değiştirilmesi
-            if (hour >= 16 || hour < 6) // Gece veya gün batımı
-            {
-                // ProgressBar değerini güncelle
-                SetDayInformation(hour, TimeDayProgressBar, Colors.DarkBlue);
-                SetIconImage("Images/MoonIcon.png", WeatherStatusIconImage); // Ay resmi
-            }
-            else
-            {
-                // ProgressBar değerini güncelle
-                SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
-                SetIconImage("Images/SunIcon.png", WeatherStatusIconImage); // Güneş resmi
-            }
-
-            SetImagePosition(TimeDayProgressBar, WeatherStatusTransform);
         }
 
         /// <summary>
@@ -260,45 +260,59 @@ namespace WeatherPlusZero
         /// <param name="value"></param>
         /// <param name="transform"></param>
         /// <returns></returns>
-        public bool SetImagePosition(ProgressBar progressBar, TranslateTransform transform)
+        public void UpdateDayNightBar(double hour)
         {
-            if (progressBar == null || transform == null)
+            if (hour >= 16 || hour < 6)
             {
-                return false;
+                SetDayInformation(hour, TimeDayProgressBar, Colors.DarkBlue);
+                SetIconImage("pack://application:,,,/Images/MoonIcon.png", WeatherTimeStatusIconImage); // Ay resmi
+            }
+            else
+            {
+                SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
+                SetIconImage("pack://application:,,,/Images/SunIcon.png", WeatherTimeStatusIconImage); // Güneş resmi
             }
 
-            double progressWidth = progressBar.ActualWidth;
+            double progressWidth = TimeDayProgressBar.ActualWidth;
 
-            double imagePosition = (progressBar.Value / progressBar.Maximum) * progressWidth;
+            double imagePosition = (TimeDayProgressBar.Value / TimeDayProgressBar.Maximum) * progressWidth;
 
-            transform.X = imagePosition - (WeatherStatusIconImage.Width / 2);
-
-            return true;
+            WeatherStatusTransform.X = imagePosition - (WeatherStatusIconImage.Width / 2);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="itemsControl"></param>
         /// <param name="days"></param>
-        /// <returns></returns>
-        public bool SetFutureDays(ItemsControl itemsControl, ObservableCollection<DayForecast> days)
+        public void SetFutureDays(ObservableCollection<FutureDay> days)
         {
-            if (itemsControl == null && days.Count > 0)
-            {
-                return false;
-            }
-
-            itemsControl.ItemsSource = days;
-            return true;
+            WeatherList = days;
+            WeatherItemsControl.ItemsSource = WeatherList;
         }
 
-    }
+        private void WeatherScrollViewer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _startPoint = e.GetPosition(WeatherScrollViewer);
+            _isDragging = true;
+            WeatherScrollViewer.CaptureMouse();
+        }
 
-    public class DayForecast
-    {
-        public string dayName { get; set; }
-        public string iconPath { get; set; }
-        public string minMaxTemperature { get; set; }
+        private void WeatherScrollViewer_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_isDragging)
+            {
+                Point currentPoint = e.GetPosition(WeatherScrollViewer);
+                double deltaX = _startPoint.X - currentPoint.X;
+                _startPoint = currentPoint;
+
+                WeatherScrollViewer.ScrollToHorizontalOffset(WeatherScrollViewer.HorizontalOffset + deltaX);
+            }
+        }
+
+        private void WeatherScrollViewer_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _isDragging = false;
+            WeatherScrollViewer.ReleaseMouseCapture();
+        }
     }
 }

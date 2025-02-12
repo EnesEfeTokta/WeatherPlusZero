@@ -94,6 +94,35 @@
                         Foreground="White"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"/>
+
+                <Button x:Name="CancelCitySelectButton" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center" 
+                        Height="25" Width="25"
+                        Click="CanselCitySelectButton_Click">
+                    <Button.Foreground>
+                        <ImageBrush/>
+                    </Button.Foreground>
+                    <Button.BorderBrush>
+                        <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                    </Button.BorderBrush>
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/GarbageIcon.png"/>
+                    </Button.Background>
+                </Button>
+
+                <Button x:Name="AddCitySelectButton" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center" 
+                        Height="26" Width="25" Margin="30,0,0,0"
+                        Click="AddCitySelectButton_Click">
+                    <Button.BorderBrush>
+                        <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                    </Button.BorderBrush>
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Images/PlusIcon.png"/>
+                    </Button.Background>
+                </Button>
             </Grid>
         </Border>
 
@@ -155,7 +184,7 @@
         <!-- Weather Image -->
         <Border x:Name="WeatherIconBorder" Grid.Column="3" Grid.Row="2">
             <Grid>
-                <Image x:Name="WeatherIconIcon"
+                <Image x:Name="WeatherStatusIconImage"
                        Source="Images\WindyCloudySunny.png"
                        Width="100"
                        Height="100"
@@ -197,10 +226,10 @@
                             <Grid>
                                 <Image x:Name="TemperatureIconImage" 
                                        Source="Images\TemperatureIcon.png" 
-                                       Width="15"
+                                       Width="14"
                                        Height="15"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center" Margin="18,0,0,0"/>
 
                                 <TextBlock x:Name="TemperatureTitleTextBlock" 
                                 Text="Temperature" 
@@ -246,10 +275,10 @@
                             <Grid>
                                 <Image x:Name="HumidIconImage" 
                                        Source="Images\HumidIcon.png" 
-                                       Width="15"
-                                       Height="15"
+                                       Width="13"
+                                       Height="14"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Top" Margin="33,5,0,0"/>
 
                                 <TextBlock x:Name="HumidName" 
                                 Text="Humid" 
@@ -295,10 +324,10 @@
                             <Grid>
                                 <Image x:Name="WindIconImage" 
                                        Source="Images\WindIcon.png" 
-                                       Width="15"
-                                       Height="15"
+                                       Width="13"
+                                       Height="14"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center" Margin="37,0,0,0"/>
 
                                 <TextBlock x:Name="WindName" 
                                 Text="Wind" 
@@ -345,10 +374,10 @@
                             <Grid>
                                 <Image x:Name="PressureIconImage" 
                                        Source="Images\PressureIcon.png" 
-                                       Width="15"
-                                       Height="15"
+                                       Width="13"
+                                       Height="14"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Top" Margin="29,5,0,0"/>
 
                                 <TextBlock x:Name="PressureTitleTextBlock" 
                                 Text="Pressure" 
@@ -413,7 +442,7 @@
                                 <Image x:Name="DayScheduleIconImage" 
                                        Source="Images\DayIcon.png"
                                        HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center" Margin="175,0,0,0" Height="16" Width="17"/>
                             </Grid>
                         </Border>
 
@@ -442,7 +471,7 @@
                                                      HorizontalAlignment="Center" 
                                                      Canvas.Top="8"/>
 
-                                        <Image x:Name="WeatherStatusIconImage" 
+                                        <Image x:Name="WeatherTimeStatusIconImage" 
                                                Source="Images\SunIcon.png"
                                                Width="20"
                                                Height="20"
@@ -523,9 +552,11 @@
                                 <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
                                     <!-- Scrollable Area -->
                                     <ScrollViewer x:Name="WeatherScrollViewer"
-                                                  HorizontalScrollBarVisibility="Hidden"
-                                                  VerticalScrollBarVisibility="Disabled"
-                                                  PanningMode="HorizontalOnly">
+                    HorizontalScrollBarVisibility="Hidden"
+                    VerticalScrollBarVisibility="Disabled"
+                    PreviewMouseLeftButtonDown="WeatherScrollViewer_PreviewMouseLeftButtonDown"
+                    PreviewMouseMove="WeatherScrollViewer_PreviewMouseMove"
+                    PreviewMouseLeftButtonUp="WeatherScrollViewer_PreviewMouseLeftButtonUp">
                                         <ItemsControl x:Name="WeatherItemsControl" 
                                                       ItemsSource="{Binding WeatherList}">
                                             <ItemsControl.ItemsPanel>

@@ -1,175 +1,357 @@
 ﻿using System;
-using System.Net.Http;
-using System.Text;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
+using System.Reflection;
+using System.Linq;
+using static Supabase.Postgrest.Constants;
+using Supabase.Postgrest.Exceptions;
+using Notification.Wpf;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace WeatherPlusZero
 {
     public class DataBase
     {
-        protected const string supabaseUrl = "https://szqsnyrrzydtgzqxwfwt.supabase.co";
-        protected const string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6cXNueXJyenlkdGd6cXh3Znd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2OTc3NzMsImV4cCI6MjA0OTI3Mzc3M30.AJDtWaNxLLjGPRsecSqG7Cmf7KRiQaA6QgRxWwoNatk";
+        private readonly Supabase.Client supabase;
+        private readonly Dictionary<Type, PropertyInfo> primaryKeyCache;
+
+        protected IConfiguration Configuration { get; }
+
+        public User user { get; private set; }
+
+        public DataBase()
+        {
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            string url = Configuration["Authentication:Supabase_Url"];
+            string key = Configuration["Authentication:Supabase_Key"];
+            supabase = new Supabase.Client(url, key);
+            primaryKeyCache = new Dictionary<Type, PropertyInfo>();
+        }
+
+        /// <summary>
+        /// Retrieves the PropertyInfo of the primary key for a given BaseModel type.
+        /// Caches the result for subsequent lookups to improve performance.
+        /// </summary>
+        /// <typeparam name="T">The BaseModel type to get the primary key property for.</typeparam>
+        /// <returns>The PropertyInfo of the primary key, or null if not found.</returns>
+        private PropertyInfo GetPrimaryKeyProperty<T>() where T : BaseModel, new()
+        {
+            var type = typeof(T);
+            if (!primaryKeyCache.ContainsKey(type))
+            {
+                var property = type.GetProperties()
+                    .FirstOrDefault(p => p.GetCustomAttribute<PrimaryKeyAttribute>() != null);
+
+                primaryKeyCache[type] = property;
+            }
+
+            return primaryKeyCache[type];
+        }
+
+
+        #region Supabase Auth Methods
+        public async Task RegisterUserSupabaseAuth(string email, string password)
+        {
+            await supabase.Auth.SignUp(email, password);
+        }
+
+        public async Task LoginUserSupabaseAuth(string email, string password)
+        {
+            await supabase.Auth.SignIn(email, password);
+        }
+
+        public async Task LogoutUserSupabaseAuth()
+        {
+            await supabase.Auth.SignOut();
+        }
+
+        public void CheckUserSessionSupabaseAuth()
+        {
+            var user = supabase.Auth.CurrentUser;
+        }
+        #endregion
+
+        #region Own Auth Methods
+        public async Task<bool> RegisterUserOwnAuth(User user)
+        {
+            try
+            {
+                var response = await supabase.From<User>().Insert(user);
+                return true;
+            }
+            catch (PostgrestException ex)
+            {
+                // todo: UNIQE olan E-Posta adresi için hata mesajı verilecek. Ancak tam anlamıyla düzgün çalışmıyor.
+                if (ex.Message.Contains("duplicate key value violates unique constraint \"users_email_key\""))
+                    NotificationManagement.ShowNotification("Register Error", "This email is already in use. Please use another valid email.", NotificationType.Error);
+                return false;
+            }
+        }
+
+        public async Task<bool> LoginUserOwnAuth(string email, string password)
+        {
+            User response = await supabase.From<User>()
+                .Filter("email", Operator.Equals, email)
+                .Filter("password", Operator.Equals, password)
+                .Single();
+
+            if (response == null)
+                return false;
+
+            user = response;
+
+            return true;
+        }
+
+        public bool LogoutUserOwnAuth()
+        {
+            user = null;
+            return true;
+        }
+
+        public async Task<bool> ForgotUserOwnAuth(User user)
+        {
+            User response = await supabase.From<User>()
+                .Filter("email", Operator.Equals, user.email)
+                .Single();
+
+            if (response == null)
+                return false;
+
+            return true;
+        }
+
+        public async Task ChangePasswordOwnAuth(string email, string newPassword)
+        {
+            User response = await TAsyncGetUserByEmail(email);
+
+            response.password = newPassword;
+
+            await supabase.From<User>().Update(response);
+        }
+        #endregion
+
+
+        /// <summary>
+        /// Asynchronously adds a new row to the corresponding Supabase table. 
+        /// PrimaryKeys and some columns do not need to be given a value as they are autofilled. 
+        /// Supabase automatically gives a value.
+        /// </summary>
+        /// <typeparam name="T">The BaseModel type representing the table to add the row to.</typeparam>
+        /// <param name="newRow">The BaseModel object containing the data for the new row.</param>
+        /// <returns>A Task that represents the asynchronous add operation. Returns the added BaseModel object of type T if successful, otherwise null.</returns>
+        public async Task<T> TAsyncAddRow<T>(T newRow) where T : BaseModel, new()
+        {
+            try
+            {
+                var response = await supabase.From<T>().Insert(newRow);
+                return response.Models[0];
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error: {e.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously updates an existing row in the corresponding Supabase table. 
+        /// The primary key must be known to update. 
+        /// </summary>
+        /// <typeparam name="T">The BaseModel type representing the table to update the row in.</typeparam>
+        /// <param name="updatedRow">The BaseModel object containing the updated data for the row.</param>
+        /// <returns>A Task that represents the asynchronous update operation. Returns the updated BaseModel object of type T if successful, otherwise null.</returns>
+        public async Task<T> TAsyncUpdateRow<T>(T updatedRow) where T : BaseModel, new()
+        {
+            try
+            {
+                var response = await supabase.From<T>().Update(updatedRow);
+                return response.Models[0];
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error: {e.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously deletes a row from the corresponding Supabase table based on its primary key ID.
+        /// </summary>
+        /// <typeparam name="T">The BaseModel type representing the table to delete the row from.</typeparam>
+        /// <param name="rowId">The integer ID of the row to delete (primary key value).</param>
+        /// <returns>A Task that represents the asynchronous delete operation. Returns true if deletion is successful, otherwise false.</returns>
+        public async Task<bool> TAsyncDeleteRow<T>(int rowId) where T : BaseModel, new()
+        {
+            try
+            {
+                var property = GetPrimaryKeyProperty<T>();
+
+                await supabase.From<T>()
+                    .Filter(property.Name, Operator.Equals, rowId)
+                    .Delete();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error: {e.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously retrieves a specific row from the corresponding Supabase table based on its primary key ID.
+        /// </summary>
+        /// <typeparam name="T">The BaseModel type representing the table to get the row from.</typeparam>
+        /// <param name="rowId">The integer ID of the row to retrieve (primary key value).</param>
+        /// <returns>A Task that represents the asynchronous get operation. Returns the BaseModel object of type T if found, otherwise null.</returns>
+        public async Task<T> TAsyncGetRowById<T>(int rowId) where T : BaseModel, new()
+        {
+            try
+            {
+                var property = GetPrimaryKeyProperty<T>();
+
+                var response = await supabase.From<T>()
+                    .Filter(property.Name, Operator.Equals, rowId)
+                    .Single();
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error: {e.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously retrieves a specific row from the corresponding Supabase table based on a specific E-Mail value.
+        /// </summary>
+        /// <param name="email">The e-mail address you want to call should be given.</param>
+        /// <returns>If the row with the related e-mail is found, it returns User type, but if the row is not found, it returns null.</returns>
+        public async Task<User> TAsyncGetUserByEmail(string email)
+        {
+            try
+            {
+                User response = await supabase.From<User>()
+                    .Filter("email", Operator.Equals, email)
+                    .Single();
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error: {e.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously retrieves all rows from the corresponding Supabase table.
+        /// </summary>
+        /// <typeparam name="T">The BaseModel type representing the table to get all rows from.</typeparam>
+        /// <returns>A Task that represents the asynchronous get all operation. Returns a List of BaseModel objects of type T if successful, otherwise null.</returns>
+        public async Task<List<T>> TAsyncGetAllRows<T>() where T : BaseModel, new()
+        {
+            try
+            {
+                var response = await supabase.From<T>().Get();
+                return response.Models;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Error: {e.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
     }
 
-    public class SetData : DataBase
+    [Table("users")]
+    public class User : BaseModel
     {
-        public async Task<bool> SetAddRow(object newRow, string tableName)
-        {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}";
-                var json = JsonSerializer.Serialize(newRow);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+        [PrimaryKey("userid")]
+        public int userid { get; set; } // WARNING => User ID is given a random number by Supabase. So it cannot get value from here.
 
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-                client.DefaultRequestHeaders.Add("Prefer", "return=minimal");
+        [Column("namesurname")]
+        public string namesurname { get; set; } // WARNING => NOT NULL
 
-                HttpResponseMessage response = await client.PostAsync(endpoint, content);
+        [Column("email")]
+        public string email { get; set; } // WARNING => NOT NULL & UNIQUE
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Ekleme Hatası: {response.StatusCode} - {errorMessage}", "Hata");
-                    return false;
-                }
+        [Column("password")]
+        public string password { get; set; } // WARNING => NOT NULL
 
-                return response.IsSuccessStatusCode;
-            }
-        }
-
-        public async Task<bool> SetDeleteRow(int primaryKey, string primaryColumnName, string tableName)
-        {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?{primaryColumnName}=eq.{primaryKey}";
-
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-                HttpResponseMessage response = await client.DeleteAsync(endpoint);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Silme Hatası: {response.StatusCode} - {errorMessage}", "Hata");
-                    return false;
-                }
-
-                return response.IsSuccessStatusCode;
-            }
-        }
-
-        public async Task<bool> SetEditRow(object updatedRow, string tableName, string primaryColumnName, int primaryKey)
-        {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?{primaryColumnName}=eq.{primaryKey}";
-                var json = JsonSerializer.Serialize(updatedRow);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-                client.DefaultRequestHeaders.Add("Prefer", "return=minimal");
-
-                HttpResponseMessage response = await client.PatchAsync(endpoint, content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Güncelleme Hatası: {response.StatusCode} - {errorMessage}", "Hata");
-                    return false;
-                }
-
-                return response.IsSuccessStatusCode;
-            }
-        }
+        [Column("registrationdate")]
+        public DateTime registrationdate { get; set; } // WARNING => Registration Date is given a value by Supabase. Therefore it cannot get value from here.
     }
 
-    public class GetData : DataBase
+    [Table("cities")]
+    public class City : BaseModel
     {
-        public async Task<string> GetRow(string tableName, string primaryColumnName, int primaryKey)
-        {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?{primaryColumnName}=eq.{primaryKey}";
+        [PrimaryKey("cityid")]
+        public int cityid { get; set; } // WARNING => City ID is given a random number by Supabase. So it cannot get value from here.
 
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
+        [Column("cityname")]
+        public string cityname { get; set; } // WARNING => NOT NULL
 
-                HttpResponseMessage response = await client.GetAsync(endpoint);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorMessage = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Okuma Hatası: {response.StatusCode} - {errorMessage}", "Hata");
-                    return null;
-                }
-
-                return await response.Content.ReadAsStringAsync();
-            }
-        }
-
-        public async Task<int> GetPrimaryKeyByEmail(string tableName, string primaryColumnName, string email, string emailColumnName)
-        {
-            using (var client = new HttpClient())
-            {
-                var endpoint = $"{supabaseUrl}/rest/v1/{tableName}?select={primaryColumnName}&{emailColumnName}=eq.{email}";
-
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Add("apikey", supabaseKey);
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-                HttpResponseMessage response = await client.GetAsync(endpoint);
-                string content = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    MessageBox.Show($"Okuma Hatası: {response.StatusCode} - {content}", "Hata");
-                    return -1;
-                }
-
-                using (JsonDocument document = JsonDocument.Parse(content))
-                {
-                    JsonElement root = document.RootElement;
-
-                    if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
-                    {
-                        JsonElement firstElement = root[0];
-                        if (firstElement.TryGetProperty(primaryColumnName, out JsonElement primaryKeyElement))
-                        {
-                            return primaryKeyElement.GetInt32();
-                        }
-                    }
-                }
-            }
-
-            return -1;
-        }
+        [Column("countryname")]
+        public string countryname { get; set; } // WARNING => NOT NULL
     }
 
-
-
-    public class User
+    [Table("weather")]
+    public class Weather : BaseModel
     {
-        public string namesurname { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
-        public DateTime registrationdate { get; set; }
+        [PrimaryKey("weatherid")]
+        public int weatherid { get; set; } // WARNING => Weather ID is given a random number by Supabase. So it cannot get value from here.
+
+        [Column("cityid")]
+        public int cityid { get; set; } // WARNING => FOREIGN KEY
+
+        [Column("weatherdata")]
+        public WeatherData weatherdata { get; set; } // WARNING => NOT NULL
     }
 
-    public class City
+    [Table("usercities")]
+    public class UserCity : BaseModel
     {
-        public string cityname { get; set; }
-        public string countryname { get; set; }
+        [PrimaryKey("recordid")]
+        public int recordid { get; set; } // WARNING => Record ID is given a random number by Supabase. So it cannot get value from here.
+
+        [Column("userid")]
+        public int userid { get; set; } // WARNING => FOREIGN KEY
+
+        [Column("cityid")]
+        public int cityid { get; set; } // WARNING => FOREIGN KEY
+
+        [Column("notificationpreference")]
+        public bool notificationpreference { get; set; } // WARNING => NOT NULL
     }
 
+    [Table("notifications")]
+    public class Notification : BaseModel
+    {
+        [PrimaryKey("notificationid")]
+        public int notificationid { get; set; } // WARNING => Notification ID is given a random number by Supabase. So it cannot get value from here.
 
+        [Column("userid")]
+        public int userid { get; set; } // WARNING => FOREIGN KEY
+
+        [Column("notificationtype")]
+        public string notificationtype { get; set; } // WARNING => NOT NULL
+
+        [Column("notificationmessage")]
+        public string notificationmessage { get; set; } // WARNING => NOT NULL
+
+        [Column("notificationdatetime")]
+        public DateTime notificationdatetime { get; set; } // WARNING => Notification Date Time is given a value by Supabase. Therefore it cannot get value from here.
+    }
 }

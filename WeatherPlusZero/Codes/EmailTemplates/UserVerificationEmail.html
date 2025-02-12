@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Verification Email</title>
+    <style type="text/css">
+        /* Base Styles */
+        body, table, td, p, a, h1, h2, h3 {
+            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: none;
+        }
+
+        body {
+            width: 100% !important;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            -webkit-text-size-adjust: none;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        /* Email Wrapper */
+        .email-wrapper {
+            width: 100%;
+            background-color: #f4f4f4;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .email-header {
+            padding: 30px;
+            text-align: center;
+            background-color: #e8f2fc;
+        }
+
+            .email-header a {
+                font-size: 20px;
+                font-weight: bold;
+                color: #333;
+                text-decoration: none;
+            }
+        /* Body */
+        .email-body {
+            padding: 30px;
+        }
+
+            .email-body h1 {
+                font-size: 24px;
+                font-weight: bold;
+                color: #2c3e50;
+                margin-bottom: 20px;
+            }
+
+            .email-body p {
+                font-size: 16px;
+                color: #555;
+                margin-bottom: 20px;
+                line-height: 1.7;
+            }
+        /* Button */
+        .verification-code {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        /* Footer */
+        .email-footer {
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+            .email-footer p {
+                color: #777;
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            .email-footer a {
+                color: #777;
+                font-size: 14px;
+                text-decoration: underline;
+            }
+
+        /* Responsive */
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 95%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .email-body {
+                padding: 20px;
+            }
+
+            .email-header {
+                padding: 20px;
+            }
+
+            .verification-code {
+                font-size: 18px;
+                padding: 10px 15px;
+            }
+        }
+
+        .github-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 5px;
+            vertical-align: text-bottom;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.78-.01-1.37-2.23.49-2.69-1.07-2.69-1.07-.37-.94-.91-1.2-1.2-1.32-.09-.08-.19-.13-.19-.13-.31.08-.01.35.01.39.06.2.2.35.4.27 2.28.36 2.76 2.36 2.76 2.36.16.28.42.41.68.38.04-.2.06-.41.06-.61-2.14-.02-4.39-1.07-4.39-4.77 0-1.06.38-1.93 1.01-2.6.1-.2.44-1.23.1-2.55 0 0 .83-.26 2.72.99.8-.23 1.65-.34 2.5-.34.85 0 1.7.11 2.5.34 1.87-1.24 2.7-1 2.7.99-.34 1.32.02 2.1.1 2.55.63.67 1.01 1.54 1.01 2.6 0 3.71-2.25 4.75-4.39 4.77.06.05.11.15.11.3.01.45.01.82.01 1.1 0 .21.15.46.55.38C13.71 14.53 16 11.53 16 8c0-4.42-3.58-8-8-8z"/></svg>');
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+    </style>
+</head>
+<body>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <table class="email-container" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td class="email-header">
+                            <a href="#">Weather Zero Plus</a> <!-- Company/Project Name Here -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="email-body">
+                            <h1>New User Verification Email</h1> <!-- Email Title Here -->
+                            <p>You have requested membership to Weather Zero Plus. Please enter and verify the six-digit verification code below as soon as possible (60 seconds) so that we can verify your request.</p>
+
+                            <p style="text-align: center;">Enter the verification code:</p>
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <a class="verification-code">[VERIFICATION_CODE]</a>
+                            </div>
+
+                            <p>This email was sent to [TO_EMAIL] by Weather Zero Plus. Please do not share your verification code with anyone.</p>
+                            <p>Thanks,<br>Weather Zero Plus Team</p> <!-- Sending Team/Name Here -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="email-footer">
+                            <p>
+                                Weather Zero Plus is a learning project of a university student. Please use it with this in mind. We welcome you to our GitHub page.
+                            </p>
+                            <p>
+                                <a href="#">
+                                    <span class="github-icon"></span>Go to our GitHub
+                                </a>
+                            </p>
+                            <p>
+                                Weather Zero Plus, GitHub.
+                                <br>Türkiye Ağrı Merkez 709 St. Co. 04100
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
