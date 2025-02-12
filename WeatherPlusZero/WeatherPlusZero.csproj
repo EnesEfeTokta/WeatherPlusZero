@@ -7,6 +7,7 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="appsettings.json" />
     <None Remove="Codes\EmailTemplates\EmergencyWeatherAlertEmail.html" />
     <None Remove="Codes\EmailTemplates\PasswordResetEmail.html" />
     <None Remove="Codes\EmailTemplates\UserVerificationEmail.html" />
@@ -55,6 +56,9 @@
     <EmbeddedResource Include="Codes\EmailTemplates\WeatherUpdateEmail.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Resource Include="Images\AppLogo.png" />
     <Resource Include="Images\CloudyWeather.jpg" />
     <Resource Include="Images\DayIcon.png" />
@@ -108,6 +112,7 @@
   <ItemGroup>
     <PackageReference Include="Mailjet.Api" Version="3.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.2" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Notification.Wpf" Version="8.0.0" />

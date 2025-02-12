@@ -9,6 +9,8 @@ using System.Linq;
 using static Supabase.Postgrest.Constants;
 using Supabase.Postgrest.Exceptions;
 using Notification.Wpf;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace WeatherPlusZero
 {
@@ -17,14 +19,20 @@ namespace WeatherPlusZero
         private readonly Supabase.Client supabase;
         private readonly Dictionary<Type, PropertyInfo> primaryKeyCache;
 
-        public User user { get; set; }
+        protected IConfiguration Configuration { get; }
+
+        public User user { get; private set; }
 
         public DataBase()
         {
-            var url = "https://gefrxxgacwqpvczgsajf.supabase.co";
-            var key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlZnJ4eGdhY3dxcHZjemdzYWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkzNjUyNjEsImV4cCI6MjA1NDk0MTI2MX0.J1xE2swLgIfiLH8aO8qYPdtkw8Cz0KTnQkZhIJrOIOw";
-            supabase = new Supabase.Client(url, key);
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
 
+            string url = Configuration["Authentication:Supabase_Url"];
+            string key = Configuration["Authentication:Supabase_Key"];
+            supabase = new Supabase.Client(url, key);
             primaryKeyCache = new Dictionary<Type, PropertyInfo>();
         }
 

@@ -11,6 +11,7 @@ using System.Windows;
 using Notification.Wpf;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using Microsoft.Extensions.Configuration;
 
 namespace WeatherPlusZero
 {
@@ -502,11 +503,19 @@ namespace WeatherPlusZero
     /// </summary>
     public class EmailService
     {
-        private const string sendGridApiKey = "";
+        private string sendGridApiKey { get; set; }
         private readonly HTMLReadService htmlReadService;
+        private IConfiguration Configuration;
 
         public EmailService()
         {
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            sendGridApiKey = Configuration["Authentication:SendGrid_ApiKey"];
+
             htmlReadService = new HTMLReadService();
         }
 

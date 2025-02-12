@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.NetworkInformation;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace WeatherPlusZero
 {
     public abstract class WeatherServiceBase
     {
         // API key and base URL.
-        protected const string API_KEY = "AHK6CFQXSP74M46LDVVVESQ4V";
-        protected const string API_BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{0}?key={1}&unitGroup=metric";
+        protected string API_KEY { get; set; }
+        protected string API_BASE_URL { get; set; }
 
         // Path to the application data folder.
         protected static readonly string AppDataPath = Path.Combine(
@@ -27,6 +28,19 @@ namespace WeatherPlusZero
         static WeatherServiceBase()
         {
             Directory.CreateDirectory(AppDataPath);
+        }
+
+        protected IConfiguration Configuration { get; }
+
+        public WeatherServiceBase()
+        {
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            API_KEY = Configuration["Authentication:Weather_ApiKey"];
+            API_BASE_URL = Configuration["Authentication:Weather_BaseUrl"];
         }
 
         // Builds the API URL.
