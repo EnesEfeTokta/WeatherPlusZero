@@ -9,7 +9,6 @@ using System.Linq;
 using static Supabase.Postgrest.Constants;
 using Supabase.Postgrest.Exceptions;
 using Notification.Wpf;
-using System.Runtime.InteropServices;
 
 namespace WeatherPlusZero
 {
@@ -22,8 +21,8 @@ namespace WeatherPlusZero
 
         public DataBase()
         {
-            var url = "https://szqsnyrrzydtgzqxwfwt.supabase.co";
-            var key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6cXNueXJyenlkdGd6cXh3Znd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2OTc3NzMsImV4cCI6MjA0OTI3Mzc3M30.AJDtWaNxLLjGPRsecSqG7Cmf7KRiQaA6QgRxWwoNatk";
+            var url = "https://gefrxxgacwqpvczgsajf.supabase.co";
+            var key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlZnJ4eGdhY3dxcHZjemdzYWpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkzNjUyNjEsImV4cCI6MjA1NDk0MTI2MX0.J1xE2swLgIfiLH8aO8qYPdtkw8Cz0KTnQkZhIJrOIOw";
             supabase = new Supabase.Client(url, key);
 
             primaryKeyCache = new Dictionary<Type, PropertyInfo>();

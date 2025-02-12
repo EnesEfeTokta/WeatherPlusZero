@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -84,21 +86,22 @@ namespace WeatherPlusZero
                     return;
                 }
 
-                bool loginStatus = await dataBase.LoginUserOwnAuth(user.email, user.password);
+                string hashedPassword = HashPassword(user.password);
+                bool loginStatus = await dataBase.LoginUserOwnAuth(user.email, hashedPassword);
 
                 if (loginStatus)
                 {
                     NotificationManagement.ShowNotification(
-                        "Login Successful", 
-                        "Entry is successful. You will soon be redirected to the main screen...", 
+                        "Login Successful",
+                        "Entry is successful. You will soon be redirected to the main screen...",
                         NotificationType.Success);
                     Application.Current.Dispatcher.Invoke(() => WindowTransition());
                 }
                 else
                 {
                     NotificationManagement.ShowNotification(
-                        "Login Error", 
-                        "Entry failed. Please try again to enter the information...", 
+                        "Login Error",
+                        "Entry failed. Please try again to enter the information...",
                         NotificationType.Error);
                 }
             }
@@ -136,22 +139,32 @@ namespace WeatherPlusZero
         {
             if (!authenticationValidator.ValidateNameSurname(user.namesurname))
             {
-                NotificationManagement.ShowNotification("Format Error", "Please enter the name in the correct format. At least five characters please...", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please enter the name in the correct format. At least five characters please...", 
+                    NotificationType.Error);
                 return;
             }
 
             if (!authenticationValidator.ValidateEmail(user.email))
             {
-                NotificationManagement.ShowNotification("Format Error", "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please enter the e-mail in the correct format. There must be an '@' sign in your e-mail...", 
+                    NotificationType.Error);
                 return;
             }
 
             if (!authenticationValidator.ValidatePassword(user.password))
             {
-                NotificationManagement.ShowNotification("Format Error", "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Format Error", 
+                    "Please make sure your password has at least two capital characters, at least two special characters, at least two numbers and at least eight characters in length.", 
+                    NotificationType.Error);
                 return;
             }
 
+            user.password = HashPassword(user.password);
             this.user = user;
             await authService.AccountVerify(user, EmailSendType.UserVerificationEmail);
         }
@@ -221,6 +234,8 @@ namespace WeatherPlusZero
                 return;
             }
 
+            newPassword = HashPassword(newPassword);
+
             await dataBase.ChangePasswordOwnAuth(user.email, newPassword);
 
             NotificationManagement.ShowNotification(
@@ -228,6 +243,24 @@ namespace WeatherPlusZero
                 "Your new password has been registered. Please log in...", 
                 NotificationType.Success);
             userSessionWindow.PanelTransition(Panels.Login);
+        }
+
+        /// <summary>
+        /// Returns the user's input by hashing it with the SHA256 algorithm.
+        /// </summary>
+        /// <param name="input">The input to be encrypted.</param>
+        /// <returns>Hashed output.</returns>
+        private string HashPassword(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = sha256.ComputeHash(bytes);
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            }
         }
     }
 
