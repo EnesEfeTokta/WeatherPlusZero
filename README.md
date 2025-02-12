@@ -392,8 +392,8 @@ Proje için katmanlı mimari tercih edilmiş ve kullanılmıştır.
 - **03/02/2025:** Kullanıcı kayıt sistemi yapıldı.
 - **04/02/2025:** Kullanıcı şifre sıfırlama sistemi yapıldı.
 
-## Sürüm Notları 🆕
-- None
+## Sürümler 🆕
+- [v0.1.0 Beta](VersionsReadMe/v_0.1.0_Beta_README.md)
 
 ## Dikkate Alınız 📢
 Weather Zero Plus üniversite 2.sınıf bir öğrencinin projesisidir. Bunu dikkate alarak kullanın.
