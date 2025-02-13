@@ -13,6 +13,7 @@
     <None Remove="Codes\EmailTemplates\UserVerificationEmail.html" />
     <None Remove="Codes\EmailTemplates\WeatherUpdateEmail.html" />
     <None Remove="EmailIcon.png" />
+    <None Remove="Images\ChangePasswordIcon.png" />
     <None Remove="Images\EmailIcon.png" />
     <None Remove="Images\EmailVerificationPanelIcon.png" />
     <None Remove="Images\ErrorIcon.png" />
@@ -21,11 +22,11 @@
     <None Remove="Images\HappyIcon.png" />
     <None Remove="Images\KeyCodeIcon.png" />
     <None Remove="Images\LockIcon.png" />
+    <None Remove="Images\LoginIcon.png" />
     <None Remove="Images\NamesurnameIcon.png" />
     <None Remove="Images\PlusIcon.png" />
     <None Remove="Images\RegisterProfileIcon.png" />
     <None Remove="Images\TickIcon.png" />
-    <None Remove="Images\UserProfileIcon.png" />
     <None Remove="Images\WeatherStatus\clear-day.png" />
     <None Remove="Images\WeatherStatus\clear-night.png" />
     <None Remove="Images\WeatherStatus\cloudy.png" />
@@ -60,6 +61,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <Resource Include="Images\AppLogo.png" />
+    <Resource Include="Images\ChangePasswordIcon.png" />
     <Resource Include="Images\DayIcon.png" />
     <Resource Include="Images\EmailIcon.png" />
     <Resource Include="Images\EmailVerificationPanelIcon.png" />
@@ -71,6 +73,7 @@
     <Resource Include="Images\KeyCodeIcon.png" />
     <Resource Include="Images\LocationIcon.png" />
     <Resource Include="Images\LockIcon.png" />
+    <Resource Include="Images\LoginIcon.png" />
     <Resource Include="Images\MoonIcon.png" />
     <Resource Include="Images\NamesurnameIcon.png" />
     <Resource Include="Images\PlusIcon.png" />
@@ -79,7 +82,6 @@
     <Resource Include="Images\SunIcon.png" />
     <Resource Include="Images\TemperatureIcon.png" />
     <Resource Include="Images\TickIcon.png" />
-    <Resource Include="Images\UserProfileIcon.png" />
     <Resource Include="Images\WeatherStatus\clear-day.png" />
     <Resource Include="Images\WeatherStatus\clear-night.png" />
     <Resource Include="Images\WeatherStatus\cloudy.png" />
