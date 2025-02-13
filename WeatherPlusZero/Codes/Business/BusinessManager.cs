@@ -7,6 +7,8 @@ using System.Globalization;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Notification.Wpf;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace WeatherPlusZero
 {
@@ -267,6 +269,8 @@ namespace WeatherPlusZero
     public class UiUpdater
     {
         private static readonly string[] WindDirections = { "N", "NH", "E", "SH", "S", "SW", "W", "NW" }; // Array of wind directions.
+        
+        private IConfiguration Configuration;
 
         /// <summary>
         /// Updates all UI components with weather data.
@@ -281,12 +285,18 @@ namespace WeatherPlusZero
 
             if (weatherData?.CurrentConditions == null) return;
 
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
             Application.Current.Dispatcher.Invoke(() =>
             {
                 UpdateMainWeatherParameters(weatherData, mainWindow);
                 UpdateWeatherIcon(weatherData.CurrentConditions.Icon, mainWindow);
                 UpdateLocationDisplay(weatherData.ResolvedAddress, mainWindow);
                 UpdateFutureWeatherForecast(weatherData, mainWindow);
+                UpdateBackgroudImage(Configuration[$"BackgroundImageURLs:{weatherData.CurrentConditions.Icon}-background"], mainWindow);
             });
         }
 
@@ -322,6 +332,9 @@ namespace WeatherPlusZero
             degrees = (degrees % 360 + 360) % 360; // Normalizes degree to be between 0-360.
             return WindDirections[(int)Math.Round(degrees / 45.0) % 8]; // Converts degree to the nearest direction and gets direction from array.
         }
+
+        private void UpdateBackgroudImage(string path, MainWindow window) =>
+            window.UpdateBackgroundImage(path);
 
         /// <summary>
         /// Updates location information in the UI.

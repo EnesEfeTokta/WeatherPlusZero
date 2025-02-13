@@ -505,6 +505,7 @@ namespace WeatherPlusZero
     {
         private string sendGridApiKey { get; set; }
         private readonly HTMLReadService htmlReadService;
+
         private IConfiguration Configuration;
 
         public EmailService()

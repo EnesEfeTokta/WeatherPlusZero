@@ -25,7 +25,8 @@
 
         <!-- Background Image -->
         <Grid.Background>
-            <ImageBrush ImageSource="Images/RainyWeatherInTheEvening.jpg"
+            <ImageBrush x:Name="BackgroundImageBrush" 
+                        ImageSource="https://static.vecteezy.com/system/resources/thumbnails/026/184/448/small/rain-drop-copy-space-blurred-background-ai-generated-photo.jpg"
                         Stretch="UniformToFill"/>
         </Grid.Background>
 

@@ -144,6 +144,15 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
+        /// Changes the background image of the home screen.
+        /// </summary>
+        /// <param name="path">Path to the image to be replaced.</param>
+        public void UpdateBackgroundImage(string path)
+        {
+            BackgroundImageBrush.ImageSource = new BitmapImage(new Uri(path, UriKind.Absolute));
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="temp"></param>

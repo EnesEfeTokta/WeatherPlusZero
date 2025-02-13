@@ -60,7 +60,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <Resource Include="Images\AppLogo.png" />
-    <Resource Include="Images\CloudyWeather.jpg" />
     <Resource Include="Images\DayIcon.png" />
     <Resource Include="Images\EmailIcon.png" />
     <Resource Include="Images\EmailVerificationPanelIcon.png" />
@@ -76,12 +75,8 @@
     <Resource Include="Images\NamesurnameIcon.png" />
     <Resource Include="Images\PlusIcon.png" />
     <Resource Include="Images\PressureIcon.png" />
-    <Resource Include="Images\RainyWeatherInTheEvening.jpg" />
     <Resource Include="Images\RegisterProfileIcon.png" />
-    <Resource Include="Images\SnowyWeather.jpg" />
-    <Resource Include="Images\StormWeather.jpg" />
     <Resource Include="Images\SunIcon.png" />
-    <Resource Include="Images\SunnyWeather.jpg" />
     <Resource Include="Images\TemperatureIcon.png" />
     <Resource Include="Images\TickIcon.png" />
     <Resource Include="Images\UserProfileIcon.png" />
