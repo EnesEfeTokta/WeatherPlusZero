@@ -290,13 +290,19 @@ namespace WeatherPlusZero
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
+            //NetworkChecker networkChecker = new NetworkChecker();
+
+            //string imageUrl = networkChecker.IsConnected ? $"BackgroundImageURLs:{weatherData.CurrentConditions.Icon}-background" : "BackgroundImageURLs:default-background";
+
+            string imageUrl = $"BackgroundImageURLs:{weatherData.CurrentConditions.Icon}-background";
+
             Application.Current.Dispatcher.Invoke(() =>
             {
                 UpdateMainWeatherParameters(weatherData, mainWindow);
                 UpdateWeatherIcon(weatherData.CurrentConditions.Icon, mainWindow);
                 UpdateLocationDisplay(weatherData.ResolvedAddress, mainWindow);
                 UpdateFutureWeatherForecast(weatherData, mainWindow);
-                UpdateBackgroudImage(Configuration[$"BackgroundImageURLs:{weatherData.CurrentConditions.Icon}-background"], mainWindow);
+                UpdateBackgroudImage(Configuration[imageUrl], mainWindow);
             });
         }
 
