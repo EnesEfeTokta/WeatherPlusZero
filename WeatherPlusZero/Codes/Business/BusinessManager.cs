@@ -43,9 +43,10 @@ namespace WeatherPlusZero
         /// Main method called when the application starts.
         /// Initiates application startup processes.
         /// </summary>
-        public void ApplicationStart()
+        public async void ApplicationStart()
         {
             InitializeApplication();
+            await SettingsPanelManager.UpdateSettingsPanelAsync();
         }
 
         /// <summary>
@@ -217,6 +218,8 @@ namespace WeatherPlusZero
                 "City added to the list.", 
                 "The city has been successfully added to the list of cities.", 
                 NotificationType.Success);
+
+            ApplicationActivity.SaveApplicationActivityDataByCity(_weatherData.Address); // The saved city information is updated.
         }
 
         /// <summary>
@@ -395,23 +398,5 @@ namespace WeatherPlusZero
         public string DayName { get; set; } // Day of the week name.
         public string IconPath { get; set; } // Icon path.
         public string MinMaxTemperature { get; set; } // Min-Max temperature values.
-    }
-
-    // Burası uygulamanın yürütlme ayarlarını içeriyor...
-    public class ApplicationActivityData
-    {
-        public User LoggedInUser { get; set; }
-
-        public bool IsLoggedIn { get; set; }
-        public string FirstOpeningDateTimeOfTheDay {  get; set; }
-        public string LastOpeningDateTimeOfTheDay { get; set; }
-
-        public bool IsInAppNotificationOn { get; set; }
-        public bool IsDailyWeatherEmailsOpen { get; set; }
-        public bool IsImportantWeatherEmailsOn { get; set; }
-
-        public WeatherData WeatherData { get; set; }
-
-        public short ApplicationVersion { get; set; }
     }
 }

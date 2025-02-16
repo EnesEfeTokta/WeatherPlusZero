@@ -18,11 +18,14 @@ namespace WeatherPlusZero
 
         private ObservableCollection<FutureDay> WeatherList { get; set; }
 
-        private Point _startPoint;
-        private bool _isDragging;
+        private Point _startPoint { get; set; }
+        private bool _isDragging { get; set; }
 
-        ApplicationProgress applicationProgress;
-        SearchCity searchCity;
+        ApplicationProgress applicationProgress { get; set; }
+
+        SearchCity searchCity { get; set; }
+
+        private bool isSettingsPanelVisible { get; set; } = false;
 
         public MainWindow()
         {
@@ -322,6 +325,69 @@ namespace WeatherPlusZero
         {
             _isDragging = false;
             WeatherScrollViewer.ReleaseMouseCapture();
+        }
+
+        /// <summary>
+        /// Shows or hides the settings panel.
+        /// </summary>
+        private void SettingsShowButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isSettingsPanelVisible)
+                SettingsPanelBorder.Visibility = Visibility.Hidden;
+            else
+                SettingsPanelBorder.Visibility = Visibility.Visible;
+
+            isSettingsPanelVisible = !isSettingsPanelVisible;
+        }
+
+        /// <summary>
+        /// Logs the user out of the application.
+        /// </summary>
+        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SettingsPanelManager.LogOutAsync();
+        }
+
+        /// <summary>
+        /// Updates the settings panel with the received data.
+        /// </summary>
+        /// <param name="data">...</param>
+        public void UpdateSettingsPanel(ApplicationActivityData data)
+        {
+            UserNameSurnameTextBlock.Text = "Name Surname: " + data.UserNameSurname;
+            UserEmailTextBlock.Text = "Email: " + data.UserEmail;
+
+            InAppCheckBox.IsChecked = data.IsInAppNotificationOn;
+            DailyWeatherCheckBox.IsChecked = data.IsDailyWeatherEmailsOpen;
+            EmergencyWeatherCheckBox.IsChecked = data.IsImportantWeatherEmailsOn;
+
+            UserSelectCityTextBlock.Text = "Selected City: " + data.SelectCity;
+        }
+
+        private async void NotificationsCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            if (!isSettingsPanelVisible) // If the settings panel is not visible, do not return.
+                return;
+            await SettingsPanelManager.UpdateNotificationsApplicationActivityDataAsync(
+                InAppCheckBox.IsChecked ?? false,
+                DailyWeatherCheckBox.IsChecked ?? false,
+                EmergencyWeatherCheckBox.IsChecked ?? false);
+        }
+
+        /// <summary>
+        /// Removes the city from the user's list.
+        /// </summary>
+        public void RemoveCity_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPanelManager.ClearCity();
+        }
+
+        /// <summary>
+        /// Opens the GitHub page of the project.
+        /// </summary>
+        private void GoToGitHub_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPanelManager.GoToGitHubPage();
         }
     }
 }

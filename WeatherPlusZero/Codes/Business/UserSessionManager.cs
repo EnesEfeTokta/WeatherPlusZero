@@ -96,6 +96,7 @@ namespace WeatherPlusZero
                         "Login Successful",
                         "Entry is successful. You will soon be redirected to the main screen...",
                         NotificationType.Success);
+
                     Application.Current.Dispatcher.Invoke(() => WindowTransition());
                 }
                 else
@@ -108,7 +109,9 @@ namespace WeatherPlusZero
             }
             catch (Exception ex)
             {
-                NotificationManagement.ShowNotification("Error", $"An error occurred during login: {ex.Message}", NotificationType.Error);
+                NotificationManagement.ShowNotification(
+                    "Error", $"An error occurred during login: {ex.Message}", 
+                    NotificationType.Error);
             }
         }
 
@@ -166,7 +169,10 @@ namespace WeatherPlusZero
             }
 
             user.password = HashPassword(user.password);
+            user.registrationdate = DateTime.Now.ToString();
+
             this.user = user;
+
             await authService.AccountVerify(user, EmailSendType.UserVerificationEmail);
         }
 

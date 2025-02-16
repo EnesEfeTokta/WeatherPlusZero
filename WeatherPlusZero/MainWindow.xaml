@@ -90,13 +90,14 @@
                 <Border x:Name="SettingsOpenBorder" Grid.Column="3" Grid.Row="1">
                     <Grid x:Name="SettingsOpenGrid">
                         <Button x:Name="SettingsOpenButton"
-                        Content="🧰"
-                        Width="30"
-                        Height="30"
-                        Background="Transparent"
-                        Foreground="White"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                                Content="🧰"
+                                Width="30"
+                                Height="30"
+                                Background="Transparent"
+                                Foreground="White"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Click="SettingsShowButton_Click"/>
 
                         <Button x:Name="CancelCitySelectButton" 
                         HorizontalAlignment="Left" 
@@ -615,7 +616,9 @@
                         </Border>
                     </Grid>
                 </Border>
-                <Border x:Name="SettingsPanelBorder" BorderThickness="1" Grid.Column="3" Grid.RowSpan="5" Grid.ColumnSpan="2" Margin="210,0,0,-4">
+
+                <!-- Settings Panel -->
+                <Border x:Name="SettingsPanelBorder" BorderThickness="1" Grid.Column="3" Grid.RowSpan="5" Grid.ColumnSpan="2" Margin="210,0,0,-4" Visibility="Hidden">
                     <Border.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF0047FF" Offset="1"/>
@@ -636,6 +639,8 @@
                             <RowDefinition Height="16*"/>
                             <RowDefinition Height="16*"/>
                             <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
                             <RowDefinition Height="35*"/>
                             <RowDefinition Height="200*"/>
                             <RowDefinition Height="15*"/>
@@ -646,17 +651,18 @@
                             <ColumnDefinition Width="12*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="CloseSettingsPanelButton" Grid.Column="1" Content="❌" Background="Transparent" Foreground="White" BorderThickness="0" Click="CloseSettingsButton_Click" Margin="164,0,0,0" Grid.Row="1"/>
+                        <Button x:Name="CloseSettingsPanelButton" Grid.Column="1" Content="❌" Background="Transparent" Foreground="White" BorderThickness="0" Click="SettingsShowButton_Click" Margin="164,0,0,0" Grid.Row="1"/>
 
                         <TextBlock Grid.Column="1" Grid.Row="2" Text="User" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" VerticalAlignment="Center" Height="10" Margin="10,0,0,0"/>
-                        <Line Grid.Column="1" Grid.Row="2" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Top" Height="2" Margin="0,14,0,0"/>
+                        <Line Grid.Column="1" Grid.Row="2" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Bottom" Height="3"/>
                         <TextBlock x:Name="UserNameSurnameTextBlock" Grid.Column="1" Grid.Row="3" Text="Name Surname: Enes Efe" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Margin="74,0,0,0" Width="116"/>
                         <TextBlock x:Name="UserEmailTextBlock" Grid.Column="1" Grid.Row="4" Text="Email: enesefetokta41@gmail.com" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Margin="28,0,0,0" Width="162"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Left" Content="Log Out" Grid.Row="5" VerticalAlignment="Center" Height="16" Width="46" Margin="144,0,0,0" FontSize="7" BorderBrush="#FF0063A6" Background="#FF58B9FF" Click="LogoutButton_Click"/>
 
-                        <TextBlock Grid.Column="1" Grid.Row="5" Text="Select City" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
-                        <Line Grid.Column="1" Grid.Row="6" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Center" Height="0"/>
-                        <TextBlock x:Name="UserSelectCityTextBlock" Grid.Column="1" Grid.Row="6" Text="City: None" HorizontalAlignment="Left" TextAlignment="Right" Foreground="White" FontWeight="Bold" FontSize="10" Margin="56,0,0,0" Width="116"/>
-                        <Button Grid.Column="1" HorizontalAlignment="Left" Grid.Row="6" VerticalAlignment="Center" Height="12" Width="13" Margin="177,0,0,0">
+                        <TextBlock Grid.Column="1" Grid.Row="6" Text="Select City" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
+                        <Line Grid.Column="1" Grid.Row="6" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Bottom" Height="3"/>
+                        <TextBlock x:Name="UserSelectCityTextBlock" Grid.Column="1" Grid.Row="7" Text="City: None" HorizontalAlignment="Left" TextAlignment="Right" Foreground="White" FontWeight="Bold" FontSize="10" Margin="56,0,0,0" Width="116"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Left" Grid.Row="7" VerticalAlignment="Center" Height="12" Width="13" Margin="177,0,0,0" Click="RemoveCity_Click">
                             <Button.BorderBrush>
                                 <SolidColorBrush Color="#FF707070" Opacity="0"/>
                             </Button.BorderBrush>
@@ -668,15 +674,16 @@
                             </Button.Foreground>
                         </Button>
 
-                        <TextBlock Grid.Column="1" Grid.Row="7" Text="Notifications" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
-                        <Line Grid.Column="1" Grid.Row="7" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Top" Height="1" Margin="0,15,0,0"/>
-                        <RadioButton Grid.Column="1" Content="Daily Weather" HorizontalAlignment="Left" Margin="106,0,0,0" Grid.Row="8" VerticalAlignment="Center" Width="84" BorderBrush="White" Background="#FF007DB8" Foreground="White" FontSize="10" Height="16" />
-                        <RadioButton Grid.Column="1" Content="Emergency Weather" HorizontalAlignment="Left" Margin="79,0,0,0" Grid.Row="9" VerticalAlignment="Center" Width="111" Foreground="White" Background="#FF007DB8" BorderBrush="White" FontSize="10" Height="14"/>
+                        <TextBlock Grid.Column="1" Grid.Row="8" Text="Notifications" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
+                        <Line Grid.Column="1" Grid.Row="8" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Bottom" Height="3"/>
+                        <CheckBox x:Name="InAppCheckBox" Checked="NotificationsCheckBox_Changed" Unchecked="NotificationsCheckBox_Changed" Grid.Column="1" Content="In-App" HorizontalAlignment="Left" Margin="138,0,0,0" Grid.Row="9" VerticalAlignment="Center" Width="52" Foreground="White" Background="#FF007DB8" BorderBrush="White" FontSize="10" Height="14" IsChecked="True"/>
+                        <CheckBox x:Name="EmergencyWeatherCheckBox" Checked="NotificationsCheckBox_Changed" Unchecked="NotificationsCheckBox_Changed" Grid.Column="1" Content="Emergency Weather" HorizontalAlignment="Left" Margin="79,0,0,0" Grid.Row="10" VerticalAlignment="Center" Width="111" Foreground="White" Background="#FF007DB8" BorderBrush="White" FontSize="10" Height="14" IsChecked="True"/>
+                        <CheckBox x:Name="DailyWeatherCheckBox" Checked="NotificationsCheckBox_Changed" Unchecked="NotificationsCheckBox_Changed" Grid.Column="1" Content="Daily Weather" HorizontalAlignment="Left" Margin="106,0,0,0" Grid.Row="11" VerticalAlignment="Center" Width="84" BorderBrush="White" Background="#FF007DB8" Foreground="White" FontSize="10" Height="16" IsChecked="True"/>
 
-                        <TextBlock Grid.Column="1" Grid.Row="10" Text="Info" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
-                        <Line Grid.Column="1" Grid.Row="10" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Top" Height="1" Margin="0,15,0,0"/>
-                        <Button Grid.Column="1" HorizontalAlignment="Left" Content="GitHub" Grid.Row="11" VerticalAlignment="Center" Height="16" Width="46" Margin="144,0,0,0" FontSize="7" BorderBrush="#FF0063A6" Background="#FF58B9FF"/>
-                        <TextBlock Grid.Column="1" Grid.Row="12" Text="Weather Zero Plus is the project of a 2nd year student studying at Atatürk University. Please use with this in mind." Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="28" TextWrapping="Wrap"/>
+                        <TextBlock Grid.Column="1" Grid.Row="12" Text="Info" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
+                        <Line Grid.Column="1" Grid.Row="12" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Bottom" Height="3"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Left" Content="GitHub" Grid.Row="13" VerticalAlignment="Center" Height="16" Width="46" Margin="144,0,0,0" FontSize="7" BorderBrush="#FF0063A6" Background="#FF58B9FF" Click="GoToGitHub_Click" />
+                        <TextBlock Grid.Column="1" Grid.Row="14" Text="Weather Zero Plus is the project of a 2nd year student studying at Atatürk University. Please use with this in mind." Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="28" TextWrapping="Wrap"/>
                     </Grid>
                 </Border>
             </Grid>

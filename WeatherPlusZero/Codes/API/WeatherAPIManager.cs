@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Net.NetworkInformation;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using System.Windows;
 
 namespace WeatherPlusZero
 {
@@ -22,7 +23,10 @@ namespace WeatherPlusZero
         );
 
         // Path to the json file.
-        protected static readonly string JsonFilePath = Path.Combine(AppDataPath, "WeatherData.json");
+        protected static readonly string WeatherDataJsonFilePath = Path.Combine(AppDataPath, "WeatherData.json");
+
+        // Path to the json file.
+        protected static readonly string ApplicationActivityDataJsonFilePath = Path.Combine(AppDataPath, "ApplicationActivityData.json");
 
         // Path to the application data folder.
         static WeatherServiceBase()
@@ -70,7 +74,7 @@ namespace WeatherPlusZero
         public async Task SaveWeatherDataAsync(WeatherData data)
         {
             data.CurrentConditions.Datetime = DateTime.Now.ToString();
-            await File.WriteAllTextAsync(JsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+            await File.WriteAllTextAsync(WeatherDataJsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
         }
 
         public void AddCity(string city)
@@ -102,14 +106,38 @@ namespace WeatherPlusZero
         // Fetches weather information from the json file.
         public async Task<WeatherData> GetWeatherDataAsync(string city = null)
         {
-            if (!File.Exists(JsonFilePath)) return null;
+            if (!File.Exists(WeatherDataJsonFilePath)) return null;
 
-            var json = await File.ReadAllTextAsync(JsonFilePath);
+            var json = await File.ReadAllTextAsync(WeatherDataJsonFilePath);
             return JsonConvert.DeserializeObject<WeatherData>(json, new SmartIntConverter());
         }
 
         // Saves the weather data to the json file.
-        public Task SaveWeatherDataAsync(WeatherData data) => Task.CompletedTask;
+        public async Task SaveWeatherDataAsync(WeatherData data) => await File.WriteAllTextAsync(WeatherDataJsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+
+        // Deletes the registered city.
+        public async void RemoveCity()
+        {
+            await SaveWeatherDataAsync(new WeatherData()); // An empty WeatherData object is created and written to the file.
+
+            await ApplicationActivity.ChangeApplicationActivityDataByCity(null);
+        }
+
+        // Saves the application activity data to the json file.
+        public async Task SaveApplicationActivityDataAsync(ApplicationActivityData data)
+        {
+            await File.WriteAllTextAsync(ApplicationActivityDataJsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+            await SettingsPanelManager.UpdateSettingsPanelAsync();
+        }
+
+        // Fetches application activity data from the json file.
+        public async Task<ApplicationActivityData> GetApplicationActivityDataAsync()
+        {
+            if (!File.Exists(ApplicationActivityDataJsonFilePath)) return null;
+
+            var json = await File.ReadAllTextAsync(ApplicationActivityDataJsonFilePath);
+            return JsonConvert.DeserializeObject<ApplicationActivityData>(json, new SmartIntConverter());
+        }
     }
 
     public class WeatherManager

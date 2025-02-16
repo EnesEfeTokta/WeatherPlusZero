@@ -108,6 +108,14 @@ namespace WeatherPlusZero
 
             user = response;
 
+            ApplicationActivityData data = new ApplicationActivityData()
+            {
+                UserNameSurname = user.namesurname,
+                UserEmail = user.email,
+            };
+
+            ApplicationActivity.SaveApplicationActivityData(data);
+
             return true;
         }
 
@@ -291,7 +299,7 @@ namespace WeatherPlusZero
         public string password { get; set; } // WARNING => NOT NULL
 
         [Column("registrationdate")]
-        public DateTime registrationdate { get; set; } // WARNING => Registration Date is given a value by Supabase. Therefore it cannot get value from here.
+        public string registrationdate { get; set; } // WARNING => Registration Date is given a value by Supabase. Therefore it cannot get value from here.
     }
 
     [Table("cities")]
