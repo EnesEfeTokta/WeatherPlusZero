@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Diagnostics;
+using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {

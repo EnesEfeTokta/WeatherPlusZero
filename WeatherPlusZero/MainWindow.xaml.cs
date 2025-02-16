@@ -21,16 +21,10 @@ namespace WeatherPlusZero
         private Point _startPoint { get; set; }
         private bool _isDragging { get; set; }
 
-        ApplicationProgress applicationProgress { get; set; }
-
-        SearchCity searchCity { get; set; }
-
         private bool isSettingsPanelVisible { get; set; } = false;
 
         public MainWindow()
         {
-            applicationProgress = new ApplicationProgress();
-            searchCity = new SearchCity();
             InitializeComponent();
             Initialize();
         }
@@ -42,7 +36,7 @@ namespace WeatherPlusZero
 
         private void ApplicationStart()
         {
-            applicationProgress.ApplicationStart();
+            ApplicationProgress.ApplicationStart();
 
             //HelloCard helloCard = new HelloCard();
             //helloCard.Show();
@@ -89,7 +83,7 @@ namespace WeatherPlusZero
         {
             if (e.Key == Key.Enter)
             {
-                SearchCity();
+                StartSearchCity();
                 e.Handled = false;
             }
         }
@@ -101,16 +95,16 @@ namespace WeatherPlusZero
         /// <param name="e"></param>
         private void CityNameSearchClickButton(object sender, RoutedEventArgs e)
         {
-            SearchCity();
+            StartSearchCity();
         }
 
-        private async void SearchCity()
+        private async void StartSearchCity()
         {
             string cityName = CityNameSearchTextBox.Text;
             if (cityName == "Search for city...")
                 return;
 
-            bool successStatus = await searchCity.SearchCityName(cityName);
+            bool successStatus = await SearchCity.SearchCityName(cityName);
 
             if (successStatus)
             {
@@ -129,13 +123,13 @@ namespace WeatherPlusZero
         private async void AddCitySelectButton_Click(object sender, RoutedEventArgs e)
         {
             CityButtonOperations();
-            await searchCity.AddSelectCity();
+            await SearchCity.AddSelectCity();
         }
 
         private async void CanselCitySelectButton_Click(object sender, RoutedEventArgs e)
         {
             CityButtonOperations();
-            await searchCity.CanselCitySelect();
+            await SearchCity.CanselCitySelect();
         }
 
         private void CityButtonOperations()

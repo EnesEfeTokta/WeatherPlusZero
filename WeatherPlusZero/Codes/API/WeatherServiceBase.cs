@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.NetworkInformation;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using System.Windows;
 
 namespace WeatherPlusZero
 {
@@ -52,148 +49,8 @@ namespace WeatherPlusZero
             string.Format(API_BASE_URL, Uri.EscapeDataString(city), API_KEY);
     }
 
-    public interface IWeatherProvider
-    {
-        public Task<WeatherData> GetWeatherDataAsync(string city); // Receives weather data.
-        public Task SaveWeatherDataAsync(WeatherData data); // Records weather data.
-    }
-
-    public class ApiService : WeatherServiceBase, IWeatherProvider
-    {
-        // HttpClient instance for making requests.
-        private readonly HttpClient _httpClient = new HttpClient();
-
-        // Fetches weather data from the API.
-        public async Task<WeatherData> GetWeatherDataAsync(string city)
-        {
-            var response = await _httpClient.GetStringAsync(BuildApiUrl(city));
-            return DeserializeWeatherData(response);
-        }
-
-        // Saves the weather data to the json file.
-        public async Task SaveWeatherDataAsync(WeatherData data)
-        {
-            data.CurrentConditions.Datetime = DateTime.Now.ToString();
-            await File.WriteAllTextAsync(WeatherDataJsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
-        }
-
-        public void AddCity(string city)
-        {
-            // Add city to the list of cities
-        }
-
-        // Deserializes the json string to the WeatherData object.
-        private WeatherData DeserializeWeatherData(string json)
-        {
-            var settings = new JsonSerializerSettings
-            {
-                Error = HandleDeserializationError,
-                Converters = { new SmartIntConverter() }
-            };
-
-            return JsonConvert.DeserializeObject<WeatherData>(json, settings);
-        }
-
-        // Handles deserialization errors.
-        private void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
-        {
-            args.ErrorContext.Handled = true;
-        }
-    }
-
-    public class JsonService : WeatherServiceBase, IWeatherProvider
-    {
-        // Fetches weather information from the json file.
-        public async Task<WeatherData> GetWeatherDataAsync(string city = null)
-        {
-            if (!File.Exists(WeatherDataJsonFilePath)) return null;
-
-            var json = await File.ReadAllTextAsync(WeatherDataJsonFilePath);
-            return JsonConvert.DeserializeObject<WeatherData>(json, new SmartIntConverter());
-        }
-
-        // Saves the weather data to the json file.
-        public async Task SaveWeatherDataAsync(WeatherData data) => await File.WriteAllTextAsync(WeatherDataJsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
-
-        // Deletes the registered city.
-        public async void RemoveCity()
-        {
-            await SaveWeatherDataAsync(new WeatherData()); // An empty WeatherData object is created and written to the file.
-
-            await ApplicationActivity.ChangeApplicationActivityDataByCity(null);
-        }
-
-        // Saves the application activity data to the json file.
-        public async Task SaveApplicationActivityDataAsync(ApplicationActivityData data)
-        {
-            await File.WriteAllTextAsync(ApplicationActivityDataJsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
-            await SettingsPanelManager.UpdateSettingsPanelAsync();
-        }
-
-        // Fetches application activity data from the json file.
-        public async Task<ApplicationActivityData> GetApplicationActivityDataAsync()
-        {
-            if (!File.Exists(ApplicationActivityDataJsonFilePath)) return null;
-
-            var json = await File.ReadAllTextAsync(ApplicationActivityDataJsonFilePath);
-            return JsonConvert.DeserializeObject<ApplicationActivityData>(json, new SmartIntConverter());
-        }
-    }
-
-    public class WeatherManager
-    {
-        private readonly IWeatherProvider _apiProvider;
-        private readonly IWeatherProvider _jsonProvider;
-        private readonly NetworkChecker _networkChecker;
-
-        // Dependency injection for testing purposes.
-        public WeatherManager()
-        {
-            _apiProvider = new ApiService();
-            _jsonProvider = new JsonService();
-            _networkChecker = new NetworkChecker();
-        }
-        
-        // Gets weather data for the specified city.
-        public async Task<WeatherData> GetWeatherDataAsync(string city, bool forceRefresh = false)
-        {
-            if (string.IsNullOrWhiteSpace(city)) return null;
-
-            // If the 'forceRefresh' parameter is true, it pulls data from the API and returns it without saving.
-            if (forceRefresh)
-            {
-                return await _apiProvider.GetWeatherDataAsync(city);
-            }
-
-            // If the 'forceRefresh' parameter is false, it first pulls data from json and returns if there is data.
-            WeatherData jsonWeatherData = await _jsonProvider.GetWeatherDataAsync(city);
-
-            // If data could not be retrieved from json or the data is old, it pulls data from the API and saves it.
-            // If the last data extraction was more than 5 hours ago, extracts data from the API and saves it.
-            // If data cannot be retrieved from the API, it returns the data from json.
-            if (_networkChecker.IsConnected && (jsonWeatherData == null || IsDataExpired(jsonWeatherData)))
-            {
-                WeatherData freshData = await _apiProvider.GetWeatherDataAsync(city);
-                if (freshData != null)
-                {
-                    await _apiProvider.SaveWeatherDataAsync(freshData);
-                    return freshData;
-                }
-            }
-
-            return jsonWeatherData;
-        }
-
-        // Checks if the data is older than 5 hours.
-        private bool IsDataExpired(WeatherData data)
-        {
-            if (data?.CurrentConditions == null) return true;
-
-            DateTime lastUpdated = DateTime.Parse(data.CurrentConditions.Datetime);
-            return (DateTime.UtcNow - lastUpdated).TotalHours > 5;
-        }
-    }
-
+    
+    
     public class NetworkChecker
     {
         // Checks if the device is connected to the internet.
@@ -243,6 +100,8 @@ namespace WeatherPlusZero
             writer.WriteValue(value.ToString());
     }
 
+    
+    
     public class WeatherData
     {
         public short QueryCost { get; set; }
@@ -386,5 +245,14 @@ namespace WeatherPlusZero
         public string Sunset { get; set; }
         public int SunsetEpoch { get; set; }
         public float Moonphase { get; set; }
+    }
+
+    // Class representing weather forecasts for future days.
+    // Used to display daily forecasts in the UI.
+    public class FutureDay
+    {
+        public string DayName { get; set; } // Day of the week name.
+        public string IconPath { get; set; } // Icon path.
+        public string MinMaxTemperature { get; set; } // Min-Max temperature values.
     }
 }

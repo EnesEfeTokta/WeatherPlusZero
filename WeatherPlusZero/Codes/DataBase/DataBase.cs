@@ -14,16 +14,16 @@ using System.IO;
 
 namespace WeatherPlusZero
 {
-    public class DataBase
+    public static class DataBase
     {
-        private readonly Supabase.Client supabase;
-        private readonly Dictionary<Type, PropertyInfo> primaryKeyCache;
+        private static readonly Supabase.Client supabase;
+        private static readonly Dictionary<Type, PropertyInfo> primaryKeyCache;
 
-        protected IConfiguration Configuration { get; }
+        public static IConfiguration Configuration { get; }
 
-        public User user { get; private set; }
+        public static User user { get; private set; }
 
-        public DataBase()
+        static DataBase()
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -36,13 +36,7 @@ namespace WeatherPlusZero
             primaryKeyCache = new Dictionary<Type, PropertyInfo>();
         }
 
-        /// <summary>
-        /// Retrieves the PropertyInfo of the primary key for a given BaseModel type.
-        /// Caches the result for subsequent lookups to improve performance.
-        /// </summary>
-        /// <typeparam name="T">The BaseModel type to get the primary key property for.</typeparam>
-        /// <returns>The PropertyInfo of the primary key, or null if not found.</returns>
-        private PropertyInfo GetPrimaryKeyProperty<T>() where T : BaseModel, new()
+        private static PropertyInfo GetPrimaryKeyProperty<T>() where T : BaseModel, new()
         {
             var type = typeof(T);
             if (!primaryKeyCache.ContainsKey(type))
@@ -56,31 +50,51 @@ namespace WeatherPlusZero
             return primaryKeyCache[type];
         }
 
-
         #region Supabase Auth Methods
-        public async Task RegisterUserSupabaseAuth(string email, string password)
+        /// <summary>
+        /// Registers a new user using Supabase authentication.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        public static async Task RegisterUserSupabaseAuth(string email, string password)
         {
             await supabase.Auth.SignUp(email, password);
         }
 
-        public async Task LoginUserSupabaseAuth(string email, string password)
+        /// <summary>
+        /// Logs in a user using Supabase authentication.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        public static async Task LoginUserSupabaseAuth(string email, string password)
         {
             await supabase.Auth.SignIn(email, password);
         }
 
-        public async Task LogoutUserSupabaseAuth()
+        /// <summary>
+        /// Logs out the current user using Supabase authentication.
+        /// </summary>
+        public static async Task LogoutUserSupabaseAuth()
         {
             await supabase.Auth.SignOut();
         }
 
-        public void CheckUserSessionSupabaseAuth()
+        /// <summary>
+        /// Checks the current user session using Supabase authentication.
+        /// </summary>
+        public static void CheckUserSessionSupabaseAuth()
         {
             var user = supabase.Auth.CurrentUser;
         }
         #endregion
 
         #region Own Auth Methods
-        public async Task<bool> RegisterUserOwnAuth(User user)
+        /// <summary>
+        /// Registers a new user using custom authentication.
+        /// </summary>
+        /// <param name="user">The user object containing user details.</param>
+        /// <returns>True if registration is successful, otherwise false.</returns>
+        public static async Task<bool> RegisterUserOwnAuth(User user)
         {
             try
             {
@@ -89,14 +103,19 @@ namespace WeatherPlusZero
             }
             catch (PostgrestException ex)
             {
-                // todo: UNIQE olan E-Posta adresi için hata mesajı verilecek. Ancak tam anlamıyla düzgün çalışmıyor.
                 if (ex.Message.Contains("duplicate key value violates unique constraint \"users_email_key\""))
                     NotificationManagement.ShowNotification("Register Error", "This email is already in use. Please use another valid email.", NotificationType.Error);
                 return false;
             }
         }
 
-        public async Task<bool> LoginUserOwnAuth(string email, string password)
+        /// <summary>
+        /// Logs in a user using custom authentication.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>True if login is successful, otherwise false.</returns>
+        public static async Task<bool> LoginUserOwnAuth(string email, string password)
         {
             User response = await supabase.From<User>()
                 .Filter("email", Operator.Equals, email)
@@ -119,13 +138,22 @@ namespace WeatherPlusZero
             return true;
         }
 
-        public bool LogoutUserOwnAuth()
+        /// <summary>
+        /// Logs out the current user using custom authentication.
+        /// </summary>
+        /// <returns>True if logout is successful.</returns>
+        public static bool LogoutUserOwnAuth()
         {
             user = null;
             return true;
         }
 
-        public async Task<bool> ForgotUserOwnAuth(User user)
+        /// <summary>
+        /// Checks if a user exists using custom authentication.
+        /// </summary>
+        /// <param name="user">The user object containing user details.</param>
+        /// <returns>True if user exists, otherwise false.</returns>
+        public static async Task<bool> ForgotUserOwnAuth(User user)
         {
             User response = await supabase.From<User>()
                 .Filter("email", Operator.Equals, user.email)
@@ -137,7 +165,12 @@ namespace WeatherPlusZero
             return true;
         }
 
-        public async Task ChangePasswordOwnAuth(string email, string newPassword)
+        /// <summary>
+        /// Changes the password of a user using custom authentication.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="newPassword">The new password of the user.</param>
+        public static async Task ChangePasswordOwnAuth(string email, string newPassword)
         {
             User response = await TAsyncGetUserByEmail(email);
 
@@ -147,16 +180,13 @@ namespace WeatherPlusZero
         }
         #endregion
 
-
         /// <summary>
-        /// Asynchronously adds a new row to the corresponding Supabase table. 
-        /// PrimaryKeys and some columns do not need to be given a value as they are autofilled. 
-        /// Supabase automatically gives a value.
+        /// Adds a new row to the database.
         /// </summary>
-        /// <typeparam name="T">The BaseModel type representing the table to add the row to.</typeparam>
-        /// <param name="newRow">The BaseModel object containing the data for the new row.</param>
-        /// <returns>A Task that represents the asynchronous add operation. Returns the added BaseModel object of type T if successful, otherwise null.</returns>
-        public async Task<T> TAsyncAddRow<T>(T newRow) where T : BaseModel, new()
+        /// <typeparam name="T">The type of the row to add.</typeparam>
+        /// <param name="newRow">The new row to add.</param>
+        /// <returns>The added row.</returns>
+        public static async Task<T> TAsyncAddRow<T>(T newRow) where T : BaseModel, new()
         {
             try
             {
@@ -171,13 +201,12 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Asynchronously updates an existing row in the corresponding Supabase table. 
-        /// The primary key must be known to update. 
+        /// Updates an existing row in the database.
         /// </summary>
-        /// <typeparam name="T">The BaseModel type representing the table to update the row in.</typeparam>
-        /// <param name="updatedRow">The BaseModel object containing the updated data for the row.</param>
-        /// <returns>A Task that represents the asynchronous update operation. Returns the updated BaseModel object of type T if successful, otherwise null.</returns>
-        public async Task<T> TAsyncUpdateRow<T>(T updatedRow) where T : BaseModel, new()
+        /// <typeparam name="T">The type of the row to update.</typeparam>
+        /// <param name="updatedRow">The updated row.</param>
+        /// <returns>The updated row.</returns>
+        public static async Task<T> TAsyncUpdateRow<T>(T updatedRow) where T : BaseModel, new()
         {
             try
             {
@@ -192,12 +221,12 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Asynchronously deletes a row from the corresponding Supabase table based on its primary key ID.
+        /// Deletes a row from the database by its ID.
         /// </summary>
-        /// <typeparam name="T">The BaseModel type representing the table to delete the row from.</typeparam>
-        /// <param name="rowId">The integer ID of the row to delete (primary key value).</param>
-        /// <returns>A Task that represents the asynchronous delete operation. Returns true if deletion is successful, otherwise false.</returns>
-        public async Task<bool> TAsyncDeleteRow<T>(int rowId) where T : BaseModel, new()
+        /// <typeparam name="T">The type of the row to delete.</typeparam>
+        /// <param name="rowId">The ID of the row to delete.</param>
+        /// <returns>True if deletion is successful, otherwise false.</returns>
+        public static async Task<bool> TAsyncDeleteRow<T>(int rowId) where T : BaseModel, new()
         {
             try
             {
@@ -217,12 +246,12 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Asynchronously retrieves a specific row from the corresponding Supabase table based on its primary key ID.
+        /// Gets a row from the database by its ID.
         /// </summary>
-        /// <typeparam name="T">The BaseModel type representing the table to get the row from.</typeparam>
-        /// <param name="rowId">The integer ID of the row to retrieve (primary key value).</param>
-        /// <returns>A Task that represents the asynchronous get operation. Returns the BaseModel object of type T if found, otherwise null.</returns>
-        public async Task<T> TAsyncGetRowById<T>(int rowId) where T : BaseModel, new()
+        /// <typeparam name="T">The type of the row to get.</typeparam>
+        /// <param name="rowId">The ID of the row to get.</param>
+        /// <returns>The row with the specified ID.</returns>
+        public static async Task<T> TAsyncGetRowById<T>(int rowId) where T : BaseModel, new()
         {
             try
             {
@@ -242,11 +271,11 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Asynchronously retrieves a specific row from the corresponding Supabase table based on a specific E-Mail value.
+        /// Gets a user from the database by their email.
         /// </summary>
-        /// <param name="email">The e-mail address you want to call should be given.</param>
-        /// <returns>If the row with the related e-mail is found, it returns User type, but if the row is not found, it returns null.</returns>
-        public async Task<User> TAsyncGetUserByEmail(string email)
+        /// <param name="email">The email of the user to get.</param>
+        /// <returns>The user with the specified email.</returns>
+        public static async Task<User> TAsyncGetUserByEmail(string email)
         {
             try
             {
@@ -264,11 +293,11 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Asynchronously retrieves all rows from the corresponding Supabase table.
+        /// Gets all rows of a specified type from the database.
         /// </summary>
-        /// <typeparam name="T">The BaseModel type representing the table to get all rows from.</typeparam>
-        /// <returns>A Task that represents the asynchronous get all operation. Returns a List of BaseModel objects of type T if successful, otherwise null.</returns>
-        public async Task<List<T>> TAsyncGetAllRows<T>() where T : BaseModel, new()
+        /// <typeparam name="T">The type of the rows to get.</typeparam>
+        /// <returns>A list of all rows of the specified type.</returns>
+        public static async Task<List<T>> TAsyncGetAllRows<T>() where T : BaseModel, new()
         {
             try
             {
