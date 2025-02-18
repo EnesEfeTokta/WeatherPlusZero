@@ -9,7 +9,7 @@ namespace WeatherPlusZero
 {
     public static class UiUpdater
     {
-        private static readonly string[] WindDirections = { "N", "NH", "E", "SH", "S", "SW", "W", "NW" }; // Array of wind directions.
+        private static readonly string[] WindDirections = { "N", "NE", "E", "SE", "S", "SW", "W", "NW" }; // Improved wind directions
 
         private static IConfiguration Configuration;
 
@@ -18,10 +18,10 @@ namespace WeatherPlusZero
         /// Updates main weather parameters, icon, location, and future forecasts.
         /// </summary>
         /// <param name="weatherData">Weather data.</param>
-        /// <param name="mainWindow">Main window object (optional).</param>
-        public static void UpdateAllComponents(WeatherData weatherData, MainWindow mainWindow = null)
+        /// <param name="IsDateTimeBased">Flag indicating whether to use date/time based update (optional, default: true).</param>
+        public static void UpdateAllComponents(WeatherData weatherData, bool IsDateTimeBased = true)
         {
-            mainWindow ??= Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+            MainWindow mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
 
             if (weatherData?.CurrentConditions == null) return;
 
@@ -34,32 +34,70 @@ namespace WeatherPlusZero
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                UpdateMainWeatherParameters(weatherData, mainWindow);
-                UpdateWeatherIcon(weatherData.CurrentConditions.Icon, mainWindow);
+                UpdateBackgroudImage(Configuration[imageUrl], mainWindow);
+
+                if (IsDateTimeBased)
+                {
+                    UpdateMainWeatherParametersByHour(weatherData, mainWindow);
+                    UpdateWeatherIcon(weatherData.CurrentConditions.Icon, mainWindow);
+                }
+                else
+                {
+                    UpdateMainWeatherParametersByCurrentCondition(weatherData.CurrentConditions, mainWindow);
+                    UpdateWeatherIcon(weatherData.CurrentConditions.Icon, mainWindow);
+                }
+
                 UpdateLocationDisplay(weatherData.ResolvedAddress, mainWindow);
                 UpdateFutureWeatherForecast(weatherData, mainWindow);
-                UpdateBackgroudImage(Configuration[imageUrl], mainWindow);
             });
         }
 
-        /// <summary>
-        /// Updates the main weather parameters in the UI.
-        /// Displays temperature, wind, humidity, and pressure information in the UI.
-        /// </summary>
-        /// <param name="data">Weather data.</param>
-        /// <param name="window">Main window object.</param>
-        private static void UpdateMainWeatherParameters(WeatherData data, MainWindow window)
+        private static void UpdateMainWeatherParametersByHour(WeatherData weatherData, MainWindow window)
         {
-            CurrentConditions current = data.CurrentConditions;
-            string windDirection = ConvertWindDirection(current.Winddir);
+            DateTime now = DateTime.Now;
+            string day = now.ToString("yyyy-MM-dd");
+            string hour = now.ToString("HH:00:00"); // Check at O'clock for stable results
 
-            window.UpdateMainWeatherParametersText( // Updates main weather parameter texts.
-                Math.Round(Convert.ToDecimal(current.Temp)).ToString(), // Temperature
-                current.Windspeed.ToString(), // Wind speed
-                windDirection, // Wind direction (text)
-                current.Winddir.ToString(), // Wind direction (degrees)
-                Math.Round(Convert.ToDecimal(current.Humidity)).ToString(), // Humidity
-                current.Pressure.ToString() // Pressure
+            Day today = weatherData.Days.FirstOrDefault(d => d.Datetime == day);
+            if (today != null)
+            {
+                Hour currentHourData = today.Hours.FirstOrDefault(h => h.Datetime == hour);
+                if (currentHourData != null)
+                {
+                    string windDirection = ConvertWindDirection(currentHourData.Winddir);
+
+                    window.UpdateMainWeatherParametersText( // Updates main weather parameter texts.
+                        Math.Round(Convert.ToDecimal(currentHourData.Temp)).ToString(), // Temperature
+                        currentHourData.Windspeed.ToString(), // Wind speed
+                        windDirection, // Wind direction (text)
+                        currentHourData.Winddir.ToString(), // Wind direction (degrees)
+                        Math.Round(Convert.ToDecimal(currentHourData.Humidity)).ToString(), // Humidity
+                        currentHourData.Pressure.ToString() // Pressure
+                    );
+
+                    // We return currentHourData.Icon before UpdateWeatherIcon(weatherData.CurrentConditions.Icon, mainWindow);
+                    return;
+                }
+            }
+
+            // If hourly data not found, fallback to current conditions:
+            UpdateMainWeatherParametersByCurrentCondition(weatherData.CurrentConditions, window);
+        }
+
+        /// <summary>
+        /// Updates the main weather parameters in the UI based on CurrentConditions.
+        /// </summary>
+        private static void UpdateMainWeatherParametersByCurrentCondition(CurrentConditions data, MainWindow window)
+        {
+            string windDirection = ConvertWindDirection(data.Winddir);
+
+            window.UpdateMainWeatherParametersText(
+                Math.Round(Convert.ToDecimal(data.Temp)).ToString(),
+                data.Windspeed.ToString(),
+                windDirection,
+                data.Winddir.ToString(),
+                Math.Round(Convert.ToDecimal(data.Humidity)).ToString(),
+                data.Pressure.ToString()
             );
         }
 
@@ -67,8 +105,6 @@ namespace WeatherPlusZero
         /// Converts wind direction degrees to textual direction.
         /// Converts a 360-degree angle to one of 8 cardinal directions.
         /// </summary>
-        /// <param name="degrees">Wind direction in degrees.</param>
-        /// <returns>Textual wind direction (e.g., "N", "E", "SW").</returns>
         private static string ConvertWindDirection(double degrees)
         {
             degrees = (degrees % 360 + 360) % 360; // Normalizes degree to be between 0-360.
@@ -82,8 +118,6 @@ namespace WeatherPlusZero
         /// Updates location information in the UI.
         /// Displays city or location name in the UI.
         /// </summary>
-        /// <param name="address">Location address.</param>
-        /// <param name="window">Main window object.</param>
         private static void UpdateLocationDisplay(string address, MainWindow window) =>
             window.UpdateLocationText(address);
 
@@ -91,8 +125,6 @@ namespace WeatherPlusZero
         /// Updates weather icon in the UI.
         /// Displays the icon in the UI using the icon file name.
         /// </summary>
-        /// <param name="icon">Icon file name (e.g., "01d").</param>
-        /// <param name="window">Main window object.</param>
         private static void UpdateWeatherIcon(string icon, MainWindow window) =>
             window.UpdateWeatherStatusIcon($"{ApplicationProgress.ImageBasePath}{icon}.png");
 
@@ -100,8 +132,6 @@ namespace WeatherPlusZero
         /// Updates future days' weather forecasts in the UI.
         /// Converts daily forecast data to FutureDay objects and displays them in the UI.
         /// </summary>
-        /// <param name="data">Weather data.</param>
-        /// <param name="window">Main window object.</param>
         private static void UpdateFutureWeatherForecast(WeatherData data, MainWindow window)
         {
             if (data?.Days == null) return;

@@ -16,7 +16,6 @@ namespace WeatherPlusZero
         private const string CultureName = "en-US"; // Culture name constant (English - US).
         private static readonly CultureInfo _culture = new CultureInfo(CultureName); // Creates CultureInfo object.
         private static DispatcherTimer _timer; // Timer for updating the UI at regular intervals.
-        private static WeatherData _weatherData; // Field to store weather data.
 
         private static MainWindow _mainWindow; // Main window object.
 
@@ -60,21 +59,17 @@ namespace WeatherPlusZero
         /// Asynchronously fetches weather data and updates the UI.
         /// </summary>
         public static async Task LoadInitialData()
-        {
-            _weatherData = null;
-            _weatherData = await FetchWeatherData();
-            UpdateUI();
-        }
+            => UpdateUI(await FetchWeatherData());
 
         /// <summary>
         /// Updates the UI with weather data.
         /// Executes UI updates on the main UI thread.
         /// </summary>
-        private static void UpdateUI()
+        private static void UpdateUI(WeatherData data)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                UiUpdater.UpdateAllComponents(_weatherData, _mainWindow);
+                UiUpdater.UpdateAllComponents(data, true);
             });
         }
 
@@ -138,15 +133,13 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Asynchronously fetches weather data.
-        /// Retrieves data from JSON service, or API service if not available.
+        /// Asynchronously fetches weather data..
         /// </summary>
         /// <returns>WeatherData object or null.</returns>
         private static async Task<WeatherData> FetchWeatherData()
         {
             JsonService jsonService = new JsonService(); // Creates a JSON service instance.
-            WeatherData weatherDataJson = await jsonService.GetWeatherDataAsync(); // Gets weather data from JSON file.
-            string city = weatherDataJson?.Address; // Gets city information.
+            string city = (await jsonService.GetApplicationActivityDataAsync()).SelectCity; // Gets city information.
 
             return await WeatherManager.GetWeatherDataAsync(city, false);
         }

@@ -37,6 +37,7 @@ namespace WeatherPlusZero
                 }
             }
 
+            // If the data is not old, it returns the data from json.
             return jsonWeatherData;
         }
 

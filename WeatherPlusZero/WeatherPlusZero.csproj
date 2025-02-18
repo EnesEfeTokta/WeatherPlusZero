@@ -107,7 +107,6 @@
     <Resource Include="Images\WindyCloudySunny.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mailjet.Api" Version="3.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.2" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />

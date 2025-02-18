@@ -36,7 +36,7 @@ namespace WeatherPlusZero
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                UiUpdater.UpdateAllComponents(_weatherData);
+                UiUpdater.UpdateAllComponents(_weatherData, false);
             });
 
             return true;
