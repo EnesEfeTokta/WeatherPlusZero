@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace WeatherPlusZero
 {
-    public static class WeatherReportGenerator
+    public static class DailyWeatherReportGenerator
     {
         // Default values for trial purposes.
         private static readonly Dictionary<string, string> weatherUpdateEmailPlaceholders = new Dictionary<string, string>
@@ -127,9 +127,22 @@ namespace WeatherPlusZero
             };
 
         /// <summary>
-        /// Starts the process of sending the weather report email.
+        /// Sends the weather report email to the specified email address.
         /// </summary>
+        /// <param name="sendEmail">Email address</param>
         public static async void SendWeatherReportEmail(string sendEmail)
+        {
+            DateTime firstDailyInformationDateTime = DateTime.Parse(await ApplicationActivity.GetFirstDailyInformationDateTimeFromApplicationActivityData());
+            bool isDailyWeatherEmailsOpen = await ApplicationActivity.GetIsDailyWeatherEmailsOpenFromApplicationActivityData();
+            
+            if ((DateTime.UtcNow - firstDailyInformationDateTime).TotalHours > 24 && isDailyWeatherEmailsOpen)
+                CreateEmail(sendEmail);
+        }
+
+        /// <summary>
+        /// Creates an email with the weather information and sends it to the specified email address.
+        /// </summary>
+        private static async void CreateEmail(string sendEmail)
         {
             await PopulateWeatherDataAsync();
             string emailHTML = HTMLReadService.ReadHTML(EmailSendType.WeatherUpdateEmail);
@@ -143,6 +156,8 @@ namespace WeatherPlusZero
             user.email = sendEmail;
 
             await EmailService.SendMail_SendGrid(user, emailHTML);
+
+            await ApplicationActivity.ChangeApplicationActivityDataByFirstDailyInformationDateTime(DateTime.Now.ToString());
         }
 
         /// <summary>

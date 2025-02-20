@@ -42,6 +42,12 @@ namespace WeatherPlusZero
         {
             InitializeApplication();
             await SettingsPanelManager.UpdateSettingsPanelAsync();
+            DailyWeatherWeatherInformation();
+        }
+
+        private static async void DailyWeatherWeatherInformation()
+        {
+            DailyWeatherReportGenerator.SendWeatherReportEmail(await ApplicationActivity.GetUserEmailFromApplicationActivityData());
         }
 
         /// <summary>
@@ -73,7 +79,6 @@ namespace WeatherPlusZero
             });
         }
 
-        #region UpdateDayBar
         /// <summary>
         /// Initializes the timer to update the UI regularly.
         /// Creates the timer, attaches the Tick event, and starts it.
@@ -110,7 +115,6 @@ namespace WeatherPlusZero
 
             _mainWindow.UpdateDayNightBar(hour);
         }
-        #endregion
 
         /// <summary>
         /// Updates the date and time information in the UI.

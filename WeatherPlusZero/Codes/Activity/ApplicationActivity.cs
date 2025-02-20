@@ -1,24 +1,25 @@
-﻿using Supabase.Gotrue.Mfa;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System;
 using System.Threading.Tasks;
-using System.Windows;
 using WeatherPlusZero.Codes.API;
+using System.Windows.Controls;
 
 namespace WeatherPlusZero
 {
     public static class ApplicationActivity
     {
-        public static async void SaveApplicationActivityData(ApplicationActivityData data)
+        // Save the application activity data.
+        public static async Task SaveApplicationActivityData(ApplicationActivityData data)
         {
             JsonService jsonService = new JsonService();
 
             await jsonService.SaveApplicationActivityDataAsync(data);
         }
 
-        public static async void SaveApplicationActivityDataByCity(string city)
+        // Save the city selected by the user.
+        public static async Task SaveApplicationActivityDataByCity(string city)
         {
             JsonService jsonService = new JsonService();
 
@@ -28,6 +29,7 @@ namespace WeatherPlusZero
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
 
+        // Get the application activity data.
         public static async Task<ApplicationActivityData> GetApplicationActivityData()
         {
             JsonService jsonService = new JsonService();
@@ -37,6 +39,7 @@ namespace WeatherPlusZero
             return applicationActivityData;
         }
 
+        // The application is updating Activity Data.
         public static async Task UpdateApplicationActivityData(ApplicationActivityData applicationActivityData)
         {
             JsonService jsonService = new JsonService();
@@ -44,6 +47,7 @@ namespace WeatherPlusZero
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
 
+        // The application is deleting Activity Data.
         public static async Task ClearApplicationActivityData()
         {
             JsonService jsonService = new JsonService();
@@ -54,6 +58,7 @@ namespace WeatherPlusZero
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
 
+        // Save the city selected by the user.
         public static async Task ChangeApplicationActivityDataByCity(string city)
         {
             JsonService jsonService = new JsonService();
@@ -64,6 +69,7 @@ namespace WeatherPlusZero
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
 
+        // Save the notification status of the user.
         public static async Task ChnageApplicationActivityDataByNotifications(bool isInAppNotificationOn, bool isDailyWeatherEmailsOpen, bool isImportantWeatherEmailsOn)
         {
             JsonService jsonService = new JsonService();
@@ -77,6 +83,7 @@ namespace WeatherPlusZero
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
 
+        // Save the user's name and email.
         public static async Task ChangeApplicationActivityDataByUser(string userName, string userEmail)
         {
             JsonService jsonService = new JsonService();
@@ -87,17 +94,86 @@ namespace WeatherPlusZero
 
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
+
+        // Save the first daily information date and time.
+        public static async Task ChangeApplicationActivityDataByFirstDailyInformationDateTime(string dateTime)
+        {
+            JsonService jsonService = new JsonService();
+
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+            applicationActivityData.FirstDailyInformationDateTime = dateTime;
+
+            await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
+        }
+
+        // Get the name of the logged in user.
+        public static async Task<string> GetUserNameSurnameFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.UserNameSurname;
+        }
+
+        // Get the email of the logged in user.
+        public static async Task<string> GetUserEmailFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.UserEmail;
+        }
+
+        // Get the city selected by the user.
+        public static async Task<string> GetCityVariationFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.SelectCity;
+        }
+
+        // Get the notification status of the user.
+        public static async Task<bool> GetIsInAppNotificationOnFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.IsInAppNotificationOn;
+        }
+
+        // Get the status of daily weather emails.
+        public static async Task<bool> GetIsDailyWeatherEmailsOpenFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.IsDailyWeatherEmailsOpen;
+        }
+
+        // Get the status of important weather emails.
+        public static async Task<bool> GetIsImportantWeatherEmailsOnFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.IsImportantWeatherEmailsOn;
+        }
+
+        // Get the first daily information date and time.
+        public static async Task<string> GetFirstDailyInformationDateTimeFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.FirstDailyInformationDateTime;
+        }
     }
 
     public class ApplicationActivityData
     {
-        public string UserNameSurname { get; set; }
-        public string UserEmail { get; set; }
+        public string UserNameSurname { get; set; } // User name and surname information.
+        public string UserEmail { get; set; } // User email information.
 
-        public string SelectCity { get; set; } = "Oltu";
+        public string SelectCity { get; set; } = "Oltu"; // City information.
 
-        public bool IsInAppNotificationOn { get; set; } = true;
-        public bool IsDailyWeatherEmailsOpen { get; set; } = true;
-        public bool IsImportantWeatherEmailsOn { get; set; } = true;
+        public bool IsInAppNotificationOn { get; set; } = true; // In-app notification status.
+        public bool IsDailyWeatherEmailsOpen { get; set; } = true; // Daily weather email status.
+        public bool IsImportantWeatherEmailsOn { get; set; } = true; // Important weather email status.
+
+        public string FirstDailyInformationDateTime { get; set; } = "01.01.0001 01:01:01"; // First daily information date and time.
     }
 }
