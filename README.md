@@ -1,4 +1,7 @@
-![WeatherPlusZero.png](WeatherPlusZero/Images/AppLogo.png)
+![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 
 # Weather Plus Zero
 > Windows platformları için uygun, C# dilinde basit ve kullanışlı hava durumu uygulaması.
@@ -43,6 +46,8 @@ Uygulama, kullanıcı dostu arayüzü ve sezgisel tasarımı ile her yaştan kul
 ## Drawio 🪢
 [Weather Plus Zero Drawio](https://github.com/EnesEfeTokta/WeatherPlusZero/blob/main/WeatherPlusZero/Planning/WeatherPlusZero.drawio)
 
+## Proje Dallanması
+
 ## İletişim ☎️
 
 - [enesefetokta009@gmail.com](mailto:enesefetokta009@gmail.com)
@@ -57,11 +62,7 @@ Uygulama, kullanıcı dostu arayüzü ve sezgisel tasarımı ile her yaştan kul
 ## Kaynaklar ➕
 
 ### Görseller
-
-- https://www.freepik.com/free-ai-image/portrait-was-captured-streets-depicting-everyday-life-urban-culture_65362546.htm#fromView=search&page=3&position=7&uuid=cb6478b5-be31-4935-bcd2-443f0f8a6cc5 → Yağmurlu hava arkaplan görseli.
-- https://www.freepik.com/free-photo/yellow-flowers_1484001.htm#fromView=search&page=1&position=10&uuid=c08af2dc-e1e9-4b82-bb66-54c40f2f152c → Güneşli hava arkaplanı görseli.
-- https://www.freepik.com/free-photo/storm-clouds_1172981.htm#fromView=search&page=1&position=40&uuid=48f3c3fb-ead3-41c4-b7ac-80ba4190c82d → Bulutlu hava arkaplanı görseli.
-- https://www.freepik.com/free-photo/closeup-shot-tree-branch-snowy-weather_12040237.htm#fromView=search&page=1&position=29&uuid=96710d47-8fa4-46c1-9061-bb6ca10aabcb → Karlı hava arkaplanı görseli.
+- None
 
 ## Görevler 📝
 
