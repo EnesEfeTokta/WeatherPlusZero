@@ -8,14 +8,14 @@ namespace WeatherPlusZero
     /// <summary>
     /// Provides methods for reading HTML files.
     /// </summary>
-    public static class HTMLReadService
+    public static class HTMLService
     {
         /// <summary>
         /// Reads the content of an HTML file based on the specified email type.
         /// </summary>
         /// <param name="emailSendType">The type of email to read the HTML for.</param>
         /// <returns>The HTML content as a string.</returns>
-        public static string ReadHTML(EmailSendType emailSendType)
+        public static string GetHTMLCode(EmailSendType emailSendType)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             string resourceName = assembly.GetManifestResourceNames().FirstOrDefault(name => name.EndsWith(emailSendType + ".html"));

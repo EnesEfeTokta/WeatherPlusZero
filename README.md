@@ -1,3 +1,5 @@
+![Banner](https://static.vecteezy.com/system/resources/previews/002/054/629/non_2x/dark-cloudy-sky-banner-free-photo.jpg)
+
 ![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)
@@ -372,9 +374,41 @@ Proje için katmanlı mimari tercih edilmiş ve kullanılmıştır.
     - Ek Ayarlar ve Hesap Bilgileri Düğmesi
 
 ## Yasal ve Hukuki Uyarılar ⚠️
-- **Gizlilik Politikası:** Kullanıcı verilerinin nasıl toplandığı, kullanıldığı ve korunduğu açıklanacak.
-- **Kullanım Koşulları:** Uygulamanın kullanım koşulları belirtilecek.
-- **Sorumluluk Reddi:** Uygulamanın sağladığı hava durumu bilgilerinin doğruluğu hakkında bir garanti verilmediği belirtilecek.
+
+### Gizlilik Politikası
+Kişisel verilerinizin gizliliği bizim için önemlidir. Bu nedenle, verilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu şeffaf bir şekilde açıklamak isteriz:
+
+**Toplanan Veriler:** Uygulamayı kullanımınız sırasında belirli veriler toplanabilir. Bu veriler, konum bilgileriniz, cihazınızla ilgili teknik veriler (örneğin, işletim sistemi sürümü, cihaz modeli), kullanım alışkanlıklarınız ve tercihleriniz olabilir. Topladığımız verilerin tam listesi için [Gizlilik Politikası sayfamızı](none) ziyaret edin.
+
+**Veri Kullanımı:** Toplanan veriler, uygulamanın işlevselliğini geliştirmek, size daha iyi bir kullanıcı deneyimi sunmak, kişiselleştirilmiş içerik sağlamak, hataları gidermek ve analizler yapmak amacıyla kullanılabilir.
+
+**Veri Güvenliği:** Kişisel verilerinizin güvenliğini sağlamak için endüstri standardı güvenlik önlemleri uygulanmaktadır. Ancak, internet üzerinden yapılan veri aktarımlarının tamamen güvenli olmadığını ve verilerinizin yetkisiz erişimlere karşı korunması için azami çaba gösterdiğimizi, ancak mutlak güvenlik garantisi veremediğimizi lütfen unutmayın.
+
+**Veri Paylaşımı:** Kişisel verileriniz, yasal gereklilikler veya zorunlu durumlar dışında üçüncü şahıslarla paylaşılmaz.
+
+**Haklarınız:** Kişisel verilerinize erişme, düzeltme, silme veya verilerinizi kullanmamızı sınırlama hakkına sahipsiniz. Bu haklarınızı nasıl kullanacağınız hakkında daha fazla bilgi için [Gizlilik Politikası sayfamızı](none) ziyaret edin.
+
+### Kullanım Koşulları
+Uygulamamızı kullanarak aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız:
+
+**Kullanım Sınırları:** Uygulamayı yasalara uygun bir şekilde kullanmayı ve başkalarının haklarını ihlal etmemeyi kabul edersiniz.
+
+**Fikri Mülkiyet:** Uygulamadaki tüm içerik (metinler, grafikler, logolar, ikonlar, yazılımlar vb.) tarafımıza veya lisans sahiplerimize aittir ve fikri mülkiyet haklarıyla korunmaktadır. Her hangi bir ekonomik gelir elde etme amacı dışında içeriklerimizin kullanılmasında sakınca yoktur.
+
+**Hesap Sorumluluğu:** Uygulamada bir hesap oluşturmanız durumunda, hesap bilgilerinizin gizliliğini korumak sizin sorumluluğunuzdadır.
+
+**Değişiklikler:** Kullanım koşulları zaman zaman güncellenebilir. Bu nedenle, düzenli olarak kontrol etmeniz önerilir.
+
+**Sonlandırma:** Kullanım koşullarını ihlal etmeniz durumunda, hesabınız askıya alınabilir veya sonlandırılabilir.
+
+### Sorumluluk Reddi
+Uygulamamız, hava durumu bilgilerini genel bilgilendirme amacıyla sunmaktadır. Bu bilgilerin doğruluğu ve güncelliği konusunda azami özen gösterilmekle birlikte, aşağıdaki hususları dikkate almanız önemlidir:
+
+**Garanti Yoktur:** Uygulamanın sağladığı hava durumu bilgilerinin her zaman doğru, eksiksiz ve güncel olduğuna dair herhangi bir garanti vermemekteyiz. Hava durumu tahminleri, atmosferik koşulların karmaşıklığı nedeniyle hatalı olabilir.
+
+**Sorumluluk Sınırı:** Uygulamayı kullanımınızdan kaynaklanan doğrudan veya dolaylı zararlardan (örneğin, planlarınızın iptali, maddi kayıplar vb.) tarafımız sorumlu tutulamaz.
+
+**Profesyonel Tavsiye Yerine Geçmez:** Uygulamanın sağladığı bilgiler, profesyonel hava durumu uzmanlarının tavsiyesi yerine geçmez. Kritik kararlar almadan önce güvenilir kaynaklardan ve uzmanlardan bilgi almanız önerilir.
 
 ## Pazarlama & Tanıtım Stratejileri 🖊️
 - **Sosyal Medya Pazarlaması:** Uygulamanın özelliklerini ve faydalarını sosyal medya platformları üzerinden tanıtılacak.
@@ -392,6 +426,7 @@ Proje için katmanlı mimari tercih edilmiş ve kullanılmıştır.
 - **02/02/2025:** Kullanıcı giriş sistemi yapıldı.
 - **03/02/2025:** Kullanıcı kayıt sistemi yapıldı.
 - **04/02/2025:** Kullanıcı şifre sıfırlama sistemi yapıldı.
+- **08/02/2025:** Günlük hava durumunu e-posta gönderme sistemi yapıldı.
 
 ## Sürümler 🆕
 - [v0.1.0 Beta](VersionsReadMe/v_0.1.0_Beta_README.md)

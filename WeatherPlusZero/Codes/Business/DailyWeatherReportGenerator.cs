@@ -145,7 +145,7 @@ namespace WeatherPlusZero
         private static async void CreateEmail(string sendEmail)
         {
             await PopulateWeatherDataAsync();
-            string emailHTML = HTMLReadService.ReadHTML(EmailSendType.WeatherUpdateEmail);
+            string emailHTML = HTMLService.GetHTMLCode(EmailSendType.WeatherUpdateEmail);
 
             foreach (var item in weatherUpdateEmailPlaceholders)
             {

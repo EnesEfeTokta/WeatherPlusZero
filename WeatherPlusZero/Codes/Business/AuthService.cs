@@ -45,7 +45,7 @@ namespace WeatherPlusZero
         {
             verificationCode = GenerateVerificationCode();
 
-            string htmlCode = HTMLReadService.ReadHTML(emailSendType);
+            string htmlCode = HTMLService.GetHTMLCode(emailSendType);
 
             switch (emailSendType)
             {

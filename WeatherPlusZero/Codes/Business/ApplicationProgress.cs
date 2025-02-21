@@ -43,6 +43,8 @@ namespace WeatherPlusZero
             InitializeApplication();
             await SettingsPanelManager.UpdateSettingsPanelAsync();
             DailyWeatherWeatherInformation();
+
+            EmergencyWeatherAlertReportGenerator.EmergencySituationCheck((await FetchWeatherData()).CurrentConditions);
         }
 
         private static async void DailyWeatherWeatherInformation()
