@@ -11,6 +11,7 @@ using Supabase.Postgrest.Exceptions;
 using Notification.Wpf;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Windows.Media.Animation;
 
 namespace WeatherPlusZero
 {
@@ -21,7 +22,11 @@ namespace WeatherPlusZero
 
         public static IConfiguration Configuration { get; }
 
-        public static User user { get; private set; }
+        public static User User { get; private set; }
+        public static List<UserCity> UserCities { get; private set; }
+        public static List<City> Cities { get; private set; }
+        public static List<Weather> Weathers { get; private set; }
+        public static List<Notification> Notifications { get; private set; }
 
         static DataBase()
         {
@@ -98,7 +103,7 @@ namespace WeatherPlusZero
         {
             try
             {
-                var response = await supabase.From<User>().Insert(user);
+                await SetDatabaseData(user);
                 return true;
             }
             catch (PostgrestException ex)
@@ -125,17 +130,108 @@ namespace WeatherPlusZero
             if (response == null)
                 return false;
 
-            user = response;
+            User = response;
 
-            ApplicationActivityData data = new ApplicationActivityData()
+            await GetDatabaseData();
+
+            NewSaveApplicationActivity();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Sets the database data for a new user.
+        /// </summary>
+        /// <param name="user">The user object containing user details.</param>
+        /// <returns>True if data is set successfully, otherwise false.</returns>
+        private static async Task<bool> SetDatabaseData(User user)
+        {
+            User insertedUser = await TAsyncAddRow<User>(user);
+            if (insertedUser == null) return false;
+
+            // Ensure your static collections are instantiated.
+            if (Cities == null) Cities = new List<City>();
+            if (Weathers == null) Weathers = new List<Weather>();
+            if (UserCities == null) UserCities = new List<UserCity>();
+            if (Notifications == null) Notifications = new List<Notification>();
+
+            City newCity = new City { cityname = "Ankara", countryname = "Turkey" };
+            City insertedCity = await TAsyncAddRow<City>(newCity);
+            if (insertedCity == null) return false;
+
+            Weather newWeather = new Weather { cityid = insertedCity.cityid, weatherdata = await WeatherManager.GetWeatherDataAsync("Ankara", true) };
+            Weather insertedWeather = await TAsyncAddRow<Weather>(newWeather);
+            if (insertedWeather == null) return false;
+
+            UserCity newUserCity = new UserCity { userid = insertedUser.userid, cityid = insertedCity.cityid, notificationpreference = true };
+            UserCity insertedUserCity = await TAsyncAddRow<UserCity>(newUserCity);
+            if (insertedUserCity == null) return false;
+
+            Notification newNotification = new Notification { userid = insertedUser.userid, notificationtype = "Null", notificationmessage = "Null", notificationdatetime = DateTime.MinValue };
+            Notification insertedNotification = await TAsyncAddRow<Notification>(newNotification);
+            if (insertedNotification == null) return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Retrieves the database data for the current user.
+        /// </summary>
+        /// <returns>True if data is retrieved successfully, otherwise false.</returns>
+        private static async Task<bool> GetDatabaseData()
+        {
+            var userCityResponse = await supabase.From<UserCity>()
+                .Filter("userid", Operator.Equals, User.userid)
+                .Get();
+            UserCities = userCityResponse.Models;
+
+            Cities = new List<City>();
+            Weathers = new List<Weather>();
+
+            foreach (UserCity userCity in UserCities)
             {
-                UserNameSurname = user.namesurname,
-                UserEmail = user.email,
+                City cityResponse = await supabase.From<City>()
+                    .Filter("cityid", Operator.Equals, userCity.cityid)
+                    .Single();
+                Cities.Add(cityResponse);
+
+                Weather weatherResponse = await supabase.From<Weather>()
+                    .Filter("cityid", Operator.Equals, userCity.cityid)
+                    .Single();
+                Weathers.Add(weatherResponse);
+            }
+
+            var notificationResponse = await supabase.From<Notification>()
+                .Filter("userid", Operator.Equals, User.userid)
+                .Get();
+            Notifications = notificationResponse.Models;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Saves the application activity data for the current user.
+        /// </summary>
+        private static void NewSaveApplicationActivity()
+        {
+            ApplicationActivityData data = new ApplicationActivityData
+            {
+                UserId = User.userid,
+                CityId = Cities[0].cityid,
+                UserCityId = UserCities[0].recordid,
+                WeatherId = Weathers[0].weatherid,
+                NotificationId = Notifications[0].notificationid,
+
+                UserNameSurname = User.namesurname,
+                UserEmail = User.email,
+
+                SelectCity = Cities[0].cityname,
+                IsInAppNotificationOn = UserCities[0].notificationpreference,
+                IsDailyWeatherEmailsOpen = true,
+                IsImportantWeatherEmailsOn = true,
             };
 
             ApplicationActivity.SaveApplicationActivityData(data);
-
-            return true;
         }
 
         /// <summary>
@@ -144,7 +240,11 @@ namespace WeatherPlusZero
         /// <returns>True if logout is successful.</returns>
         public static bool LogoutUserOwnAuth()
         {
-            user = null;
+            User = null;
+            Cities.Clear();
+            Weathers.Clear();
+            UserCities.Clear();
+            Notifications.Clear();
             return true;
         }
 
@@ -179,6 +279,36 @@ namespace WeatherPlusZero
             await supabase.From<User>().Update(response);
         }
         #endregion
+
+        public static User GetUser() => User;
+        public static int GetUserId() => User.userid;
+        public static string GetUsername() => User.namesurname;
+        public static string GetUserEmail() => User.email;
+        public static string GetHashPassword() => User.password;
+        public static DateTime GetRegistrationDate() => User.registrationdate;
+
+        public static City GetCity() => Cities[0];
+        public static int GetCityId() => Cities[0].cityid;
+        public static string GetCityName() => Cities[0].cityname;
+        public static string GetCountryName() => Cities[0].countryname;
+
+        public static Weather GetWeather() => Weathers[0];
+        public static int GetWeatherId() => Weathers[0].weatherid;
+        public static int GetCityIdWeather() => Weathers[0].cityid;
+        public static WeatherData GetWeatherData() => Weathers[0].weatherdata;
+
+        public static UserCity GetUserCity() => UserCities[0];
+        public static int GetRecordId() => UserCities[0].recordid;
+        public static int GetUserIdUserCity() => UserCities[0].userid;
+        public static int GetCityIdUserCity() => UserCities[0].cityid;
+        public static bool GetNotificationPreference() => UserCities[0].notificationpreference;
+
+        public static Notification GetNotification() => Notifications[0];
+        public static int GetNotificationId() => Notifications[0].notificationid;
+        public static int GetUserIdNotification() => Notifications[0].userid;
+        public static string GetNotificationType() => Notifications[0].notificationtype;
+        public static string GetNotificationMessage() => Notifications[0].notificationmessage;
+        public static DateTime GetNotificationDateTime() => Notifications[0].notificationdatetime;
 
         /// <summary>
         /// Adds a new row to the database.
@@ -328,7 +458,7 @@ namespace WeatherPlusZero
         public string password { get; set; } // WARNING => NOT NULL
 
         [Column("registrationdate")]
-        public string registrationdate { get; set; } // WARNING => Registration Date is given a value by Supabase. Therefore it cannot get value from here.
+        public DateTime registrationdate { get; set; } // WARNING => Registration Date is given a value by Supabase. Therefore it cannot get value from here.
     }
 
     [Table("cities")]

@@ -45,37 +45,68 @@ namespace WeatherPlusZero
         /// <summary>
         /// The user cancels the searched city and returns to the app.
         /// </summary>
-        public static async Task CanselCitySelect()  
+        public static async void CanselCitySelect()  
             => await ApplicationProgress.LoadInitialData();
 
         /// <summary>
         /// The user adds the selected city to the list of cities.
         /// </summary>
-        public static async Task AddSelectCity()
+        public static async void AddSelectCity()
         {
             ApiService apiService = new ApiService();
             await apiService.SaveWeatherDataAsync(_weatherData);
 
-            await CanselCitySelect();
+            SaveCityDataBase();
+
+            CanselCitySelect();
 
             NotificationManagement.ShowNotification(
                 "City added to the list.",
                 "The city has been successfully added to the list of cities.",
                 NotificationType.Success);
 
-            ApplicationActivity.SaveApplicationActivityDataByCity(_weatherData.Address); // The saved city information is updated.
+            await ApplicationActivity.SaveApplicationActivityDataByCity(_weatherData.Address); // The saved city information is updated.
         }
 
-        /// <summary>
-        /// Checks if the city name is valid.
-        /// Checks if the city name is empty, contains emojis, or special characters.
-        /// </summary>
-        /// <param name="city">City name to check.</param>
-        /// <returns>True if city name is invalid, false otherwise.</returns>
-        private static bool IsInvalidCityName(string city)
+        private static async void SaveCityDataBase()
         {
-            return string.IsNullOrWhiteSpace(city) || ContainsEmoji(city) || ContainsSpecialCharacters(city);
+            City city = DataBase.GetCity();
+            city.cityname = _weatherData.ResolvedAddress.Split(", ")[0];
+            city.countryname = _weatherData.ResolvedAddress.Split(", ")[1];
+
+            UserCity userCity = DataBase.GetUserCity();
+            userCity.userid = DataBase.GetUserId();
+            userCity.cityid = city.cityid;
+            userCity.notificationpreference = true;
+
+            Weather weather = DataBase.GetWeather();
+            weather.cityid = city.cityid;
+            weather.weatherdata = _weatherData;
+
+            await DataBase.TAsyncUpdateRow<City>(city);
+            await DataBase.TAsyncUpdateRow<UserCity>(userCity);
+            await DataBase.TAsyncUpdateRow<Weather>(weather);
         }
+
+        private static async void SaveUserCityDataBase()
+        {
+            UserCity userCity = new UserCity
+            {
+                userid = DataBase.GetUserId(),
+                cityid = DataBase.GetCityId(),
+                notificationpreference = await ApplicationActivity.GetIsInAppNotificationOnFromApplicationActivityData()
+            };
+
+            await DataBase.TAsyncAddRow<UserCity>(userCity);
+        }
+
+            /// <summary>
+            /// Checks if the city name is valid.
+            /// Checks if the city name is empty, contains emojis, or special characters.
+            /// </summary>
+            /// <param name="city">City name to check.</param>
+            /// <returns>True if city name is invalid, false otherwise.</returns>
+            private static bool IsInvalidCityName(string city) => string.IsNullOrWhiteSpace(city) || ContainsEmoji(city) || ContainsSpecialCharacters(city);
 
         /// <summary>
         /// Checks if the input text contains emoji characters.

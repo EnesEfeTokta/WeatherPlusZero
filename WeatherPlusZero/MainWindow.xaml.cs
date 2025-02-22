@@ -120,16 +120,16 @@ namespace WeatherPlusZero
             }
         }
 
-        private async void AddCitySelectButton_Click(object sender, RoutedEventArgs e)
+        private void AddCitySelectButton_Click(object sender, RoutedEventArgs e)
         {
             CityButtonOperations();
-            await SearchCity.AddSelectCity();
+            SearchCity.AddSelectCity();
         }
 
-        private async void CanselCitySelectButton_Click(object sender, RoutedEventArgs e)
+        private void CanselCitySelectButton_Click(object sender, RoutedEventArgs e)
         {
             CityButtonOperations();
-            await SearchCity.CanselCitySelect();
+            SearchCity.CanselCitySelect();
         }
 
         private void CityButtonOperations()

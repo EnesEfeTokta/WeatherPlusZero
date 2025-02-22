@@ -5,13 +5,14 @@ using System;
 using System.Threading.Tasks;
 using WeatherPlusZero.Codes.API;
 using System.Windows.Controls;
+using Notifications.Wpf.Annotations;
 
 namespace WeatherPlusZero
 {
     public static class ApplicationActivity
     {
         // Save the application activity data.
-        public static async Task SaveApplicationActivityData(ApplicationActivityData data)
+        public static async void SaveApplicationActivityData(ApplicationActivityData data)
         {
             JsonService jsonService = new JsonService();
 
@@ -165,6 +166,12 @@ namespace WeatherPlusZero
 
     public class ApplicationActivityData
     {
+        public int UserId { get; set; } // User ID information.
+        public int CityId { get; set; } // City ID information.
+        public int UserCityId { get; set; } // User city ID information.
+        public int WeatherId { get; set; } // Weather ID information.
+        public int NotificationId { get; set; } // Notification ID information.
+
         public string UserNameSurname { get; set; } // User name and surname information.
         public string UserEmail { get; set; } // User email information.
 

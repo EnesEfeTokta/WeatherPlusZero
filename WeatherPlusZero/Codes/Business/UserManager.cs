@@ -152,7 +152,7 @@ namespace WeatherPlusZero
             }
 
             user.password = HashPassword(user.password);
-            user.registrationdate = DateTime.Now.ToString();
+            user.registrationdate = DateTime.UtcNow;
 
             UserManager.user = user;
 

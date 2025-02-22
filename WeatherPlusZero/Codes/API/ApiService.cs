@@ -15,6 +15,15 @@ namespace WeatherPlusZero
         // Fetches weather data from the API.
         public async Task<WeatherData> GetWeatherDataAsync(string city)
         {
+            //try
+            //{
+            //    var response = await _httpClient.GetStringAsync(BuildApiUrl(city));
+            //    return DeserializeWeatherData(response);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return null;
+            //}
             var response = await _httpClient.GetStringAsync(BuildApiUrl(city));
             return DeserializeWeatherData(response);
         }
