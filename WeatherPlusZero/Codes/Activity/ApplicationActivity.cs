@@ -79,7 +79,7 @@ namespace WeatherPlusZero
             ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
 
             applicationActivityData.IsInAppNotificationOn = isInAppNotificationOn;
-            applicationActivityData.IsDailyWeatherEmailsOpen = isDailyWeatherEmailsOpen;
+            applicationActivityData.IsDailyWeatherEmailsOn = isDailyWeatherEmailsOpen;
             applicationActivityData.IsImportantWeatherEmailsOn = isImportantWeatherEmailsOn;
 
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
@@ -169,7 +169,7 @@ namespace WeatherPlusZero
         {
             ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
 
-            return applicationActivityData.IsDailyWeatherEmailsOpen;
+            return applicationActivityData.IsDailyWeatherEmailsOn;
         }
 
         // Get the status of important weather emails.
@@ -216,13 +216,14 @@ namespace WeatherPlusZero
 
         public string UserNameSurname { get; set; } // User name and surname information.
         public string UserEmail { get; set; } // User email information.
+        public string UserHashedPassword { get; set; } // User password information.
 
         public bool IsLogIn { get; set; } = false; // Login status.
 
-        public string SelectCity { get; set; } = "Oltu"; // City information.
+        public string SelectCity { get; set; } // City information.
 
         public bool IsInAppNotificationOn { get; set; } = true; // In-app notification status.
-        public bool IsDailyWeatherEmailsOpen { get; set; } = true; // Daily weather email status.
+        public bool IsDailyWeatherEmailsOn { get; set; } = true; // Daily weather email status.
         public bool IsImportantWeatherEmailsOn { get; set; } = true; // Important weather email status.
 
         public string FirstDailyInformationDateTime { get; set; } = "01.01.0001 01:01:01"; // First daily information date and time.

@@ -23,16 +23,21 @@ namespace WeatherPlusZero
 
         public static async void UpdateSettingsPanelAsync() => UpdateUI(await ApplicationActivity.GetApplicationActivityData());
 
-        public static async void UpdateNotificationsApplicationActivityDataAsync(bool isInAppNotificationOn, bool isDailyWeatherEmailsOpen, bool isImportantWeatherEmailsOn)
+        public static async void UpdateNotificationsApplicationActivityDataAsync(bool isInAppNotificationOn, bool isDailyWeatherEmailsOn, bool isImportantWeatherEmailsOn)
         {
-            ApplicationActivityData applicationActivityData = await ApplicationActivity.GetApplicationActivityData();
+            await ApplicationActivity.ChnageApplicationActivityDataByNotifications(isInAppNotificationOn, isDailyWeatherEmailsOn, isImportantWeatherEmailsOn);
+            
+            UserCity newUserCity = new UserCity()
+            {
+                userid = DataBase.GetUserId(),
+                cityid = DataBase.GetCityId(),
 
-            applicationActivityData.IsInAppNotificationOn = isInAppNotificationOn;
-            applicationActivityData.IsDailyWeatherEmailsOpen = isDailyWeatherEmailsOpen;
-            applicationActivityData.IsImportantWeatherEmailsOn = isImportantWeatherEmailsOn;
+                inappnotificationon = isInAppNotificationOn,
+                dailyweatheremailson = isDailyWeatherEmailsOn,
+                importantweatheremailson = isImportantWeatherEmailsOn
+            };
 
-            await ApplicationActivity.UpdateApplicationActivityData(applicationActivityData);
-
+            await DataBase.TAsyncUpdateRow<UserCity>(newUserCity); ;
             UpdateSettingsPanelAsync();
         }
 

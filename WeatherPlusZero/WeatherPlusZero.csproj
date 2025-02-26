@@ -13,6 +13,7 @@
     <None Remove="Codes\EmailTemplates\UserVerificationEmail.html" />
     <None Remove="Codes\EmailTemplates\WeatherUpdateEmail.html" />
     <None Remove="EmailIcon.png" />
+    <None Remove="Gifs\Wait.gif" />
     <None Remove="Images\ChangePasswordIcon.png" />
     <None Remove="Images\EmailIcon.png" />
     <None Remove="Images\EmailVerificationPanelIcon.png" />
@@ -60,6 +61,7 @@
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Resource Include="Gifs\Wait.gif" />
     <Resource Include="Images\AppLogo.png" />
     <Resource Include="Images\ChangePasswordIcon.png" />
     <Resource Include="Images\DayIcon.png" />
@@ -116,6 +118,7 @@
     <PackageReference Include="Supabase" Version="1.1.1" />
     <PackageReference Include="Supabase.Core" Version="1.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">

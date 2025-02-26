@@ -28,6 +28,12 @@ namespace WeatherPlusZero
             //UserManager.AuthService.UserManager = UserManager;
         }
 
+        public static async void StartApplication()
+        {
+            if (await ApplicationActivity.GetIsLogInFromApplicationActivityData())
+                await AutoLogIn();
+        }
+
         /// <summary>
         /// Validates user input fields based on the specified validation type.
         /// </summary>
@@ -71,8 +77,7 @@ namespace WeatherPlusZero
                     return;
                 }
 
-                string hashedPassword = HashPassword(user.password);
-                bool loginStatus = await DataBase.LoginUserOwnAuth(user.email, hashedPassword);
+                bool loginStatus = await DataBase.LoginUserOwnAuth(user.email, HashPassword(user.password));
 
                 if (loginStatus)
                 {
@@ -94,7 +99,23 @@ namespace WeatherPlusZero
             }
         }
 
-        public static async void LogInSuccess()
+        /// <summary>
+        /// The system automatically logs in instead of the user.
+        /// </summary>
+        public static async Task AutoLogIn()
+        {
+            userSessionWindow.ShowWaitGift(true);
+
+            ApplicationActivityData data = await ApplicationActivity.GetApplicationActivityData();
+
+            bool loginStatus = await DataBase.LoginUserOwnAuth(data.UserEmail, data.UserHashedPassword);
+            if (!loginStatus)
+                return;
+
+            LogInSuccess();
+        }
+
+        private static async void LogInSuccess()
         {
             NotificationManagement.ShowNotification(
                 "Login Successful",

@@ -43,11 +43,11 @@ namespace WeatherPlusZero
             InitializeApplication();
 
             await LocationService.SaveLocationDataAsync(); // Saves the location data.
-
-            string city = (await ApplicationActivity.GetIpLocationFromApplicationActivityData()).city; // Gets the city name.
+            ApplicationActivityData data = await ApplicationActivity.GetApplicationActivityData(); // Gets the application activity data.
+            string city = data.SelectCity ?? data.IpLocation.city; // Gets the city name.
             await SearchCity.SearchCityName(city); // Searches for the city name.
 
-            EmergencyWeatherAlertReportGenerator.EmergencySituationCheck((await FetchWeatherData()).CurrentConditions);
+            //EmergencyWeatherAlertReportGenerator.EmergencySituationCheck((await FetchWeatherData()).CurrentConditions);
 
             DailyWeatherWeatherInformation();
         }

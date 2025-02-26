@@ -55,12 +55,10 @@ namespace WeatherPlusZero
         /// <summary>
         /// Initializes the application by transitioning to the login panel.
         /// </summary>
-        private async void ApplicationStart()
+        private void ApplicationStart()
         {
+            UserManager.StartApplication();
             PanelTransition(Panels.Login);
-
-            if (await ApplicationActivity.GetIsLogInFromApplicationActivityData())
-                UserManager.LogInSuccess();
         }
 
         /// <summary>
@@ -289,6 +287,20 @@ namespace WeatherPlusZero
             {
                 textBox.Text = "";
             }
+        }
+
+        /// <summary>
+        /// Shows or hides the wait GIF based on the specified value.
+        /// </summary>
+        /// <param name="show">True to show the GIF, false to hide it.</param>
+        public void ShowWaitGift(bool show)
+        {
+            if (show)
+            {
+                WaitGifBorder.Visibility = Visibility.Visible;
+                return;
+            }
+            WaitGifBorder.Visibility = Visibility.Collapsed;
         }
     }
 

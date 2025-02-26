@@ -11,7 +11,6 @@ using Supabase.Postgrest.Exceptions;
 using Notification.Wpf;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using System.Windows.Media.Animation;
 using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
@@ -137,7 +136,7 @@ namespace WeatherPlusZero
 
             SaveIpLocationData();
 
-            NewSaveApplicationActivity();
+            SaveApplicationActivity();
 
             return true;
         }
@@ -178,7 +177,16 @@ namespace WeatherPlusZero
             Weather insertedWeather = await TAsyncAddRow<Weather>(newWeather);
             if (insertedWeather == null) return false;
 
-            UserCity newUserCity = new UserCity { userid = insertedUser.userid, cityid = insertedCity.cityid, notificationpreference = true };
+            UserCity newUserCity = new UserCity 
+            { 
+                userid = insertedUser.userid, 
+                cityid = insertedCity.cityid, 
+                
+                inappnotificationon = true, 
+                dailyweatheremailson = true, 
+                importantweatheremailson = true 
+            };
+
             UserCity insertedUserCity = await TAsyncAddRow<UserCity>(newUserCity);
             if (insertedUserCity == null) return false;
 
@@ -227,7 +235,7 @@ namespace WeatherPlusZero
         /// <summary>
         /// Saves the application activity data for the current user.
         /// </summary>
-        private static async void NewSaveApplicationActivity()
+        private static async void SaveApplicationActivity()
         {
             ApplicationActivityData data = new ApplicationActivityData
             {
@@ -239,12 +247,15 @@ namespace WeatherPlusZero
 
                 UserNameSurname = User.namesurname,
                 UserEmail = User.email,
+                UserHashedPassword = User.password,
+
+                IsLogIn = true,
 
                 SelectCity = Cities[0].cityname,
 
-                IsInAppNotificationOn = UserCities[0].notificationpreference,
-                IsDailyWeatherEmailsOpen = UserCities[0].notificationpreference,
-                IsImportantWeatherEmailsOn = UserCities[0].notificationpreference,
+                IsInAppNotificationOn = UserCities[0].inappnotificationon,
+                IsDailyWeatherEmailsOn = UserCities[0].dailyweatheremailson,
+                IsImportantWeatherEmailsOn = UserCities[0].importantweatheremailson,
 
                 IpLocation = await LocationService.GetLocationDataByApiAsync()
             };
@@ -319,7 +330,9 @@ namespace WeatherPlusZero
         public static int GetRecordId() => UserCities[0].recordid;
         public static int GetUserIdUserCity() => UserCities[0].userid;
         public static int GetCityIdUserCity() => UserCities[0].cityid;
-        public static bool GetNotificationPreference() => UserCities[0].notificationpreference;
+        public static bool GetInAppNotificationOn() => UserCities[0].inappnotificationon;
+        public static bool GetDailyWeatherEmailsOn() => UserCities[0].dailyweatheremailson;
+        public static bool GetImportantWeatherEmailsOn() => UserCities[0].importantweatheremailson;
 
         public static Notification GetNotification() => Notifications[0];
         public static int GetNotificationId() => Notifications[0].notificationid;
@@ -517,8 +530,14 @@ namespace WeatherPlusZero
         [Column("cityid")]
         public int cityid { get; set; } // WARNING => FOREIGN KEY
 
-        [Column("notificationpreference")]
-        public bool notificationpreference { get; set; } // WARNING => NOT NULL
+        [Column("inappnotificationon")]
+        public bool inappnotificationon { get; set; } // WARNING => NOT NULL
+
+        [Column("dailyweatheremailson")]
+        public bool dailyweatheremailson { get; set; } // WARNING => NOT NULL
+
+        [Column("importantweatheremailson")]
+        public bool importantweatheremailson { get; set; } // WARNING => NOT NULL
     }
 
     [Table("notifications")]

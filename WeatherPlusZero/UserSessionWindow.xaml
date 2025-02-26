@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WeatherPlusZero"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com" 
         mc:Ignorable="d"
         Title="Weather Plus Zero"
         Height="460"
@@ -12,17 +13,6 @@
         WindowStartupLocation="CenterScreen"
         Icon="Images/AppLogo.png">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80*"/>
-            <RowDefinition Height="280*"/>
-            <RowDefinition Height="80*"/>
-        </Grid.RowDefinitions>
-
         <!-- Background Image -->
         <Grid.Background>
             <ImageBrush x:Name="BackgroundImageBrush" 
@@ -30,8 +20,21 @@
                         Stretch="UniformToFill"/>
         </Grid.Background>
 
-        <!-- Login Panel Background -->
-        <Border x:Name="LoginPanelBackgroundBorder" 
+        <Border x:Name="UserProcessesBorder" Visibility="Visible">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80*"/>
+                    <RowDefinition Height="280*"/>
+                    <RowDefinition Height="80*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Login Panel Background -->
+                <Border x:Name="LoginPanelBackgroundBorder" 
                 IsEnabled="True"
                 CornerRadius="25"
                 Background="#33FFFFFF"
@@ -40,215 +43,100 @@
                 Grid.Column="1"
                 Grid.Row="1"
                 MaxWidth="300">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="130*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="28*"/>
-                </Grid.RowDefinitions>
-                <Image x:Name="UserProfileIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/LoginIcon.png"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="130*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="28*"/>
+                        </Grid.RowDefinitions>
+                        <Image x:Name="UserProfileIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/LoginIcon.png"/>
 
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
+                        <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
                             </Grid.ColumnDefinitions>
-                            <Image x:Name="Login_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="Login_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_EmailTextBox_TextChanged"/>
-                            <Image x:Name="Login_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="Login_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="Login_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_EmailTextBox_TextChanged"/>
+                                    <Image x:Name="Login_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                                </Grid>
+                            </Border>
                         </Grid>
-                    </Border>
-                </Grid>
 
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
+                        <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
                             </Grid.ColumnDefinitions>
-                            <Image x:Name="Login_PasswordIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="Login_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_PasswordTextBox_TextChanged"/>
-                            <Image x:Name="Login_PasswordStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="Login_PasswordIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="Login_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_PasswordTextBox_TextChanged"/>
+                                    <Image x:Name="Login_PasswordStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                                </Grid>
+                            </Border>
                         </Grid>
-                    </Border>
-                </Grid>
 
-                <Grid Grid.Row="3">
-                    <Button x:Name="ForgotPasswordButton" Content="Forgot Password" HorizontalAlignment="Center" Foreground="#FF60C3EF" VerticalAlignment="Center" Width="226" FontFamily="Arial Narrow" Click="ForgotPasswordClickButton">
-                    <Button.BorderBrush>
-                        <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                    </Button.BorderBrush>
-                    <Button.Background>
-                        <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
-                    </Button.Background>
-                    </Button>
-                </Grid>
-
-                <Grid Grid.Row="4">
-                    <Button x:Name="LogInButton" HorizontalAlignment="Center" Foreground="White" Grid.Row="4" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Log In" Click="LogInClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
-
-                <Grid Grid.Row="5">
-                    <Button x:Name="RegisterPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" Grid.Row="5" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Register Now" Click="RegisterPanelClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
-            </Grid>
-        </Border>
-
-        <!-- Register Panel Background -->
-        <Border x:Name="RegisterPanelBackgroundBorder" 
-                CornerRadius="25"
-                IsEnabled="True"
-                Background="#33FFFFFF"
-                BorderBrush="#66FFFFFF"
-                BorderThickness="0"
-                Grid.Column="1"
-                Grid.Row="1"
-                MaxWidth="300">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="130*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="28*"/>
-                </Grid.RowDefinitions>
-                
-                <Image x:Name="Register_UserProfileIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/RegisterProfileIcon.png"/>
-                
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image x:Name="Register_NamesurnameIconImage" Source="Images/NamesurnameIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="Register_NamesurnameTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_NamesurnameTextBox_TextChanged"/>
-                            <Image x:Name="Register_NamesurnameStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                        <Grid Grid.Row="3">
+                            <Button x:Name="ForgotPasswordButton" Content="Forgot Password" HorizontalAlignment="Center" Foreground="#FF60C3EF" VerticalAlignment="Center" Width="226" FontFamily="Arial Narrow" Click="ForgotPasswordClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
+                                </Button.Background>
+                            </Button>
                         </Grid>
-                    </Border>
-                </Grid>
 
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image x:Name="Register_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="Register_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_EmailTextBox_TextChanged"/>
-                            <Image x:Name="Register_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                        <Grid Grid.Row="4">
+                            <Button x:Name="LogInButton" HorizontalAlignment="Center" Foreground="White" Grid.Row="4" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Log In" Click="LogInClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
+                                </Button.Background>
+                            </Button>
                         </Grid>
-                    </Border>
-                </Grid>
 
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image x:Name="Register_PasswordIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="Register_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_PasswordTextBox_TextChanged"/>
-                            <Image x:Name="Register_PasswordStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                        <Grid Grid.Row="5">
+                            <Button x:Name="RegisterPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" Grid.Row="5" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Register Now" Click="RegisterPanelClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
+                                </Button.Background>
+                            </Button>
                         </Grid>
-                    </Border>
-                </Grid>
-
-                <Grid Grid.Row="4">
-                    <Button x:Name="RegisterButton" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Register" Click="RegisterClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
-
-                    <Grid Grid.Row="5">
-                        <Button x:Name="Register_LoginPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Log In" Click="LogInPanelClickButton">
-                            <Button.BorderBrush>
-                                <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                            </Button.BorderBrush>
-                            <Button.Background>
-                                <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
-                            </Button.Background>
-                        </Button>
                     </Grid>
-                </Grid>
-        </Border>
+                </Border>
 
-        <!-- Forgot Panel Background -->
-        <Border x:Name="ForgotPanelBackgroundBorder" 
+                <!-- Register Panel Background -->
+                <Border x:Name="RegisterPanelBackgroundBorder" 
                 CornerRadius="25"
                 IsEnabled="True"
                 Background="#33FFFFFF"
@@ -257,226 +145,362 @@
                 Grid.Column="1"
                 Grid.Row="1"
                 MaxWidth="300">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="130*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="28*"/>
-                </Grid.RowDefinitions>
-                
-                <Image x:Name="Forgot_UserProfileIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/ForgotProfileIcon.png"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="130*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="28*"/>
+                        </Grid.RowDefinitions>
 
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
+                        <Image x:Name="Register_UserProfileIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/RegisterProfileIcon.png"/>
+
+                        <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
                             </Grid.ColumnDefinitions>
-                            <Image x:Name="Forgot_NamesurnameIconImage" Source="Images/NamesurnameIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="Forgot_NamesurnameTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_NamesurnameTextBox_TextChanged"/>
-                            <Image x:Name="Forgot_NamesurnameStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="Register_NamesurnameIconImage" Source="Images/NamesurnameIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="Register_NamesurnameTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_NamesurnameTextBox_TextChanged"/>
+                                    <Image x:Name="Register_NamesurnameStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                                </Grid>
+                            </Border>
                         </Grid>
-                    </Border>
-                </Grid>
 
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
+                        <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
                             </Grid.ColumnDefinitions>
-                            <Image x:Name="Forgot_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="Forgot_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_EmailTextBox_TextChanged"/>
-                            <Image x:Name="Forgot_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="Register_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="Register_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_EmailTextBox_TextChanged"/>
+                                    <Image x:Name="Register_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                                </Grid>
+                            </Border>
                         </Grid>
-                    </Border>
-                </Grid>
 
-                <Grid Grid.Row="4">
-                    <Button x:Name="ForgotButton" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Forgot" Click="ForgotClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="Register_PasswordIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="Register_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_PasswordTextBox_TextChanged"/>
+                                    <Image x:Name="Register_PasswordStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
 
-                <Grid Grid.Row="5">
-                    <Button x:Name="Forgot_LoginPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Log In" Click="LogInPanelClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
+                        <Grid Grid.Row="4">
+                            <Button x:Name="RegisterButton" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Register" Click="RegisterClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+
+                        <Grid Grid.Row="5">
+                            <Button x:Name="Register_LoginPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Log In" Click="LogInPanelClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Forgot Panel Background -->
+                <Border x:Name="ForgotPanelBackgroundBorder" 
+                CornerRadius="25"
+                IsEnabled="True"
+                Background="#33FFFFFF"
+                BorderBrush="#66FFFFFF"
+                BorderThickness="0"
+                Grid.Column="1"
+                Grid.Row="1"
+                MaxWidth="300">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="130*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="28*"/>
+                        </Grid.RowDefinitions>
+
+                        <Image x:Name="Forgot_UserProfileIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/ForgotProfileIcon.png"/>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="Forgot_NamesurnameIconImage" Source="Images/NamesurnameIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="Forgot_NamesurnameTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_NamesurnameTextBox_TextChanged"/>
+                                    <Image x:Name="Forgot_NamesurnameStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="Forgot_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="Forgot_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_EmailTextBox_TextChanged"/>
+                                    <Image x:Name="Forgot_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Grid Grid.Row="4">
+                            <Button x:Name="ForgotButton" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Forgot" Click="ForgotClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+
+                        <Grid Grid.Row="5">
+                            <Button x:Name="Forgot_LoginPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Log In" Click="LogInPanelClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- E-Mail Verification Panel Background -->
+                <Border x:Name="EmailVerificationPanelBackgroundBorder" 
+                CornerRadius="25"
+                IsEnabled="True"
+                Background="#33FFFFFF"
+                BorderBrush="#66FFFFFF"
+                BorderThickness="0"
+                Grid.Column="1"
+                Grid.Row="1"
+                MaxWidth="300">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="130*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="28*"/>
+                        </Grid.RowDefinitions>
+
+                        <Image x:Name="EmailVerification_PanelIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/EmailVerificationPanelIcon.png"/>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="EmailVerification_KeyCodeIconImage" Source="Images/KeyCodeIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="EmailVerification_KeyCodeTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="EmailVerification_EmailKeyCodeTextBox_TextChanged"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <TextBlock x:Name="EmailVerification_TimerTextBlock" Text="00:00" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontWeight="Bold"/>
+                        </Grid>
+
+                        <Grid Grid.Row="3">
+                            <Button x:Name="EmailVerificationButton" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Verification" Click="EmailVerificationClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+
+                        <Grid Grid.Row="4">
+                            <Button x:Name="EmailVerification_LoginPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Log In" Click="LogInPanelClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Change Password Panel Background -->
+                <Border x:Name="ChangePasswordPanelBackgroundBorder" 
+                CornerRadius="25"
+                IsEnabled="True"
+                Background="#33FFFFFF"
+                BorderBrush="#66FFFFFF"
+                BorderThickness="0"
+                Grid.Column="1"
+                Grid.Row="1"
+                MaxWidth="300">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="130*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="28*"/>
+                        </Grid.RowDefinitions>
+
+                        <Image x:Name="ChangePassword_PanelIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/ChangePasswordIcon.png"/>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="6*"/>
+                                <ColumnDefinition Width="77*"/>
+                                <ColumnDefinition Width="6*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="30*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="ChangePassword_LockIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
+                                    <TextBox x:Name="ChangePassword_ChangePasswordTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="ChangePassword_ChangePasswordTextBox_TextChanged"/>
+                                    <Image x:Name="ChangePassword_StatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Grid Grid.Row="3">
+                            <Button x:Name="ChangePasswordButton" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Change Password" Click="ChangePasswordClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+
+                        <Grid Grid.Row="4">
+                            <Button x:Name="ChangePassword_LoginPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Log In" Click="LogInPanelClickButton">
+                                <Button.BorderBrush>
+                                    <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                                </Button.BorderBrush>
+                                <Button.Background>
+                                    <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
 
-        <!-- E-Mail Verification Panel Background -->
-        <Border x:Name="EmailVerificationPanelBackgroundBorder" 
-                CornerRadius="25"
-                IsEnabled="True"
-                Background="#33FFFFFF"
-                BorderBrush="#66FFFFFF"
-                BorderThickness="0"
-                Grid.Column="1"
-                Grid.Row="1"
-                MaxWidth="300">
+        <Border x:Name="WaitGifBorder" Visibility="Visible">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="130*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="28*"/>
+                    <RowDefinition Height="145*"/>
+                    <RowDefinition Height="123*"/>
+                    <RowDefinition Height="145*"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="145*"/>
+                    <ColumnDefinition Width="123*"/>
+                    <ColumnDefinition Width="145*"/>
+                </Grid.ColumnDefinitions>
 
-                <Image x:Name="EmailVerification_PanelIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/EmailVerificationPanelIcon.png"/>
-
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image x:Name="EmailVerification_KeyCodeIconImage" Source="Images/KeyCodeIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="EmailVerification_KeyCodeTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="EmailVerification_EmailKeyCodeTextBox_TextChanged"/>
-                        </Grid>
-                    </Border>
-                </Grid>
-
-                <Grid Grid.Row="2">
-                    <TextBlock x:Name="EmailVerification_TimerTextBlock" Text="00:00" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontWeight="Bold"/>
-                </Grid>
-            
-                <Grid Grid.Row="3">
-                    <Button x:Name="EmailVerificationButton" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Verification" Click="EmailVerificationClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
-
-                <Grid Grid.Row="4">
-                    <Button x:Name="EmailVerification_LoginPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Log In" Click="LogInPanelClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
-            </Grid>
-        </Border>
-
-        <!-- Change Password Panel Background -->
-        <Border x:Name="ChangePasswordPanelBackgroundBorder" 
-                CornerRadius="25"
-                IsEnabled="True"
-                Background="#33FFFFFF"
-                BorderBrush="#66FFFFFF"
-                BorderThickness="0"
-                Grid.Column="1"
-                Grid.Row="1"
-                MaxWidth="300">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="130*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="35*"/>
-                    <RowDefinition Height="28*"/>
-                </Grid.RowDefinitions>
-
-                <Image x:Name="ChangePassword_PanelIconImage" HorizontalAlignment="Center" Height="115" Margin="0,10,0,0" VerticalAlignment="Top" Width="115" Source="Images/ChangePasswordIcon.png"/>
-
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="6*"/>
-                        <ColumnDefinition Width="77*"/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" Grid.Column="1" CornerRadius="5,5,5,5" Grid.ColumnSpan="2" Margin="0,0,18,0">
-                        <Border.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="0.5"/>
-                        </Border.Background>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*"/>
-                                <ColumnDefinition Width="150*"/>
-                                <ColumnDefinition Width="30*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image x:Name="ChangePassword_LockIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                            <TextBox x:Name="ChangePassword_ChangePasswordTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="ChangePassword_ChangePasswordTextBox_TextChanged"/>
-                            <Image x:Name="ChangePassword_StatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
-                        </Grid>
-                    </Border>
-                </Grid>
-
-                <Grid Grid.Row="3">
-                    <Button x:Name="ChangePasswordButton" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" Width="124" FontFamily="Arial" Content="Change Password" Click="ChangePasswordClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FF60C3EF" Opacity="1"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
-
-                <Grid Grid.Row="4">
-                    <Button x:Name="ChangePassword_LoginPanelButton" HorizontalAlignment="Center" Foreground="#FFADDFF6" VerticalAlignment="Center" Width="226" FontFamily="Agency FB" Content="Log In" Click="LogInPanelClickButton">
-                        <Button.BorderBrush>
-                            <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                        </Button.BorderBrush>
-                        <Button.Background>
-                            <SolidColorBrush Color="#FFDDDDDD" Opacity="0"/>
-                        </Button.Background>
-                    </Button>
-                </Grid>
+                <Border Grid.Column="1" Grid.Row="1">
+                    <Image gif:ImageBehavior.AnimatedSource="Gifs/Wait.gif" />
+                </Border>
             </Grid>
         </Border>
     </Grid>

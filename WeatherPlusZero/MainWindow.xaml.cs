@@ -357,7 +357,7 @@ namespace WeatherPlusZero
             UserEmailTextBlock.Text = "Email: " + data.UserEmail;
 
             InAppCheckBox.IsChecked = data.IsInAppNotificationOn;
-            DailyWeatherCheckBox.IsChecked = data.IsDailyWeatherEmailsOpen;
+            DailyWeatherCheckBox.IsChecked = data.IsDailyWeatherEmailsOn;
             EmergencyWeatherCheckBox.IsChecked = data.IsImportantWeatherEmailsOn;
 
             UserSelectCityTextBlock.Text = "Selected City: " + data.SelectCity;

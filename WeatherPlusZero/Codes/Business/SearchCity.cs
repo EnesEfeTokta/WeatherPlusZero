@@ -77,7 +77,9 @@ namespace WeatherPlusZero
             UserCity userCity = DataBase.GetUserCity();
             userCity.userid = DataBase.GetUserId();
             userCity.cityid = city.cityid;
-            userCity.notificationpreference = true;
+            userCity.inappnotificationon = userCity.inappnotificationon;
+            userCity.dailyweatheremailson = userCity.dailyweatheremailson;
+            userCity.importantweatheremailson = userCity.importantweatheremailson;
 
             Weather weather = DataBase.GetWeather();
             weather.cityid = city.cityid;
@@ -94,7 +96,10 @@ namespace WeatherPlusZero
             {
                 userid = DataBase.GetUserId(),
                 cityid = DataBase.GetCityId(),
-                notificationpreference = await ApplicationActivity.GetIsInAppNotificationOnFromApplicationActivityData()
+
+                inappnotificationon = await ApplicationActivity.GetIsInAppNotificationOnFromApplicationActivityData(),
+                dailyweatheremailson = await ApplicationActivity.GetIsDailyWeatherEmailsOpenFromApplicationActivityData(),
+                importantweatheremailson = await ApplicationActivity.GetIsImportantWeatherEmailsOnFromApplicationActivityData()
             };
 
             await DataBase.TAsyncAddRow<UserCity>(userCity);

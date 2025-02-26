@@ -118,7 +118,8 @@ namespace WeatherPlusZero
         /// <param name="report">The generated report as a string.</param>
         private static async Task SendReport(string report)
         {
-            await EmailService.SendMail_SendGrid(await ApplicationActivity.GetApplicationActivityData(), report);
+            // todo: Sürekli E-Posta gönderimi yapılır....
+            //await EmailService.SendMail_SendGrid(await ApplicationActivity.GetApplicationActivityData(), report);
         }
     }
 }
