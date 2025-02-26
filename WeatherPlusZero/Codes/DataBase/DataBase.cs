@@ -12,6 +12,7 @@ using Notification.Wpf;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Windows.Media.Animation;
+using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {
@@ -134,9 +135,21 @@ namespace WeatherPlusZero
 
             await GetDatabaseData();
 
+            SaveIpLocationData();
+
             NewSaveApplicationActivity();
 
             return true;
+        }
+
+        private static async void SaveIpLocationData()
+        {
+            IpLocationUser newIpLocationUser = new IpLocationUser()
+            {
+                userid = User.userid,
+                locationdata = await LocationService.GetLocationDataByApiAsync()
+            };
+            await TAsyncAddRow<IpLocationUser>(newIpLocationUser);
         }
 
         /// <summary>
@@ -155,11 +168,13 @@ namespace WeatherPlusZero
             if (UserCities == null) UserCities = new List<UserCity>();
             if (Notifications == null) Notifications = new List<Notification>();
 
-            City newCity = new City { cityname = "Ankara", countryname = "Turkey" };
+            IpLocation ipLocation = await LocationService.GetLocationDataByApiAsync();
+
+            City newCity = new City { cityname = ipLocation.city, countryname = ipLocation.country };
             City insertedCity = await TAsyncAddRow<City>(newCity);
             if (insertedCity == null) return false;
 
-            Weather newWeather = new Weather { cityid = insertedCity.cityid, weatherdata = await WeatherManager.GetWeatherDataAsync("Ankara", true) };
+            Weather newWeather = new Weather { cityid = insertedCity.cityid, weatherdata = await WeatherManager.GetWeatherDataAsync(ipLocation.city, true) };
             Weather insertedWeather = await TAsyncAddRow<Weather>(newWeather);
             if (insertedWeather == null) return false;
 
@@ -212,7 +227,7 @@ namespace WeatherPlusZero
         /// <summary>
         /// Saves the application activity data for the current user.
         /// </summary>
-        private static void NewSaveApplicationActivity()
+        private static async void NewSaveApplicationActivity()
         {
             ApplicationActivityData data = new ApplicationActivityData
             {
@@ -226,9 +241,12 @@ namespace WeatherPlusZero
                 UserEmail = User.email,
 
                 SelectCity = Cities[0].cityname,
+
                 IsInAppNotificationOn = UserCities[0].notificationpreference,
-                IsDailyWeatherEmailsOpen = true,
-                IsImportantWeatherEmailsOn = true,
+                IsDailyWeatherEmailsOpen = UserCities[0].notificationpreference,
+                IsImportantWeatherEmailsOn = UserCities[0].notificationpreference,
+
+                IpLocation = await LocationService.GetLocationDataByApiAsync()
             };
 
             ApplicationActivity.SaveApplicationActivityData(data);
@@ -446,7 +464,7 @@ namespace WeatherPlusZero
     public class User : BaseModel
     {
         [PrimaryKey("userid")]
-        public int userid { get; set; } // WARNING => User ID is given a random number by Supabase. So it cannot get value from here.
+        public int userid { get; set; } // WARNING => PRIMARY KEY
 
         [Column("namesurname")]
         public string namesurname { get; set; } // WARNING => NOT NULL
@@ -465,7 +483,7 @@ namespace WeatherPlusZero
     public class City : BaseModel
     {
         [PrimaryKey("cityid")]
-        public int cityid { get; set; } // WARNING => City ID is given a random number by Supabase. So it cannot get value from here.
+        public int cityid { get; set; } // WARNING => PRIMARY KEY
 
         [Column("cityname")]
         public string cityname { get; set; } // WARNING => NOT NULL
@@ -478,7 +496,7 @@ namespace WeatherPlusZero
     public class Weather : BaseModel
     {
         [PrimaryKey("weatherid")]
-        public int weatherid { get; set; } // WARNING => Weather ID is given a random number by Supabase. So it cannot get value from here.
+        public int weatherid { get; set; } // WARNING => PRIMARY KEY
 
         [Column("cityid")]
         public int cityid { get; set; } // WARNING => FOREIGN KEY
@@ -491,7 +509,7 @@ namespace WeatherPlusZero
     public class UserCity : BaseModel
     {
         [PrimaryKey("recordid")]
-        public int recordid { get; set; } // WARNING => Record ID is given a random number by Supabase. So it cannot get value from here.
+        public int recordid { get; set; } // WARNING => PRIMARY KEY
 
         [Column("userid")]
         public int userid { get; set; } // WARNING => FOREIGN KEY
@@ -507,7 +525,7 @@ namespace WeatherPlusZero
     public class Notification : BaseModel
     {
         [PrimaryKey("notificationid")]
-        public int notificationid { get; set; } // WARNING => Notification ID is given a random number by Supabase. So it cannot get value from here.
+        public int notificationid { get; set; } // WARNING => PRIMARY KEY
 
         [Column("userid")]
         public int userid { get; set; } // WARNING => FOREIGN KEY
@@ -520,5 +538,18 @@ namespace WeatherPlusZero
 
         [Column("notificationdatetime")]
         public DateTime notificationdatetime { get; set; } // WARNING => Notification Date Time is given a value by Supabase. Therefore it cannot get value from here.
+    }
+
+    [Table("iplocationusers")]
+    public class IpLocationUser : BaseModel
+    {
+        [PrimaryKey("recordid")]
+        public int iplocationid { get; set; } // WARNING => PRIMARY KEY
+
+        [Column("userid")]
+        public int userid { get; set; } // WARNING => FOREIGN KEY
+
+        [Column("locationdata")]
+        public IpLocation locationdata { get; set; } // WARNING => NOT NULL
     }
 }

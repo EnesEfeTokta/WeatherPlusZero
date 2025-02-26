@@ -49,5 +49,11 @@ namespace WeatherPlusZero
             DateTime lastUpdated = DateTime.Parse(data.CurrentConditions.Datetime);
             return (DateTime.UtcNow - lastUpdated).TotalHours > 5;
         }
+
+        // Saves the null weather data.
+        public static async void ClearWeatherData()
+        {
+            await _jsonProvider.SaveWeatherDataAsync(null);
+        }
     }
 }

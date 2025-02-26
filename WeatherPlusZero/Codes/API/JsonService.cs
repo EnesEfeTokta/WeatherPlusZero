@@ -28,10 +28,7 @@ namespace WeatherPlusZero.Codes.API
 
         // Saves the application activity data to the json file.
         public async Task SaveApplicationActivityDataAsync(ApplicationActivityData data)
-        {
-            await File.WriteAllTextAsync(ApplicationActivityDataJsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
-            await SettingsPanelManager.UpdateSettingsPanelAsync();
-        }
+            => await File.WriteAllTextAsync(ApplicationActivityDataJsonFilePath, JsonConvert.SerializeObject(data, Formatting.Indented));
 
         // Fetches application activity data from the json file.
         public async Task<ApplicationActivityData> GetApplicationActivityDataAsync()

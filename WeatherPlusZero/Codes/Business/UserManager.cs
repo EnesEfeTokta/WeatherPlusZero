@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Notification.Wpf;
+using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {
@@ -75,12 +76,7 @@ namespace WeatherPlusZero
 
                 if (loginStatus)
                 {
-                    NotificationManagement.ShowNotification(
-                        "Login Successful",
-                        "Entry is successful. You will soon be redirected to the main screen...",
-                        NotificationType.Success);
-
-                    Application.Current.Dispatcher.Invoke(() => WindowTransition());
+                    LogInSuccess();
                 }
                 else
                 {
@@ -96,6 +92,18 @@ namespace WeatherPlusZero
                     "Error", $"An error occurred during login: {ex.Message}",
                     NotificationType.Error);
             }
+        }
+
+        public static async void LogInSuccess()
+        {
+            NotificationManagement.ShowNotification(
+                "Login Successful",
+                "Entry is successful. You will soon be redirected to the main screen...",
+                NotificationType.Success);
+
+            await ApplicationActivity.ChangeApplicationActivityDataByLogIn(true);
+
+            Application.Current.Dispatcher.Invoke(() => WindowTransition());
         }
 
         /// <summary>
@@ -231,6 +239,18 @@ namespace WeatherPlusZero
                 "Password Changed",
                 "Your password has been successfully changed.",
                 NotificationType.Success);
+        }
+
+
+        /// <summary>
+        /// Logs out the current user.
+        /// Application activities and weather data are cleared.
+        /// </summary>
+        /// <returns></returns>
+        public static void LogOut()
+        {
+            ApplicationActivity.ClearApplicationActivityData();
+            WeatherManager.ClearWeatherData();
         }
 
         /// <summary>

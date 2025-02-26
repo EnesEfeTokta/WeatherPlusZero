@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 using WeatherPlusZero.Codes.API;
+using Notification.Wpf;
 
 namespace WeatherPlusZero
 {
@@ -15,17 +16,19 @@ namespace WeatherPlusZero
         // Fetches weather data from the API.
         public async Task<WeatherData> GetWeatherDataAsync(string city)
         {
-            //try
-            //{
-            //    var response = await _httpClient.GetStringAsync(BuildApiUrl(city));
-            //    return DeserializeWeatherData(response);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return null;
-            //}
-            var response = await _httpClient.GetStringAsync(BuildApiUrl(city));
-            return DeserializeWeatherData(response);
+            try
+            {
+                var response = await _httpClient.GetStringAsync(BuildApiUrl(city));
+                return DeserializeWeatherData(response);
+            }
+            catch (Exception ex)
+            {
+                NotificationManagement.ShowNotification(
+                    "City Search Error", 
+                    $"Data could not be retrieved from the city you wanted to search. Error: {ex}", 
+                    NotificationType.Error);
+                return null;
+            }
         }
 
         // Saves the weather data to the json file.

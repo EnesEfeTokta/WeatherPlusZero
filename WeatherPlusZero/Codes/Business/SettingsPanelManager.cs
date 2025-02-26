@@ -16,13 +16,14 @@ namespace WeatherPlusZero
             mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
         }
 
-        public static async Task UpdateSettingsPanelAsync()
+        public static void OpenSettingsPanel()
         {
-            ApplicationActivityData applicationActivityData = await ApplicationActivity.GetApplicationActivityData();
-            UpdateUI(applicationActivityData);
+            UpdateSettingsPanelAsync();
         }
 
-        public static async Task UpdateNotificationsApplicationActivityDataAsync(bool isInAppNotificationOn, bool isDailyWeatherEmailsOpen, bool isImportantWeatherEmailsOn)
+        public static async void UpdateSettingsPanelAsync() => UpdateUI(await ApplicationActivity.GetApplicationActivityData());
+
+        public static async void UpdateNotificationsApplicationActivityDataAsync(bool isInAppNotificationOn, bool isDailyWeatherEmailsOpen, bool isImportantWeatherEmailsOn)
         {
             ApplicationActivityData applicationActivityData = await ApplicationActivity.GetApplicationActivityData();
 
@@ -32,15 +33,15 @@ namespace WeatherPlusZero
 
             await ApplicationActivity.UpdateApplicationActivityData(applicationActivityData);
 
-            await UpdateSettingsPanelAsync();
+            UpdateSettingsPanelAsync();
         }
 
-        public static async void ClearCity()
+        public static void ClearCity()
         {
             JsonService jsonService = new JsonService();
             jsonService.RemoveCity();
 
-            await UpdateSettingsPanelAsync();
+            UpdateSettingsPanelAsync();
         }
 
         public static void GoToGitHubPage()
@@ -51,10 +52,11 @@ namespace WeatherPlusZero
             });
         }
 
-        public static async Task LogOutAsync()
+        public static void LogOut()
         {
+            ApplicationActivity.ClearApplicationActivityData();
+            WeatherManager.ClearWeatherData();
             WindowTransition();
-            await ApplicationActivity.ClearApplicationActivityData();
         }
 
         private static void WindowTransition()

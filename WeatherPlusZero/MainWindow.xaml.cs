@@ -327,9 +327,14 @@ namespace WeatherPlusZero
         private void SettingsShowButton_Click(object sender, RoutedEventArgs e)
         {
             if (isSettingsPanelVisible)
+            {
                 SettingsPanelBorder.Visibility = Visibility.Hidden;
+            }
             else
+            {
                 SettingsPanelBorder.Visibility = Visibility.Visible;
+                SettingsPanelManager.OpenSettingsPanel();
+            }
 
             isSettingsPanelVisible = !isSettingsPanelVisible;
         }
@@ -337,9 +342,9 @@ namespace WeatherPlusZero
         /// <summary>
         /// Logs the user out of the application.
         /// </summary>
-        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            await SettingsPanelManager.LogOutAsync();
+            SettingsPanelManager.LogOut();
         }
 
         /// <summary>
@@ -358,11 +363,11 @@ namespace WeatherPlusZero
             UserSelectCityTextBlock.Text = "Selected City: " + data.SelectCity;
         }
 
-        private async void NotificationsCheckBox_Changed(object sender, RoutedEventArgs e)
+        private void NotificationsCheckBox_Changed(object sender, RoutedEventArgs e)
         {
             if (!isSettingsPanelVisible) // If the settings panel is not visible, do not return.
                 return;
-            await SettingsPanelManager.UpdateNotificationsApplicationActivityDataAsync(
+            SettingsPanelManager.UpdateNotificationsApplicationActivityDataAsync(
                 InAppCheckBox.IsChecked ?? false,
                 DailyWeatherCheckBox.IsChecked ?? false,
                 EmergencyWeatherCheckBox.IsChecked ?? false);

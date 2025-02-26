@@ -55,8 +55,13 @@ namespace WeatherPlusZero
         /// <summary>
         /// Initializes the application by transitioning to the login panel.
         /// </summary>
-        private void ApplicationStart()
-            => PanelTransition(Panels.Login);
+        private async void ApplicationStart()
+        {
+            PanelTransition(Panels.Login);
+
+            if (await ApplicationActivity.GetIsLogInFromApplicationActivityData())
+                UserManager.LogInSuccess();
+        }
 
         /// <summary>
         /// Handles the login process when the login button is clicked.

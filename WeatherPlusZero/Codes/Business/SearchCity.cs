@@ -100,13 +100,13 @@ namespace WeatherPlusZero
             await DataBase.TAsyncAddRow<UserCity>(userCity);
         }
 
-            /// <summary>
-            /// Checks if the city name is valid.
-            /// Checks if the city name is empty, contains emojis, or special characters.
-            /// </summary>
-            /// <param name="city">City name to check.</param>
-            /// <returns>True if city name is invalid, false otherwise.</returns>
-            private static bool IsInvalidCityName(string city) => string.IsNullOrWhiteSpace(city) || ContainsEmoji(city) || ContainsSpecialCharacters(city);
+        /// <summary>
+        /// Checks if the city name is valid.
+        /// Checks if the city name is empty, contains emojis, or special characters.
+        /// </summary>
+        /// <param name="city">City name to check.</param>
+        /// <returns>True if city name is invalid, false otherwise.</returns>
+        private static bool IsInvalidCityName(string city) => string.IsNullOrWhiteSpace(city) || ContainsEmoji(city) || ContainsSpecialCharacters(city);
 
         /// <summary>
         /// Checks if the input text contains emoji characters.

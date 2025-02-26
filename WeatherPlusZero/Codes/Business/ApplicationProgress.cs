@@ -41,10 +41,15 @@ namespace WeatherPlusZero
         public static async void ApplicationStart()
         {
             InitializeApplication();
-            await SettingsPanelManager.UpdateSettingsPanelAsync();
-            DailyWeatherWeatherInformation();
+
+            await LocationService.SaveLocationDataAsync(); // Saves the location data.
+
+            string city = (await ApplicationActivity.GetIpLocationFromApplicationActivityData()).city; // Gets the city name.
+            await SearchCity.SearchCityName(city); // Searches for the city name.
 
             EmergencyWeatherAlertReportGenerator.EmergencySituationCheck((await FetchWeatherData()).CurrentConditions);
+
+            DailyWeatherWeatherInformation();
         }
 
         private static async void DailyWeatherWeatherInformation()
@@ -148,6 +153,11 @@ namespace WeatherPlusZero
             string city = (await jsonService.GetApplicationActivityDataAsync()).SelectCity; // Gets city information.
 
             return await WeatherManager.GetWeatherDataAsync(city, false);
+        }
+
+        public static void LogOut()
+        {
+            UserManager.LogOut();
         }
     }
 }

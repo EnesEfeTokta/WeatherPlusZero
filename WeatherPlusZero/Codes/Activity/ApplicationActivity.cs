@@ -49,7 +49,7 @@ namespace WeatherPlusZero
         }
 
         // The application is deleting Activity Data.
-        public static async Task ClearApplicationActivityData()
+        public static async void ClearApplicationActivityData()
         {
             JsonService jsonService = new JsonService();
 
@@ -59,6 +59,7 @@ namespace WeatherPlusZero
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
 
+        #region Change Methods
         // Save the city selected by the user.
         public static async Task ChangeApplicationActivityDataByCity(string city)
         {
@@ -107,6 +108,30 @@ namespace WeatherPlusZero
             await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
 
+        // Save the location information.
+        public static async Task ChangeApplicationActivityDataByLocation(IpLocation ipLocation)
+        {
+            JsonService jsonService = new JsonService();
+
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+            applicationActivityData.IpLocation = ipLocation;
+
+            await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
+        }
+
+        // Save the LogIn status.
+        public static async Task ChangeApplicationActivityDataByLogIn(bool isLogIn)
+        {
+            JsonService jsonService = new JsonService();
+
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+            applicationActivityData.IsLogIn = isLogIn;
+
+            await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
+        }
+        #endregion
+
+        #region Get Methods
         // Get the name of the logged in user.
         public static async Task<string> GetUserNameSurnameFromApplicationActivityData()
         {
@@ -162,6 +187,23 @@ namespace WeatherPlusZero
 
             return applicationActivityData.FirstDailyInformationDateTime;
         }
+
+        // Get the location information.
+        public static async Task<IpLocation> GetIpLocationFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.IpLocation;
+        }
+
+        // Get the LogIn status.
+        public static async Task<bool> GetIsLogInFromApplicationActivityData()
+        {
+            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
+
+            return applicationActivityData.IsLogIn;
+        }
+        #endregion
     }
 
     public class ApplicationActivityData
@@ -175,6 +217,8 @@ namespace WeatherPlusZero
         public string UserNameSurname { get; set; } // User name and surname information.
         public string UserEmail { get; set; } // User email information.
 
+        public bool IsLogIn { get; set; } = false; // Login status.
+
         public string SelectCity { get; set; } = "Oltu"; // City information.
 
         public bool IsInAppNotificationOn { get; set; } = true; // In-app notification status.
@@ -182,5 +226,7 @@ namespace WeatherPlusZero
         public bool IsImportantWeatherEmailsOn { get; set; } = true; // Important weather email status.
 
         public string FirstDailyInformationDateTime { get; set; } = "01.01.0001 01:01:01"; // First daily information date and time.
+
+        public IpLocation IpLocation { get; set; } // Location information.
     }
 }
