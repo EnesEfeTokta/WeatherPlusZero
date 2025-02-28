@@ -153,10 +153,5 @@ namespace WeatherPlusZero
 
             return await WeatherManager.GetWeatherDataAsync(city, false);
         }
-
-        public static void LogOut()
-        {
-            UserManager.LogOut();
-        }
     }
 }

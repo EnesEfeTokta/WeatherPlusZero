@@ -4,10 +4,11 @@ using Newtonsoft.Json;
 using System.Net.NetworkInformation;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace WeatherPlusZero
 {
-    public abstract class WeatherServiceBase
+    public abstract class JsonServiceBase
     {
         // API key and base URL.
         protected string API_KEY { get; set; }
@@ -22,18 +23,30 @@ namespace WeatherPlusZero
         // Path to the json file.
         protected static readonly string WeatherDataJsonFilePath = Path.Combine(AppDataPath, "WeatherData.json");
 
-        // Path to the json file.
+        // Path to the json file for ApplicationActivityData (şifrelenmiş olarak saklanacak)
         protected static readonly string ApplicationActivityDataJsonFilePath = Path.Combine(AppDataPath, "ApplicationActivityData.json");
 
-        // Path to the application data folder.
-        static WeatherServiceBase()
+        static JsonServiceBase()
         {
             Directory.CreateDirectory(AppDataPath);
+
+            // Ensure WeatherData.json exists (plain text)
+            if (!File.Exists(WeatherDataJsonFilePath))
+            {
+                File.WriteAllText(WeatherDataJsonFilePath, "{}");
+            }
+
+            // Ensure ApplicationActivityData.json exists (encrypted empty JSON object)
+            if (!File.Exists(ApplicationActivityDataJsonFilePath))
+            {
+                byte[] encryptedEmpty = Encryption.EncryptData(Encoding.UTF8.GetBytes("{}"));
+                File.WriteAllBytes(ApplicationActivityDataJsonFilePath, encryptedEmpty);
+            }
         }
 
         protected IConfiguration Configuration { get; }
 
-        public WeatherServiceBase()
+        public JsonServiceBase()
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -49,8 +62,8 @@ namespace WeatherPlusZero
             string.Format(API_BASE_URL, Uri.EscapeDataString(city), API_KEY);
     }
 
-    
-    
+
+
     public class NetworkChecker
     {
         // Checks if the device is connected to the internet.
@@ -100,8 +113,8 @@ namespace WeatherPlusZero
             writer.WriteValue(value.ToString());
     }
 
-    
-    
+
+
     public class WeatherData
     {
         public short QueryCost { get; set; }

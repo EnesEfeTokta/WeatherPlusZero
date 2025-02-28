@@ -31,7 +31,7 @@ namespace WeatherPlusZero
                 .Build();
 
             string imageUrl = $"BackgroundImageURLs:{weatherData.CurrentConditions.Icon}-background";
-
+            
             Application.Current.Dispatcher.Invoke(() =>
             {
                 UpdateBackgroudImage(Configuration[imageUrl], mainWindow);

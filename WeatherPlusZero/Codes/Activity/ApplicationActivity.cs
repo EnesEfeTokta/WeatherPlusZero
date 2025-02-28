@@ -1,33 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WeatherPlusZero.Codes.API;
-using System.Windows.Controls;
-using Notifications.Wpf.Annotations;
 
 namespace WeatherPlusZero
 {
     public static class ApplicationActivity
     {
         // Save the application activity data.
-        public static async void SaveApplicationActivityData(ApplicationActivityData data)
+        public static async Task SaveApplicationActivityData(ApplicationActivityData data)
         {
             JsonService jsonService = new JsonService();
 
             await jsonService.SaveApplicationActivityDataAsync(data);
-        }
-
-        // Save the city selected by the user.
-        public static async Task SaveApplicationActivityDataByCity(string city)
-        {
-            JsonService jsonService = new JsonService();
-
-            ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
-            applicationActivityData.SelectCity = city;
-
-            await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
         }
 
         // Get the application activity data.
@@ -53,10 +36,7 @@ namespace WeatherPlusZero
         {
             JsonService jsonService = new JsonService();
 
-            // An empty ApplicationActivityData object is created and written to the file.
-            ApplicationActivityData applicationActivityData = new ApplicationActivityData();
-
-            await jsonService.SaveApplicationActivityDataAsync(applicationActivityData);
+            await jsonService.SaveApplicationActivityDataAsync(new ApplicationActivityData());
         }
 
         #region Change Methods

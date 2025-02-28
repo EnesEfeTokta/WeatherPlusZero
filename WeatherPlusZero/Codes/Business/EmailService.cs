@@ -32,38 +32,13 @@ namespace WeatherPlusZero
         /// </summary>
         /// <param name="user">The recipient user.</param>
         /// <param name="htmlCode">The HTML content of the email.</param>
-        public static async Task SendMail_SendGrid(User user, string htmlCode)
+        public static async Task SendMail_SendGrid(string namesurname, string email, string htmlCode)
         {
             try
             {
                 var client = new SendGridClient(sendGridApiKey);
                 var from = new EmailAddress("enesefetokta009@gmail.com", "Weather Zero Plus");
-                var to = new EmailAddress(user.email, user.namesurname);
-                string plainTextContent = "This email was sent as plain text.";
-                var msg = MailHelper.CreateSingleEmail(from, to, "Email from Weather Zero Plus...", plainTextContent, htmlCode);
-                await client.SendEmailAsync(msg);
-            }
-            catch (Exception ex)
-            {
-                NotificationManagement.ShowNotification(
-                    "Email Send Error",
-                    $"An error occurred while sending email: {ex.Message}",
-                    NotificationType.Error);
-            }
-        }
-
-        /// <summary>
-        /// Sends an email using SendGrid.
-        /// </summary>
-        /// <param name="user">The recipient user.</param>
-        /// <param name="htmlCode">The HTML content of the email.</param>
-        public static async Task SendMail_SendGrid(ApplicationActivityData user, string htmlCode)
-        {
-            try
-            {
-                var client = new SendGridClient(sendGridApiKey);
-                var from = new EmailAddress("enesefetokta009@gmail.com", "Weather Zero Plus");
-                var to = new EmailAddress(user.UserEmail, user.UserNameSurname);
+                var to = new EmailAddress(email, namesurname);
                 string plainTextContent = "This email was sent as plain text.";
                 var msg = MailHelper.CreateSingleEmail(from, to, "Email from Weather Zero Plus...", plainTextContent, htmlCode);
                 await client.SendEmailAsync(msg);

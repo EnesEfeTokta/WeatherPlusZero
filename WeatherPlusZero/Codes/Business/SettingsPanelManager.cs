@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Diagnostics;
-using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {
@@ -16,19 +13,32 @@ namespace WeatherPlusZero
             mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
         }
 
+        /// <summary>
+        /// Opens the settings panel.
+        /// </summary>
         public static void OpenSettingsPanel()
         {
             UpdateSettingsPanelAsync();
         }
 
+        /// <summary>
+        /// Updates the settings panel asynchronously.
+        /// </summary>
         public static async void UpdateSettingsPanelAsync() => UpdateUI(await ApplicationActivity.GetApplicationActivityData());
 
+        /// <summary>
+        /// Updates the application activity data for notifications asynchronously.
+        /// </summary>
+        /// <param name="isInAppNotificationOn">Indicates if in-app notifications are on.</param>
+        /// <param name="isDailyWeatherEmailsOn">Indicates if daily weather emails are on.</param>
+        /// <param name="isImportantWeatherEmailsOn">Indicates if important weather emails are on.</param>
         public static async void UpdateNotificationsApplicationActivityDataAsync(bool isInAppNotificationOn, bool isDailyWeatherEmailsOn, bool isImportantWeatherEmailsOn)
         {
             await ApplicationActivity.ChnageApplicationActivityDataByNotifications(isInAppNotificationOn, isDailyWeatherEmailsOn, isImportantWeatherEmailsOn);
-            
+
             UserCity newUserCity = new UserCity()
             {
+                recordid = DataBase.GetRecordId(),
                 userid = DataBase.GetUserId(),
                 cityid = DataBase.GetCityId(),
 
@@ -41,6 +51,9 @@ namespace WeatherPlusZero
             UpdateSettingsPanelAsync();
         }
 
+        /// <summary>
+        /// Clears the city data.
+        /// </summary>
         public static void ClearCity()
         {
             JsonService jsonService = new JsonService();
@@ -49,6 +62,9 @@ namespace WeatherPlusZero
             UpdateSettingsPanelAsync();
         }
 
+        /// <summary>
+        /// Opens the GitHub page of the project.
+        /// </summary>
         public static void GoToGitHubPage()
         {
             Process.Start(new ProcessStartInfo("https://github.com/EnesEfeTokta/WeatherPlusZero")
@@ -57,13 +73,18 @@ namespace WeatherPlusZero
             });
         }
 
-        public static void LogOut()
+        /// <summary>
+        /// Logs the user out of the application.
+        /// </summary>
+        public static void LogOut() 
         {
-            ApplicationActivity.ClearApplicationActivityData();
-            WeatherManager.ClearWeatherData();
-            WindowTransition();
+            UserManager.LogOut();
+            WindowTransition(); 
         }
 
+        /// <summary>
+        /// Transitions the window to the user session window.
+        /// </summary>
         private static void WindowTransition()
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -80,6 +101,10 @@ namespace WeatherPlusZero
             });
         }
 
+        /// <summary>
+        /// Updates the UI with the provided application activity data.
+        /// </summary>
+        /// <param name="data">The application activity data.</param>
         private static void UpdateUI(ApplicationActivityData data)
         {
             Application.Current.Dispatcher.Invoke(() =>

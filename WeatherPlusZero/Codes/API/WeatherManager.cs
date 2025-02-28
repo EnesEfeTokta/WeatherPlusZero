@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {
@@ -17,9 +16,7 @@ namespace WeatherPlusZero
 
             // If the 'forceRefresh' parameter is true, it pulls data from the API and returns it without saving.
             if (forceRefresh)
-            {
                 return await _apiProvider.GetWeatherDataAsync(city);
-            }
 
             // If the 'forceRefresh' parameter is false, it first pulls data from json and returns if there is data.
             WeatherData jsonWeatherData = await _jsonProvider.GetWeatherDataAsync(city);
@@ -33,6 +30,14 @@ namespace WeatherPlusZero
                 if (freshData != null)
                 {
                     await _apiProvider.SaveWeatherDataAsync(freshData);
+
+                    Weather newWeather = new Weather()
+                    {
+                        weatherid = DataBase.GetWeatherId(),
+                        cityid = DataBase.GetCityId(),
+                        weatherdata = freshData
+                    };
+                    await DataBase.TAsyncUpdateRow(newWeather);
                     return freshData;
                 }
             }
@@ -53,7 +58,7 @@ namespace WeatherPlusZero
         // Saves the null weather data.
         public static async void ClearWeatherData()
         {
-            await _jsonProvider.SaveWeatherDataAsync(null);
+            await _jsonProvider.SaveWeatherDataAsync(new WeatherData());
         }
     }
 }

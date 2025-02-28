@@ -136,7 +136,10 @@ namespace WeatherPlusZero
         /// <param name="report">The generated report as a string.</param>
         private static async void SendReport(string report)
         {
-            await EmailService.SendMail_SendGrid(await ApplicationActivity.GetApplicationActivityData(), report);
+            await EmailService.SendMail_SendGrid(
+                await ApplicationActivity.GetUserNameSurnameFromApplicationActivityData(), 
+                await ApplicationActivity.GetUserEmailFromApplicationActivityData(), 
+                report);
         }
 
         /// <summary>

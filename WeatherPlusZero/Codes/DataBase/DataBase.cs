@@ -262,7 +262,7 @@ namespace WeatherPlusZero
                 IpLocation = await LocationService.GetLocationDataByApiAsync()
             };
 
-            ApplicationActivity.SaveApplicationActivityData(data);
+            await ApplicationActivity.SaveApplicationActivityData(data);
         }
 
         /// <summary>

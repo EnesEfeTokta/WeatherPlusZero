@@ -3,12 +3,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
-using WeatherPlusZero.Codes.API;
 using Notification.Wpf;
 
 namespace WeatherPlusZero
 {
-    public class ApiService : WeatherServiceBase, IWeatherProvider
+    public class ApiService : JsonServiceBase, IWeatherProvider
     {
         // HttpClient instance for making requests.
         private readonly HttpClient _httpClient = new HttpClient();

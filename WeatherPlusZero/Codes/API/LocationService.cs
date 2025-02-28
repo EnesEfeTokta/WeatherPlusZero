@@ -1,26 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace WeatherPlusZero.Codes.API
 {
     public static class LocationService
     {
         private static readonly HttpClient _httpClient;
+        private static readonly string _locationApiUrl;
+
+        public static IConfiguration Configuration { get; }
 
         static LocationService()
         {
             _httpClient = new HttpClient();
+
+            // Set the location API URL.
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            _locationApiUrl = Configuration["Authentication:Ip_Api_Url"];
+
         }
 
         // Get the location data.
         public static async Task<IpLocation> GetLocationDataByApiAsync()
         {
-            var response = await _httpClient.GetAsync("http://ip-api.com/json");
+            var response = await _httpClient.GetAsync(_locationApiUrl);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -34,7 +44,7 @@ namespace WeatherPlusZero.Codes.API
         // Save the location data.
         public static async Task SaveLocationDataAsync()
         {
-            var response = await _httpClient.GetAsync("http://ip-api.com/json");
+            var response = await _httpClient.GetAsync(_locationApiUrl);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();

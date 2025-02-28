@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace WeatherPlusZero.Codes.API
+namespace WeatherPlusZero
 {
     public interface IWeatherProvider
     {

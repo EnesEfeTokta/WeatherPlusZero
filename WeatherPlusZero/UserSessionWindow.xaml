@@ -485,7 +485,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="WaitGifBorder" Visibility="Visible">
+        <Border x:Name="WaitGifBorder" Visibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="145*"/>

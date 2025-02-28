@@ -20,7 +20,6 @@ Weather Plus Zero, modern ve kullanıcı dostu bir hava durumu uygulamasıdır. 
 - Saatlik ve günlük tahminler.
 - Sıcaklık, nem, rüzgar hızı ve yön bilgileri.
 - Görsel hava durumu göstergeleri.
-- Çoklu şehir desteği.
 - Bildirim sistemi.
 
 **Teknik Özellikler:**
@@ -40,6 +39,41 @@ Weather Plus Zero, modern ve kullanıcı dostu bir hava durumu uygulamasıdır. 
 **Kullanıcı Deneyimi:**
 
 Uygulama, kullanıcı dostu arayüzü ve sezgisel tasarımı ile her yaştan kullanıcının kolayca kullanabileceği şekilde tasarlanmıştır. Minimal ve modern tasarım anlayışı, kullanıcılara kesintisiz bir deneyim sunar.
+
+## Projeyi İndiriken Uyulması Gerekenler
+
+Uygulamayı doğrudan klonladığınızda tam anlamıyla çalışmaz. Çünkü yapılması gereken bazı işlemler vardır. Uygulama için kritik önemi olan API 'ları doğru şekilde eklemeniz gereklidir. Eklenecek API 'lar size ait olması gerekli. Aksi halde uygulama istenildiği gibi çalışmaz. Uygulama için gerekli API 'lar `appsettings.json` 'da tutuluyor. `appsettings.json` 'de API 'lara ek olarak arkaplan görselleri için URL 'ler bulunuyor.
+```json
+{
+  "Authentication": {
+    "Supabase_Url": "Your_Supabase_URL",
+    "Supabase_Key": "Your_Supabse_KEY",
+    "Supabase_Service_Role": "Your_Supabase_ROLE",
+
+    "SendGrid_ApiKey": " Your_Twilio_SendGrid_API_KEY",
+
+    "Weather_BaseUrl": "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{0}?key={1}&unitGroup=metric",
+    "Weather_ApiKey": "Your_Visual_Crossing_API_KEY",
+
+    "Ip_Api_Url": "http://ip-api.com/json"
+  },
+
+  "BackgroundImageURLs": {
+    "clear-day-background": "https://img.freepik.com/free-photo/sun-flare_74190-1494.jpg",
+    ...
+  },
+
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+
+  "AllowedHosts": "*"
+}
+```
+Projede iki farklı JSON dosyası oluşturuluyor. Biri `WeatherData.json` diğeri ise `ApplicationActivityData.json` 'dır. `WeatherData.json`, kayıtlı şehirin detaylı havadurumu verilerini tutuyor. Konumu ise `C:/Users/UserName/AppData/Local/WeatherZeroPlus/WeatherData.json` 'da bulunuyor. `ApplicationActivityData.json`, kullanıcının uygulama aktivitelerinin kaydını tutar. Konumu ise `C:/Users/UserName/AppData/Local/ApplicationActivityData.json` 'da bulunuyor.
 
 ## GitHub ⛓️‍💥
 
@@ -122,7 +156,7 @@ Veri kaynağı olarak ise OpenWeatherMap tercih edildi. Böylece verilere daha e
         - subject: (Zorunlu) E-posta konusu.
         - from: (Zorunlu) Gönderici e-posta adresi ve adını içerir.
         - content: (Zorunlu) E-posta içeriğini belirtir (düz metin ve/veya HTML).
-- Supabase
+- **Supabase**
     - **Açıklama:** Supabase, açık kaynaklı bir Firebase alternatifi olup, veritabanı, kimlik doğrulama, depolama ve gerçek zamanlı abonelikler gibi özellikler sunar.
     - **Temel URL:** YOUR_SUPABASE_URL
     - **Kimlik Doğrulama:** API Anahtarı (apikey: YOUR_SUPABASE_ANON_KEY) ve Bearer Token (eğer kullanıcı oturumu varsa)
@@ -131,6 +165,24 @@ Veri kaynağı olarak ise OpenWeatherMap tercih edildi. Böylece verilere daha e
             - **Açıklama:** Veri ekleme, sorgulama, güncelleme ve silme işlemleri için.
             - **Endpoint:** /rest/v1/{table_name}
             - **Metotlar:** GET (Sorgulama), POST (Ekleme), PATCH (Güncelleme), DELETE (Silme)
+- **Ip-Api**
+    - **Açıklama:** Kullanıcının IP 'sine göre lokasyon bilgileri alınıyor.
+    - **Temel URL:** http://ip-api.com/json
+    - **Gelen Yanıt İçeriği** 
+      - status: API isteğinin durumudur.
+      - country: IP adresi ile ilişkili ülke.
+      - countryCode: Ülke kodu (örn. ABD, İngiltere).
+      - region: Ülke içindeki bölge veya eyalet.
+      - regionName: Bölgenin tam adı.
+      - city: IP adresi ile ilişkili şehir.
+      - zip: Posta veya posta kodu.
+      - lat: Enlem koordinatı.
+      - lon: Boylam koordinatı.
+      - timezone: Konumun saat dilimi.
+      - isp: İnternet Servis Sağlayıcısı.
+      - org: IP ile ilişkili kuruluş.
+      - as: Otonom Sistem numarası ve organizasyonu.
+      - query: Muhtemelen sorgulanan IP adresi.
 
 ### Veritabanı
 
@@ -232,14 +284,20 @@ Proje için katmanlı mimari tercih edilmiş ve kullanılmıştır.
 ## **Güvenlik ve Performans 🛡️**
 
 ### Güvenlik Protokolleri
-- None
+- **Kimlik Doğrulama:** Kullanıcılar kendi hesaplarına giriş yapabilmek için onaylanmış e-posta ve şifreleri ile giriş yapabilir.
+- **Veri Şifreleme:** Kullanıcıların belirlemiş oldukları şifreler Hash 'lenerek yabancıl kişiler tarafından okunamaz ve anlamlandırılamaz şekilde saklanılıyor.
+- **E-Posta Doğrulama:** Yeni kullanıcılar e-postalarına gönderilen kod ile hesaplarını doğrulamaları gerekli.
 
 ### Performans Optimizasyonu
 - **Asenkron Programlama:** Uzun süren işlemleri (API çağrıları) asenkron olarak yapılır, böylece UI'nin donması önlenir.
 - **Optimize Edilmiş UI:** Gereksiz UI çizimlerinden kaçınılır ve performansı etkileyen UI elementleri doğru bir şekilde kullanılır.
 
-### Yük Testleri
-- None
+### Kaynak Kullanımı
+- Uygulamanın kaynak kullanımı;
+  - **CPU:** %0,1~0,4
+  - **RAM:** 250~300MB
+  - **Ağ:** 0,1~0,2MB/sn
+  - **Disk:** 0,1~0,2MB/sn
 
 ## **Kullanıcı Dokümantasyonu 📖**
 
@@ -333,11 +391,16 @@ Proje için katmanlı mimari tercih edilmiş ve kullanılmıştır.
     - **Çözüm:** Tekrar deneyiniz veya girdiğiniz e-posta adresinin doğruluğundan emin olunuz.
 - **Problem 6:** Doğrulama kodu çalışmıyor.
     - **Çözüm:** Tekrar bir kod gönderiniz. Eğer devam ediyorsa uygulamayı tekrar başlatın veya güncel sürüme sahip olduğunu kontrol ediniz.
+- **Problem 7:** Ayarlar panelinde bilgilerim yüklenmedi.
+    - Çözüm 7: Uygulamayı tekrardan kapatıp açınız veya muhtemel neden internet ağınızın zayıf olmasıdır.
 
 ## **Kalite Güvence ✨**
 
 ### Test Senaryoları
-- None
+- **Fonksiyonel Test Senaryoları:** Uygulama genel olarak ilk aşamada hedeflenen amaçlarına başarılı şekilde uyuyor.
+- **Performans Test Senaryoları:** Uygulama saniyede birden fazla kullanıcıya hizmet etmekte sorun yaşamıyor.
+- **Güvenlik Test Senaryoları:** Veri şifreleme, kullanıcı girişi ve e-posta doğrulama ile uygulamada kullanıcı güvenliği sağlanması hedefleniyor.
+- **Kullanılabilirlik Test Senaryoları:** 
 
 ### Hata Raporlama Prosedürleri
 - Kullanıcılar, karşılaştıkları hataları [**github issues**](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FEnesEfeTokta%2FWeatherPlusZero%2Fissues) bölümüne raporlayabilir.

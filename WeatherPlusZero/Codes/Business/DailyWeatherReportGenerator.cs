@@ -154,7 +154,7 @@ namespace WeatherPlusZero
             User user = new User();
             user.email = sendEmail;
 
-            await EmailService.SendMail_SendGrid(user, emailHTML);
+            await EmailService.SendMail_SendGrid(user.namesurname, user.email, emailHTML);
 
             await ApplicationActivity.ChangeApplicationActivityDataByFirstDailyInformationDateTime(DateTime.Now.ToString());
 
@@ -163,8 +163,6 @@ namespace WeatherPlusZero
             {
                 emailBody += $" {item.Key.ToUpper()}:{item.Value}";
             }
-
-            MessageBox.Show(emailBody);
 
             Notification newNotification = new Notification()
             {

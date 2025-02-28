@@ -58,6 +58,8 @@ namespace WeatherPlusZero
 
             SaveCityDataBase();
 
+            SaveUserCityDataBase();
+
             CanselCitySelect();
 
             NotificationManagement.ShowNotification(
@@ -65,7 +67,7 @@ namespace WeatherPlusZero
                 "The city has been successfully added to the list of cities.",
                 NotificationType.Success);
 
-            await ApplicationActivity.SaveApplicationActivityDataByCity(_weatherData.Address); // The saved city information is updated.
+            await ApplicationActivity.ChangeApplicationActivityDataByCity(_weatherData.Address); // The saved city information is updated.
         }
 
         private static async void SaveCityDataBase()

@@ -115,14 +115,12 @@ namespace WeatherPlusZero
             LogInSuccess();
         }
 
-        private static async void LogInSuccess()
+        private static void LogInSuccess()
         {
             NotificationManagement.ShowNotification(
                 "Login Successful",
                 "Entry is successful. You will soon be redirected to the main screen...",
                 NotificationType.Success);
-
-            await ApplicationActivity.ChangeApplicationActivityDataByLogIn(true);
 
             Application.Current.Dispatcher.Invoke(() => WindowTransition());
         }

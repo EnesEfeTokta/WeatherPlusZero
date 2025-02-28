@@ -59,7 +59,7 @@ namespace WeatherPlusZero
                     break;
             }
 
-            await EmailService.SendMail_SendGrid(user, htmlCode);
+            await EmailService.SendMail_SendGrid(user.namesurname, user.email, htmlCode);
 
             NotificationManagement.ShowNotification(
                 "E-Mail Sent",
