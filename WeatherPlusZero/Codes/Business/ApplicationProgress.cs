@@ -47,14 +47,13 @@ namespace WeatherPlusZero
             string city = data.SelectCity ?? data.IpLocation.city; // Gets the city name.
             await SearchCity.SearchCityName(city); // Searches for the city name.
 
-            //EmergencyWeatherAlertReportGenerator.EmergencySituationCheck((await FetchWeatherData()).CurrentConditions);
-
-            DailyWeatherWeatherInformation();
+            StartSendNotifications();
         }
 
-        private static async void DailyWeatherWeatherInformation()
+        private static async void StartSendNotifications()
         {
             DailyWeatherReportGenerator.SendWeatherReportEmail(await ApplicationActivity.GetUserEmailFromApplicationActivityData());
+            EmergencyWeatherAlertReportGenerator.EmergencySituationCheck();
         }
 
         /// <summary>

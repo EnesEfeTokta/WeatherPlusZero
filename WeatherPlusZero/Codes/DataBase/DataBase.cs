@@ -190,7 +190,7 @@ namespace WeatherPlusZero
             UserCity insertedUserCity = await TAsyncAddRow<UserCity>(newUserCity);
             if (insertedUserCity == null) return false;
 
-            Notification newNotification = new Notification { userid = insertedUser.userid, notificationtype = "Null", notificationmessage = "Null", notificationdatetime = DateTime.MinValue };
+            Notification newNotification = new Notification { userid = insertedUser.userid, notificationtype = "Null", notificationmessage = "Null", notificationdatetime = DateTime.MinValue.ToString() };
             Notification insertedNotification = await TAsyncAddRow<Notification>(newNotification);
             if (insertedNotification == null) return false;
 
@@ -256,6 +256,8 @@ namespace WeatherPlusZero
                 IsInAppNotificationOn = UserCities[0].inappnotificationon,
                 IsDailyWeatherEmailsOn = UserCities[0].dailyweatheremailson,
                 IsImportantWeatherEmailsOn = UserCities[0].importantweatheremailson,
+
+                FirstDailyInformationDateTime = Notifications[0].notificationdatetime.ToString(),
 
                 IpLocation = await LocationService.GetLocationDataByApiAsync()
             };
@@ -339,7 +341,7 @@ namespace WeatherPlusZero
         public static int GetUserIdNotification() => Notifications[0].userid;
         public static string GetNotificationType() => Notifications[0].notificationtype;
         public static string GetNotificationMessage() => Notifications[0].notificationmessage;
-        public static DateTime GetNotificationDateTime() => Notifications[0].notificationdatetime;
+        public static string GetNotificationDateTime() => Notifications[0].notificationdatetime;
 
         /// <summary>
         /// Adds a new row to the database.
@@ -556,7 +558,7 @@ namespace WeatherPlusZero
         public string notificationmessage { get; set; } // WARNING => NOT NULL
 
         [Column("notificationdatetime")]
-        public DateTime notificationdatetime { get; set; } // WARNING => Notification Date Time is given a value by Supabase. Therefore it cannot get value from here.
+        public string notificationdatetime { get; set; } // WARNING => Notification Date Time is given a value by Supabase. Therefore it cannot get value from here.
     }
 
     [Table("iplocationusers")]

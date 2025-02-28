@@ -165,11 +165,17 @@ classDiagram
         WeatherID (INT, PK)
         CityID (INT, FK)
         Date (DATETIME)
-	WeatherData (JSON)
+	  WeatherData (JSON)
+    }
+    class IpLocationUser{
+      IplocationID (INT, PK)
+      UserID (INT, FK)
+      LocationData (JSON)
     }
 
     Users "1" -- "0..*" Notifications
     Users "1" -- "0..*" UserCities
+    Users "1" -- "0..*" IpLocationUser
     UserCities "0..*" -- "1" Cities
     Cities "1" -- "0..*" Weather
 ```
@@ -205,9 +211,15 @@ classDiagram
   - `Date` (DATETIME): Verilerin alınma tarihi.
   - `WeatherData` (JSON): Şehirdeki hava durumu verileri.
 
+- **IpLocationUser:** Kullanıcının lokasyon verilerini saklayan tablo.
+  - `IplocationID` (INT, PK): Veri benzersiz kimliği (Primary Key).
+  - `UserID` (INT, FK): Giriş yapan kullanıcının kimliği (Foreign Key).
+  - `LocationData (JSON)` (JSON): Kolasyon verileri.
+
 #### İlişkiler
 - `Users` ve `Notifications` arasında bir *"bir-çok"* ilişkisi vardır (bir kullanıcıya birden fazla bildirim gönderilebilir).
 - `Users` ve `UserCities` arasında bir *"bir-çok"* ilişkisi vardır (bir kullanıcı birden fazla şehir kaydedebilir).
+- `Users` ve `IpLocationUser` arasında bir *"bir-çok"* ilişkisi vardır (bir kullanıcının birden fazla giriş yaptığı cihazın lokasyon verisi tutulabilir).
 - `UserCities` ve `Cities` arasında bir "çok-bir" ilişkisi vardır (birden fazla kullanıcı aynı şehri kaydedebilir).
 - `Cities` ve `Weather` arasında bir *"bir-çok"* ilişkisi vardır (bir şehir için birden fazla hava durumu kaydı olabilir).
 
@@ -378,7 +390,7 @@ Proje için katmanlı mimari tercih edilmiş ve kullanılmıştır.
 ### Gizlilik Politikası
 Kişisel verilerinizin gizliliği bizim için önemlidir. Bu nedenle, verilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu şeffaf bir şekilde açıklamak isteriz:
 
-**Toplanan Veriler:** Uygulamayı kullanımınız sırasında belirli veriler toplanabilir. Bu veriler, konum bilgileriniz, cihazınızla ilgili teknik veriler (örneğin, işletim sistemi sürümü, cihaz modeli), kullanım alışkanlıklarınız ve tercihleriniz olabilir. Topladığımız verilerin tam listesi için [Gizlilik Politikası sayfamızı](none) ziyaret edin.
+**Toplanan Veriler:** Uygulamayı kullanımınız sırasında belirli veriler toplanabilir. Bu veriler, konum bilgileriniz, cihazınızla ilgili teknik veriler (örneğin, işletim sistemi sürümü, cihaz modeli), kullanım alışkanlıklarınız ve tercihleriniz olabilir. Topladığımız verilerin tam listesi için [Gizlilik Politikası sayfamızı](/PRIVACYPOLICY.md) ziyaret edin.
 
 **Veri Kullanımı:** Toplanan veriler, uygulamanın işlevselliğini geliştirmek, size daha iyi bir kullanıcı deneyimi sunmak, kişiselleştirilmiş içerik sağlamak, hataları gidermek ve analizler yapmak amacıyla kullanılabilir.
 
@@ -386,7 +398,7 @@ Kişisel verilerinizin gizliliği bizim için önemlidir. Bu nedenle, verilerini
 
 **Veri Paylaşımı:** Kişisel verileriniz, yasal gereklilikler veya zorunlu durumlar dışında üçüncü şahıslarla paylaşılmaz.
 
-**Haklarınız:** Kişisel verilerinize erişme, düzeltme, silme veya verilerinizi kullanmamızı sınırlama hakkına sahipsiniz. Bu haklarınızı nasıl kullanacağınız hakkında daha fazla bilgi için [Gizlilik Politikası sayfamızı](none) ziyaret edin.
+**Haklarınız:** Kişisel verilerinize erişme, düzeltme, silme veya verilerinizi kullanmamızı sınırlama hakkına sahipsiniz. Bu haklarınızı nasıl kullanacağınız hakkında daha fazla bilgi için [Gizlilik Politikası sayfamızı](/PRIVACYPOLICY.md) ziyaret edin.
 
 ### Kullanım Koşulları
 Uygulamamızı kullanarak aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız:

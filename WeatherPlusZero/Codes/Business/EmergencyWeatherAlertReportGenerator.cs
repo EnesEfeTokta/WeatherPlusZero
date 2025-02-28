@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 namespace WeatherPlusZero
 {
@@ -33,8 +34,13 @@ namespace WeatherPlusZero
         /// Checks the current weather conditions and generates alerts if any emergency situations are detected.
         /// </summary>
         /// <param name="data">The current weather conditions.</param>
-        public static async void EmergencySituationCheck(CurrentConditions data)
+        public static async void EmergencySituationCheck()
         {
+            if (!await ApplicationActivity.GetIsImportantWeatherEmailsOnFromApplicationActivityData())
+                return;
+
+            CurrentConditions data = (await WeatherManager.GetWeatherDataAsync("None")).CurrentConditions;
+
             List<(string type, string status, string value)> alerts = new List<(string type, string status, string value)>();
 
             if (data.Temp.Value >= 30)
@@ -78,8 +84,10 @@ namespace WeatherPlusZero
                     Precautions[$"{type}3"]
                 };
 
-            string report = await GenerateReport(relatedArray, status, value, dateTime);
-            await SendReport(report);
+            var (report, emailBody) = await GenerateReport(relatedArray, status, value, dateTime);
+
+            SendReport(report);
+            SaveReport(emailBody);
         }
 
         /// <summary>
@@ -90,12 +98,12 @@ namespace WeatherPlusZero
         /// <param name="severity">The severity of the weather condition.</param>
         /// <param name="startTime">The start time of the weather condition.</param>
         /// <returns>The generated report as a string.</returns>
-        private static async Task<string> GenerateReport(string[] relatedArray, string status, string severity, string startTime)
+        private static async Task<(string, string)> GenerateReport(string[] relatedArray, string status, string severity, string startTime)
         {
             string report = HTMLService.GetHTMLCode(EmailSendType.EmergencyWeatherAlertEmail);
 
             if (string.IsNullOrEmpty(report))
-                return null;
+                return (null, null);
 
             string city = await ApplicationActivity.GetCityVariationFromApplicationActivityData();
             report = report.Replace("[LOCATION]", city);
@@ -109,17 +117,46 @@ namespace WeatherPlusZero
             report = report.Replace("[PRECAUTION_2]", relatedArray[2]);
             report = report.Replace("[PRECAUTION_3]", relatedArray[3]);
 
-            return report;
+            string emailBody = 
+                $"[LOCATION:{city}], " +
+                $"[WEATHER_CHANGE_TYPE:{relatedArray[0]}], " +
+                $"[WEATHER_STATUS:{status}], " +
+                $"[WEATHER_SEVERITY:{severity}], " +
+                $"[WEATHER_START_TIME:{startTime}], " +
+                $"[PRECAUTION_1:{relatedArray[1]}], " +
+                $"[PRECAUTION_2:{relatedArray[2]}], " +
+                $"[PRECAUTION_3:{relatedArray[3]}]";
+
+            return (report, emailBody);
         }
 
         /// <summary>
         /// Sends the generated report via email.
         /// </summary>
         /// <param name="report">The generated report as a string.</param>
-        private static async Task SendReport(string report)
+        private static async void SendReport(string report)
         {
-            // todo: Sürekli E-Posta gönderimi yapılır....
-            //await EmailService.SendMail_SendGrid(await ApplicationActivity.GetApplicationActivityData(), report);
+            await EmailService.SendMail_SendGrid(await ApplicationActivity.GetApplicationActivityData(), report);
+        }
+
+        /// <summary>
+        /// Saves the generated report to the database.
+        /// </summary>
+        /// <param name="report">The generated report as a string.</param>
+        private static async void SaveReport(string report)
+        {
+            Notification newNotification = new Notification
+            {
+                notificationid = DataBase.GetNotificationId(),
+                userid = DataBase.GetUserId(),
+                notificationtype = "Emergency Weather Alert",
+                notificationmessage = report,
+                notificationdatetime = DateTime.UtcNow.ToString()
+            };
+
+            // [!] For now, instead of adding a new notification line, we update the existing notification line.
+            await DataBase.TAsyncUpdateRow<Notification>(newNotification);
+            //await DataBase.TAsyncAddRow<Notification>(newNotification);
         }
     }
 }

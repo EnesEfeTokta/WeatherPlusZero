@@ -133,9 +133,8 @@ namespace WeatherPlusZero
         public static async void SendWeatherReportEmail(string sendEmail)
         {
             DateTime firstDailyInformationDateTime = DateTime.Parse(await ApplicationActivity.GetFirstDailyInformationDateTimeFromApplicationActivityData());
-            bool isDailyWeatherEmailsOpen = await ApplicationActivity.GetIsDailyWeatherEmailsOpenFromApplicationActivityData();
-            
-            if ((DateTime.UtcNow - firstDailyInformationDateTime).TotalHours > 24 && isDailyWeatherEmailsOpen)
+
+            if ((DateTime.UtcNow - firstDailyInformationDateTime).TotalHours > 24 && await ApplicationActivity.GetIsDailyWeatherEmailsOpenFromApplicationActivityData())
                 CreateEmail(sendEmail);
         }
 
@@ -158,6 +157,27 @@ namespace WeatherPlusZero
             await EmailService.SendMail_SendGrid(user, emailHTML);
 
             await ApplicationActivity.ChangeApplicationActivityDataByFirstDailyInformationDateTime(DateTime.Now.ToString());
+
+            string emailBody = string.Empty;
+            foreach (var item in weatherUpdateEmailPlaceholders)
+            {
+                emailBody += $" {item.Key.ToUpper()}:{item.Value}";
+            }
+
+            MessageBox.Show(emailBody);
+
+            Notification newNotification = new Notification()
+            {
+                notificationid = DataBase.GetNotificationId(),
+                userid = DataBase.GetUserId(),
+                notificationtype = "Daily Weather Report",
+                notificationmessage = emailBody,
+                notificationdatetime = DateTime.UtcNow.ToString()
+            };
+
+            // [!] For now, instead of adding a new notification line, we update the existing notification line.
+            await DataBase.TAsyncUpdateRow<Notification>(newNotification);
+            //await DataBase.TAsyncAddRow<Notification>(newNotification);
         }
 
         /// <summary>
@@ -199,7 +219,7 @@ namespace WeatherPlusZero
         {
             try
             {
-                WeatherData weatherResponse = await WeatherManager.GetWeatherDataAsync("Antalya");
+                WeatherData weatherResponse = await WeatherManager.GetWeatherDataAsync("None");
 
                 // Current weather information
                 weatherUpdateEmailPlaceholders["USER_NAME"] = "Enes Efe Tokta";
