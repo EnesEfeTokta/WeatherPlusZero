@@ -42,7 +42,12 @@ Uygulama, kullanıcı dostu arayüzü ve sezgisel tasarımı ile her yaştan kul
 
 ## Projeyi İndiriken Uyulması Gerekenler
 
-Uygulamayı doğrudan klonladığınızda tam anlamıyla çalışmaz. Çünkü yapılması gereken bazı işlemler vardır. Uygulama için kritik önemi olan API 'ları doğru şekilde eklemeniz gereklidir. Eklenecek API 'lar size ait olması gerekli. Aksi halde uygulama istenildiği gibi çalışmaz. Uygulama için gerekli API 'lar `appsettings.json` 'da tutuluyor. `appsettings.json` 'de API 'lara ek olarak arkaplan görselleri için URL 'ler bulunuyor.
+Bu projeyi doğrudan klonladığınızda, tam anlamıyla çalışmayabilir. Uygulamanın düzgün çalışması için bazı yapılandırma adımlarını tamamlamanız gerekmektedir. Özellikle, proje için kritik öneme sahip **API anahtarlarını** doğru şekilde eklemeniz gerekir.
+
+### Gerekli API Anahtarları ve Yapılandırma
+Uygulamanın çalışması için ihtiyaç duyulan API anahtarları appsettings.json dosyasında saklanmaktadır. Bu anahtarlar size özel olmalıdır; aksi takdirde uygulama beklenildiği gibi çalışmayacaktır.
+
+Aşağıda, `appsettings.json` dosyasının örnek bir yapısını görebilirsiniz:
 ```json
 {
   "Authentication": {
@@ -73,7 +78,28 @@ Uygulamayı doğrudan klonladığınızda tam anlamıyla çalışmaz. Çünkü y
   "AllowedHosts": "*"
 }
 ```
-Projede iki farklı JSON dosyası oluşturuluyor. Biri `WeatherData.json` diğeri ise `ApplicationActivityData.json` 'dır. `WeatherData.json`, kayıtlı şehirin detaylı havadurumu verilerini tutuyor. Konumu ise `C:/Users/UserName/AppData/Local/WeatherZeroPlus/WeatherData.json` 'da bulunuyor. `ApplicationActivityData.json`, kullanıcının uygulama aktivitelerinin kaydını tutar. Konumu ise `C:/Users/UserName/AppData/Local/ApplicationActivityData.json` 'da bulunuyor.
+
+### Veri Depolama ve Şifreleme
+Projede iki farklı JSON dosyası oluşturulmaktadır:
+1. `WeatherData.json`
+    - Kayıtlı şehrin detaylı hava durumu verilerini saklar.
+    - Konumu:
+      ```swift
+      C:/Users/UserName/AppData/Local/WeatherZeroPlus/WeatherData.json
+      ```
+2. `ApplicationActivityData.json`
+    - Kullanıcının uygulama içi aktivitelerinin kaydını tutar.
+    - Kullanıcının e-posta ve şifresini içerdiği için güvenlik önlemi olarak şifrelenmiş biçimde saklanmaktadır.
+    - Konumu:
+      ```swift
+      C:/Users/UserName/AppData/Local/WeatherZeroPlus/ApplicationActivityData.json
+      ```
+Bu dosyalar, uygulamanın kullanıcı deneyimini kişiselleştirmek ve oturum bilgilerini güvenli bir şekilde yönetmek için kullanılmaktadır.
+
+### Önemli Notlar
+- API anahtarlarınızı kimseyle paylaşmayın ve `appsettings.json` dosyanızı versiyon kontrolüne (Git) eklemeyin.
+- Eğer API anahtarlarını yanlış girerseniz, uygulama beklenildiği gibi çalışmayabilir.
+- `ApplicationActivityData.json` içeriği şifrelenmiş olduğundan, dışarıdan erişilmesi ve okunması mümkün değildir.
 
 ## GitHub ⛓️‍💥
 
