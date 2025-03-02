@@ -142,13 +142,29 @@ gitGraph
 
 ## Logo and Visuals 🖼️
 
-![WeatherPlusZero.png](WeatherPlusZero/Images/AppLogo.png)
+<img src="WeatherPlusZero/Images/AppLogo.png" width="100" height="100">
 
 ## Sources ➕
 
 ### Images
 
-- None
+**User**
+
+<img src="WeatherPlusZero/Screenshots/LogIn.png" width="250" height="150"> <img src="WeatherPlusZero/Screenshots/NewUser.png" width="250" height="150">
+<img src="WeatherPlusZero/Screenshots/Forgot.png" width="250" height="150">
+
+**Home**
+
+<img src="WeatherPlusZero/Screenshots/Home1.png" width="250" height="150">
+<img src="WeatherPlusZero/Screenshots/Home2.png" width="250" height="150">
+
+**Email**
+
+<img src="WeatherPlusZero/Screenshots/NewUserVerificationEmail.png" width="250" height="150">
+<img src="WeatherPlusZero/Screenshots/PasswordResetRequest.png" width="250" height="150">
+<img src="WeatherPlusZero/Screenshots/UrgentWeatherWarning.png" width="250" height="150">
+<img src="WeatherPlusZero/Screenshots/WeatherUpdate.png" width="250" height="150">
+
 
 ## Görevler 📝
 

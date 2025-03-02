@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Globalization;
 
 namespace WeatherPlusZero
 {
@@ -12,6 +13,9 @@ namespace WeatherPlusZero
         private static readonly string[] WindDirections = { "N", "NE", "E", "SE", "S", "SW", "W", "NW" }; // Improved wind directions
 
         private static IConfiguration Configuration;
+
+        private const string CultureName = "en-US"; // Culture name constant (English - US).
+        private static readonly CultureInfo _culture = new CultureInfo(CultureName); // Creates CultureInfo object.
 
         /// <summary>
         /// Updates all UI components with weather data.
@@ -145,7 +149,7 @@ namespace WeatherPlusZero
 
                 forecastDays.Add(new FutureDay
                 {
-                    DayName = date.ToString("dddd"),
+                    DayName = date.ToString("dddd", _culture),
                     IconPath = $"{ApplicationProgress.ImageBasePath}{day.Icon}.png",
                     MinMaxTemperature = $"{Math.Round(day.Tempmin)}℃ ~ {Math.Round(day.Tempmax)}℃"
                 });

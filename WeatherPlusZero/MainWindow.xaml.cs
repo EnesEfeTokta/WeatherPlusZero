@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,10 +43,8 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Kullanıcı TextBox 'a girdiğinde çalışır...
+        /// It runs when the user enters the TextBox...
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CityNameSearchTextBox_GoFocus(object sender, RoutedEventArgs e)
         {
             if (CityNameSearchTextBox.Text == "Search for city...")
@@ -58,10 +55,8 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Kullanıcı TextBox 'tan çıktığında çalışır...
+        /// Runs when the user exits the TextBox...
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CityNameSearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(CityNameSearchTextBox.Text))
@@ -72,10 +67,8 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Kullanıcı yazıdığı şehri ENTER tuşu ile onaylıyor.
+        /// The user confirms the city he typed in with the ENTER key.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CityNameSearchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -86,10 +79,8 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Kullanıcı şehir adı aramsını başatan UI fonksiyon.
+        /// UI function that starts the user city name search.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CityNameSearchClickButton(object sender, RoutedEventArgs e)
             => StartSearchCity();
 
@@ -233,6 +224,8 @@ namespace WeatherPlusZero
             newImage.UriSource = new Uri(filePath, UriKind.Absolute);
             newImage.CacheOption = BitmapCacheOption.OnLoad;
             newImage.EndInit();
+
+            image.Source = newImage;
 
             return true;
         }

@@ -42,6 +42,11 @@ namespace WeatherPlusZero
                 string plainTextContent = "This email was sent as plain text.";
                 var msg = MailHelper.CreateSingleEmail(from, to, "Email from Weather Zero Plus...", plainTextContent, htmlCode);
                 await client.SendEmailAsync(msg);
+
+                NotificationManagement.ShowNotification(
+                    "Email Sent",
+                    "The email has been sent successfully.",
+                    NotificationType.Success);
             }
             catch (Exception ex)
             {
