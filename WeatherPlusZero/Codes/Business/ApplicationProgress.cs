@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Threading;
 using System.Globalization;
 using System.Linq;
-using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {

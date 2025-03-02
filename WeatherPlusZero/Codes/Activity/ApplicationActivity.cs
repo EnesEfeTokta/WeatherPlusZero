@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {

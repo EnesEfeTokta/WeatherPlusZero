@@ -38,9 +38,6 @@ namespace WeatherPlusZero
         {
             ApplicationProgress.ApplicationStart();
 
-            //HelloCard helloCard = new HelloCard();
-            //helloCard.Show();
-
             // Hide the add city and search clear buttons.
             CancelCitySelectButton.Visibility = Visibility.Hidden;
             AddCitySelectButton.Visibility = Visibility.Hidden;
@@ -94,9 +91,7 @@ namespace WeatherPlusZero
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void CityNameSearchClickButton(object sender, RoutedEventArgs e)
-        {
-            StartSearchCity();
-        }
+            => StartSearchCity();
 
         private async void StartSearchCity()
         {
@@ -271,20 +266,19 @@ namespace WeatherPlusZero
             if (hour >= 16 || hour < 6)
             {
                 SetDayInformation(hour, TimeDayProgressBar, Colors.DarkBlue);
-                SetIconImage("pack://application:,,,/Images/MoonIcon.png", WeatherTimeStatusIconImage); // Ay resmi
+                SetIconImage("pack://application:,,,/Images/MoonIcon.png", WeatherTimeStatusIconImage);
             }
             else
             {
                 SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
-                SetIconImage("pack://application:,,,/Images/SunIcon.png", WeatherTimeStatusIconImage); // Güneş resmi
+                SetIconImage("pack://application:,,,/Images/SunIcon.png", WeatherTimeStatusIconImage);
             }
 
-            double progressWidth = TimeDayProgressBar.ActualWidth;
+            double fillWidth = (TimeDayProgressBar.Value / TimeDayProgressBar.Maximum) * (TimeDayProgressBar.ActualWidth);
 
-            double imagePosition = (TimeDayProgressBar.Value / TimeDayProgressBar.Maximum) * progressWidth;
-
-            WeatherStatusTransform.X = imagePosition - (WeatherStatusIconImage.Width / 2);
+            WeatherStatusTransform.X = fillWidth - (WeatherTimeStatusIconImage.ActualWidth / 2);
         }
+
 
         /// <summary>
         /// 
@@ -343,9 +337,7 @@ namespace WeatherPlusZero
         /// Logs the user out of the application.
         /// </summary>
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            SettingsPanelManager.LogOut();
-        }
+            => SettingsPanelManager.LogOut();
 
         /// <summary>
         /// Updates the settings panel with the received data.
@@ -377,16 +369,12 @@ namespace WeatherPlusZero
         /// Removes the city from the user's list.
         /// </summary>
         public void RemoveCity_Click(object sender, RoutedEventArgs e)
-        {
-            SettingsPanelManager.ClearCity();
-        }
+            => SettingsPanelManager.ClearCity();
 
         /// <summary>
         /// Opens the GitHub page of the project.
         /// </summary>
         private void GoToGitHub_Click(object sender, RoutedEventArgs e)
-        {
-            SettingsPanelManager.GoToGitHubPage();
-        }
+            => SettingsPanelManager.GoToGitHubPage();
     }
 }

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Notification.Wpf;
-using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {
@@ -270,6 +269,7 @@ namespace WeatherPlusZero
         {
             ApplicationActivity.ClearApplicationActivityData();
             WeatherManager.ClearWeatherData();
+            DataBase.LogoutUserOwnAuth();
         }
 
         /// <summary>

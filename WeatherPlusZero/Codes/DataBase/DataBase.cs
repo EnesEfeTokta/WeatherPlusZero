@@ -11,12 +11,13 @@ using Supabase.Postgrest.Exceptions;
 using Notification.Wpf;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using WeatherPlusZero.Codes.API;
 
 namespace WeatherPlusZero
 {
     public static class DataBase
     {
+        #region === Fields & Properties ===
+
         private static readonly Supabase.Client supabase;
         private static readonly Dictionary<Type, PropertyInfo> primaryKeyCache;
 
@@ -27,6 +28,11 @@ namespace WeatherPlusZero
         public static List<City> Cities { get; private set; }
         public static List<Weather> Weathers { get; private set; }
         public static List<Notification> Notifications { get; private set; }
+        public static List<IpLocationUser> IpLocationUsers { get; private set; }
+
+        #endregion
+
+        #region === Static Constructor ===
 
         static DataBase()
         {
@@ -40,6 +46,10 @@ namespace WeatherPlusZero
             supabase = new Supabase.Client(url, key);
             primaryKeyCache = new Dictionary<Type, PropertyInfo>();
         }
+
+        #endregion
+
+        #region === Primary Key Helper ===
 
         private static PropertyInfo GetPrimaryKeyProperty<T>() where T : BaseModel, new()
         {
@@ -55,7 +65,9 @@ namespace WeatherPlusZero
             return primaryKeyCache[type];
         }
 
-        #region Supabase Auth Methods
+        #endregion
+
+        #region === Supabase Auth Methods ===
         /// <summary>
         /// Registers a new user using Supabase authentication.
         /// </summary>
@@ -91,9 +103,10 @@ namespace WeatherPlusZero
         {
             var user = supabase.Auth.CurrentUser;
         }
+
         #endregion
 
-        #region Own Auth Methods
+        #region === Own Auth Methods ===
         /// <summary>
         /// Registers a new user using custom authentication.
         /// </summary>
@@ -133,9 +146,7 @@ namespace WeatherPlusZero
             User = response;
 
             await GetDatabaseData();
-
             SaveIpLocationData();
-
             SaveApplicationActivity();
 
             return true;
@@ -145,10 +156,11 @@ namespace WeatherPlusZero
         {
             IpLocationUser newIpLocationUser = new IpLocationUser()
             {
+                iplocationid = GetIpLocationId(),
                 userid = User.userid,
                 locationdata = await LocationService.GetLocationDataByApiAsync()
             };
-            await TAsyncAddRow<IpLocationUser>(newIpLocationUser);
+            await TAsyncUpdateRow<IpLocationUser>(newIpLocationUser);
         }
 
         /// <summary>
@@ -173,24 +185,32 @@ namespace WeatherPlusZero
             City insertedCity = await TAsyncAddRow<City>(newCity);
             if (insertedCity == null) return false;
 
-            Weather newWeather = new Weather { cityid = insertedCity.cityid, weatherdata = await WeatherManager.GetWeatherDataAsync(ipLocation.city, true) };
+            Weather newWeather = new Weather
+            {
+                cityid = insertedCity.cityid,
+                weatherdata = await WeatherManager.GetWeatherDataAsync(ipLocation.city, true)
+            };
             Weather insertedWeather = await TAsyncAddRow<Weather>(newWeather);
             if (insertedWeather == null) return false;
 
-            UserCity newUserCity = new UserCity 
-            { 
-                userid = insertedUser.userid, 
-                cityid = insertedCity.cityid, 
-                
-                inappnotificationon = true, 
-                dailyweatheremailson = true, 
-                importantweatheremailson = true 
+            UserCity newUserCity = new UserCity
+            {
+                userid = insertedUser.userid,
+                cityid = insertedCity.cityid,
+                inappnotificationon = true,
+                dailyweatheremailson = true,
+                importantweatheremailson = true
             };
-
             UserCity insertedUserCity = await TAsyncAddRow<UserCity>(newUserCity);
             if (insertedUserCity == null) return false;
 
-            Notification newNotification = new Notification { userid = insertedUser.userid, notificationtype = "Null", notificationmessage = "Null", notificationdatetime = DateTime.MinValue.ToString() };
+            Notification newNotification = new Notification
+            {
+                userid = insertedUser.userid,
+                notificationtype = "Null",
+                notificationmessage = "Null",
+                notificationdatetime = DateTime.MinValue.ToString()
+            };
             Notification insertedNotification = await TAsyncAddRow<Notification>(newNotification);
             if (insertedNotification == null) return false;
 
@@ -228,6 +248,11 @@ namespace WeatherPlusZero
                 .Filter("userid", Operator.Equals, User.userid)
                 .Get();
             Notifications = notificationResponse.Models;
+
+            var ipLocationResponse = await supabase.From<IpLocationUser>()
+                .Filter("userid", Operator.Equals, User.userid)
+                .Get();
+            IpLocationUsers = ipLocationResponse.Models;
 
             return true;
         }
@@ -304,12 +329,13 @@ namespace WeatherPlusZero
         public static async Task ChangePasswordOwnAuth(string email, string newPassword)
         {
             User response = await TAsyncGetUserByEmail(email);
-
             response.password = newPassword;
-
             await supabase.From<User>().Update(response);
         }
+
         #endregion
+
+        #region === Public Accessors (Get Methods) ===
 
         public static User GetUser() => User;
         public static int GetUserId() => User.userid;
@@ -343,6 +369,14 @@ namespace WeatherPlusZero
         public static string GetNotificationMessage() => Notifications[0].notificationmessage;
         public static string GetNotificationDateTime() => Notifications[0].notificationdatetime;
 
+        public static IpLocationUser GetIpLocation() => IpLocationUsers[0];
+        public static int GetIpLocationId() => IpLocationUsers[0].iplocationid;
+        public static int GetUserIdIpLocation() => IpLocationUsers[0].userid;
+        public static IpLocation GetLocationData() => IpLocationUsers[0].locationdata;
+
+        #endregion
+
+        #region === CRUD Methods ===
         /// <summary>
         /// Adds a new row to the database.
         /// </summary>
@@ -473,7 +507,11 @@ namespace WeatherPlusZero
                 return null;
             }
         }
+
+        #endregion
     }
+
+    #region === Model Classes ===
 
     [Table("users")]
     public class User : BaseModel
@@ -564,7 +602,7 @@ namespace WeatherPlusZero
     [Table("iplocationusers")]
     public class IpLocationUser : BaseModel
     {
-        [PrimaryKey("recordid")]
+        [PrimaryKey("iplocationid")]
         public int iplocationid { get; set; } // WARNING => PRIMARY KEY
 
         [Column("userid")]
@@ -573,4 +611,6 @@ namespace WeatherPlusZero
         [Column("locationdata")]
         public IpLocation locationdata { get; set; } // WARNING => NOT NULL
     }
+
+    #endregion
 }

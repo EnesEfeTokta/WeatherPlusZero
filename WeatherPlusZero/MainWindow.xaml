@@ -481,7 +481,7 @@
                                                Height="20"
                                                VerticalAlignment="Center">
                                                     <Image.RenderTransform>
-                                                        <TranslateTransform x:Name="WeatherStatusTransform" />
+                                                        <TranslateTransform x:Name="WeatherStatusTransform"/>
                                                     </Image.RenderTransform>
                                                 </Image>
                                             </Canvas>
