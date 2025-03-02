@@ -6,48 +6,50 @@
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 
 # Weather Plus Zero
-> Windows platformları için uygun, C# dilinde basit ve kullanışlı hava durumu uygulaması.
 
-## Genel 🙌
+> Simple and useful weather application in C#, suitable for Windows platforms.
 
-Weather Plus Zero, modern ve kullanıcı dostu bir hava durumu uygulamasıdır. Weather Plus Zero, Windows işletim sistemleri için tasarlanmış, C# programlama dili kullanılarak geliştirilmiş kapsamlı bir hava durumu uygulamasıdır. Kullanıcıların günlük hayatlarını planlamalarına yardımcı olmak için tasarlanmıştır.
+## General 🙌
 
-## Özellikler ⭐
+Weather Plus Zero is a modern and user-friendly weather application. Weather Plus Zero is a comprehensive weather application designed for Windows operating systems, developed using the C# programming language. It is designed to help users plan their daily lives.
 
-**Ana Özellikler:**
+## Features ⭐
 
-- Anlık hava durumu bilgileri.
-- Saatlik ve günlük tahminler.
-- Sıcaklık, nem, rüzgar hızı ve yön bilgileri.
-- Görsel hava durumu göstergeleri.
-- Bildirim sistemi.
+**Main Features:**
 
-**Teknik Özellikler:**
+- Instant weather information.
+- Hourly and daily forecasts.
+- Temperature, humidity, wind speed and direction.
+- Visual weather indicators.
+- Notification system.
 
-- Windows uyumlu modern arayüz.
-- Hızlı ve optimize edilmiş performans.
-- Gerçek zamanlı veri güncellemeleri.
-- Düşük sistem kaynağı kullanımı.
+**Technical Specifications:**
 
-**Hedef Kitle:**
+- Windows compatible modern interface.
+- Fast and optimized performance.
+- Real-time data updates.
+- Low system resource utilization.
 
-- Günlük hava durumu takibi yapan kullanıcılar.
-- Profesyonel planlamacılar.
-- Outdoor aktivite tutkunları.
-- Hava durumuna bağlı çalışan profesyoneller.
+**Target Audience:**
 
-**Kullanıcı Deneyimi:**
+- Daily weather tracking users.
+- Professional planners.
+- Outdoor activity enthusiasts.
+- Weather dependent professionals.
 
-Uygulama, kullanıcı dostu arayüzü ve sezgisel tasarımı ile her yaştan kullanıcının kolayca kullanabileceği şekilde tasarlanmıştır. Minimal ve modern tasarım anlayışı, kullanıcılara kesintisiz bir deneyim sunar.
+**User Experience:**
 
-## Projeyi İndiriken Uyulması Gerekenler
+The application is designed to be easy to use for users of all ages with its user-friendly interface and intuitive design. The minimal and modern design approach provides users with a seamless experience.
 
-Bu projeyi doğrudan klonladığınızda, tam anlamıyla çalışmayabilir. Uygulamanın düzgün çalışması için bazı yapılandırma adımlarını tamamlamanız gerekmektedir. Özellikle, proje için kritik öneme sahip **API anahtarlarını** doğru şekilde eklemeniz gerekir.
+## What to Follow When Downloading the Project
 
-### Gerekli API Anahtarları ve Yapılandırma
-Uygulamanın çalışması için ihtiyaç duyulan API anahtarları appsettings.json dosyasında saklanmaktadır. Bu anahtarlar size özel olmalıdır; aksi takdirde uygulama beklenildiği gibi çalışmayacaktır.
+If you clone this project directly, it may not work fully. For the application to work properly, you need to complete some configuration steps. In particular, you need to correctly add **API keys** that are critical to the project.
 
-Aşağıda, `appsettings.json` dosyasının örnek bir yapısını görebilirsiniz:
+### Required API Keys and Configuration
+
+The API keys needed for the application to run are stored in the `appsettings.json` file. These keys must be unique to you; otherwise the application will not work as expected.
+
+Below you can see an example structure of the `appsettings.json` file:
 ```json
 {
   "Authentication": {
@@ -79,140 +81,165 @@ Aşağıda, `appsettings.json` dosyasının örnek bir yapısını görebilirsin
 }
 ```
 
-### Veri Depolama ve Şifreleme
-Projede iki farklı JSON dosyası oluşturulmaktadır:
+### Data Storage and Encryption
+
+Two different JSON files are created in the project:
 1. `WeatherData.json`
-    - Kayıtlı şehrin detaylı hava durumu verilerini saklar.
-    - Konumu:
+    - Stores detailed weather data for the registered city.
+    - Location:
       ```swift
       C:/Users/UserName/AppData/Local/WeatherZeroPlus/WeatherData.json
       ```
 2. `ApplicationActivityData.json`
-    - Kullanıcının uygulama içi aktivitelerinin kaydını tutar.
-    - Kullanıcının e-posta ve şifresini içerdiği için güvenlik önlemi olarak şifrelenmiş biçimde saklanmaktadır.
-    - Konumu:
+    - Keeps a record of the user's in-app activities.
+    - Since it contains the user's e-mail and password, it is stored in encrypted form as a security measure.
+    - Location:
       ```swift
       C:/Users/UserName/AppData/Local/WeatherZeroPlus/ApplicationActivityData.json
       ```
-Bu dosyalar, uygulamanın kullanıcı deneyimini kişiselleştirmek ve oturum bilgilerini güvenli bir şekilde yönetmek için kullanılmaktadır.
+These files are used to personalize the app's user experience and securely manage session information.
 
-### Önemli Notlar
-- API anahtarlarınızı kimseyle paylaşmayın ve `appsettings.json` dosyanızı versiyon kontrolüne (Git) eklemeyin.
-- Eğer API anahtarlarını yanlış girerseniz, uygulama beklenildiği gibi çalışmayabilir.
-- `ApplicationActivityData.json` içeriği şifrelenmiş olduğundan, dışarıdan erişilmesi ve okunması mümkün değildir.
+#### Important Notes
+
+- Do not share your API keys with anyone and do not add your `appsettings.json` file to version control (Git).
+- If you enter the API keys incorrectly, the application may not work as expected.
+- The contents of `ApplicationActivityData.json` are encrypted and cannot be read or accessed from outside.
 
 ## GitHub ⛓️‍💥
 
 [Weather Plus Zero GitHub Repo](https://github.com/EnesEfeTokta/WeatherPlusZero)
 
 ## Drawio 🪢
+
 [Weather Plus Zero Drawio](https://github.com/EnesEfeTokta/WeatherPlusZero/blob/main/WeatherPlusZero/Planning/WeatherPlusZero.drawio)
 
-## Proje Dallanması
+## Project Branching
 
-## İletişim ☎️
+The `main` branch is the main branch. It works and the latest codes are kept here. In the development process, the 'Develop' branch is used.
+
+```mermaid
+---
+title: Git/GitHub Branching
+---
+gitGraph
+   commit id: "Example 1"
+   commit id: "Example 2"
+   branch Develop
+   checkout Develop
+   commit id: "Example 3"
+   commit id: "Example 4"
+   checkout main
+   merge Develop
+   commit id: "Example 5"
+```
+
+## Contact ☎️
 
 - [enesefetokta009@gmail.com](mailto:enesefetokta009@gmail.com)
 - (+90) 541 586 9564
 - https://www.linkedin.com/in/enes-efe-tokta-6567151b5/
 - https://github.com/EnesEfeTokta
 
-## Logo ve Görseller 🖼️
+## Logo and Visuals 🖼️
 
 ![WeatherPlusZero.png](WeatherPlusZero/Images/AppLogo.png)
 
-## Kaynaklar ➕
+## Sources ➕
 
-### Görseller
+### Images
+
 - None
 
 ## Görevler 📝
 
 [Görevler](https://www.notion.so/1531fb14c4a880c29cd1e8274f998d62?pvs=21)
 
-## Proje Planlama ve Tasarım 🎨
+## Project Planning and Design 🎨
 
-Gösterilecek olan verileri:
+The data to be displayed:
 
-- Sıcaklık (Fahrenheit ve Celsius cinsinden…),
+- Temperature (in Celsius),
 - Nem,
-- Rüzgar,
-- Yağış
+- Wind,
+- Precipitation
 
-Eş zamanlı olarak takip edilecek şehir sayısı en fazla üç adet olunabilecek.
+The number of cities to be monitored simultaneously can be up to three.
 
-Bildirim sistemi stabil olarak her 5 saatte bir hava durumu hakkında bilgi seçilen birincil şehrin hava durumu hakkında bildirim ile haberdar edecek. Bildirimin içinde sıcaklık ve hava durumu hakkında temel bilgi içeriyor. Ekstradan kullanıcı bildirim sıklığını kendine göre düzenleyebilecektir.
+The notification system will stably notify you about the weather in the selected primary city every 5 hours. The notification includes basic information about the temperature and weather. In addition, the user will be able to customize the notification frequency.
 
-Kullanıcı arayüzü sade bir tasarım prensibine dayalıdır.  Kullanıcının lokasyon araması yaparak şehirlerin hava durumu bilgilerini öğrenmesine olanak tanıyan arama çubuğunun olmasıyla birlikte tarih ve saat bilgisini de gösteren bir UI eleman bulunuyor. Sıcaklık, basınç, nem ve rüzgar verileri gösteriliyor. Kullanıcının gün batımı ve gün doğumunu da takip edecek bir zaman çizelgesine sahiptir. Gelecek günlerde ki hava durumlarını listeleyen bir yapıda kullanılmıştır. Ekstradan kullanıcı ek ayarlar için ve hesap bilgileri için bir düğme konumlandırıldı. Bu düğme ile kullanıcı ek özelliklere erişebilecek.
+The user interface is based on a simple design principle.  There is a UI element that shows the date and time, as well as a search bar that allows the user to find out the weather information of the cities by searching for the location. Temperature, pressure, humidity and wind data are displayed. It also has a timeline that will follow the sunset and sunrise of the user. It is used in a structure that lists the weather conditions in the coming days. There is a button for additional settings and account information for the user. With this button, the user will be able to access additional features.
 
-![Bir başlık ekleyin.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/7aeaee67-246b-42dd-969b-c7f35ff9e952/d49a1714-f1ea-42b6-a294-1b9691f4356c/Bir_balk_ekleyin.png)
+## Technological Infrastructure Selection ☑️
 
-## Teknolojik Altyapı Seçimi ☑️
+LTS versions above .Net 6 or 7 were preferred for development. Because it was taken into consideration that future-oriented development and the possibility of encountering problems were low.
 
-Geliştirme için .Net 6 veya 7 üstü LTS sürümler tercih edildi. Çünkü geleceğe dönük geliştirme ve sorunlarla karşılaşma ihtimalinin düşük olması göz önüne alındı.
+The UI Framework to be used was WPF. Being both modern and up-to-date will facilitate the development process.
 
-Kullanılacak UI Framework ise WPF oldu. Hem modern hem de güncel olması geliştirme sürecinde kolaylıklar tanıyacaktır.
+OpenWeatherMap was preferred as the data source. Thus, we can access the data more economically and easily. If there is any contrary situation, we can use the Visual Crossing Weather tool.
 
-Veri kaynağı olarak ise OpenWeatherMap tercih edildi. Böylece verilere daha ekonomik ve kolay ulaşmış oluruz. Eğer hangi bir aksi durum yaşanır ise Visual Crossing Weather aracını kullanabiliriz.
+## Technical Documentation 🧑‍💻
 
-## Teknik Dokümantasyon 🧑‍💻
+### API References
 
-### API Referansları
 - **Visual Crossing Weather API:**
-    - **Açıklama:** Visual Crossing Weather API, belirli bir konum için geçmiş ve tahmini hava durumu verilerini sağlar.
-    - **Temel URL:** https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/
-    - **Endpoint:** /{city name}
-    - **Veri Formatı:** JSON
-    - **Metot:** GET
-    - **Kullanılan Parametreler:**
-        - unitGroup (ölçü birimi - metric),
-        - key (API anahtarı),
-        - contentType (veri tipi - json)
-- **Twillio SendGrid:**
-    - **Açıklama:** Twilio SendGrid, e-posta gönderme ve yönetme hizmeti sağlar.
-    - **Temel URL:** https://api.sendgrid.com/v3/
-    - **Endpoint:** mail/send
-    - **Veri Formatı:** JSON
-    - **Metot:** GET
-    - **Veri Formatı:** JSON
-    - **Kimlik Doğrulama:** API Anahtarı (Authorization: Bearer YOUR_API_KEY)
-    - **Parametreler (JSON Gövdesinde):**
-        - personalizations: (Zorunlu) Alıcı bilgileri, konu gibi kişiselleştirme detaylarını içerir.
-        - to: (Zorunlu) Alıcı e-posta adresi ve adını içerir.
-        - subject: (Zorunlu) E-posta konusu.
-        - from: (Zorunlu) Gönderici e-posta adresi ve adını içerir.
-        - content: (Zorunlu) E-posta içeriğini belirtir (düz metin ve/veya HTML).
+    - **Description:** Visual Crossing Weather API provides historical and forecast weather data for a given location.
+    - **Basic URL:** https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/
+    - **Endpoint:** /{city name}
+    - **Data Format:** JSON
+    - **Method:** GET
+    - **Parameters Used:**
+        - unitGroup (unit of measure - metric),
+        - key (API key),
+        - contentType (data type - json)
+
+- Twilio SendGrid:**
+    - **Description:** Twilio SendGrid provides email sending and management service.
+    - **Basic URL:** https://api.sendgrid.com/v3/
+    - **Endpoint:** mail/send
+    - **Data Format:** JSON
+    - **Method:** GET
+    - **Data Format:** JSON
+    - **Authentication:** API Key (Authorization: Bearer YOUR_API_KEY)
+    - **Parameters (in JSON Body):**
+        - personalizations: (Mandatory) Contains personalization details such as recipient information, subject.
+        - to: (Mandatory) Contains recipient email address and name.
+        - subject: (Required) Email subject.
+        - from: (Mandatory) Sender email address and name.
+        - content: (Required) Specifies the email content (plain text and/or HTML).
+
 - **Supabase**
-    - **Açıklama:** Supabase, açık kaynaklı bir Firebase alternatifi olup, veritabanı, kimlik doğrulama, depolama ve gerçek zamanlı abonelikler gibi özellikler sunar.
-    - **Temel URL:** YOUR_SUPABASE_URL
-    - **Kimlik Doğrulama:** API Anahtarı (apikey: YOUR_SUPABASE_ANON_KEY) ve Bearer Token (eğer kullanıcı oturumu varsa)
-    - **Özelliklere Göre Örnekler:**
-        - **Veritabanı (PostgreSQL):**
-            - **Açıklama:** Veri ekleme, sorgulama, güncelleme ve silme işlemleri için.
-            - **Endpoint:** /rest/v1/{table_name}
-            - **Metotlar:** GET (Sorgulama), POST (Ekleme), PATCH (Güncelleme), DELETE (Silme)
+    - **Description:** Supabase is an open source Firebase alternative, offering features such as database, authentication, storage and real-time subscriptions.
+    - **Basic URL:** YOUR_SUPABASE_URL
+    - **Authentication:** API Key (apikey: YOUR_SUPABASE_ANON_KEY) and Bearer Token (if the user has a session)
+    - **Examples by Features:**
+        - **Database (PostgreSQL):**
+            - **Description:** For inserting, querying, updating and deleting data.
+            - **Endpoint:** /rest/v1/{table_name}
+            - **Methods:** GET (Query), POST (Add), PATCH (Update), DELETE (Delete)
+
 - **Ip-Api**
-    - **Açıklama:** Kullanıcının IP 'sine göre lokasyon bilgileri alınıyor.
-    - **Temel URL:** http://ip-api.com/json
-    - **Gelen Yanıt İçeriği** 
-      - status: API isteğinin durumudur.
-      - country: IP adresi ile ilişkili ülke.
-      - countryCode: Ülke kodu (örn. ABD, İngiltere).
-      - region: Ülke içindeki bölge veya eyalet.
-      - regionName: Bölgenin tam adı.
-      - city: IP adresi ile ilişkili şehir.
-      - zip: Posta veya posta kodu.
-      - lat: Enlem koordinatı.
-      - lon: Boylam koordinatı.
-      - timezone: Konumun saat dilimi.
-      - isp: İnternet Servis Sağlayıcısı.
-      - org: IP ile ilişkili kuruluş.
-      - as: Otonom Sistem numarası ve organizasyonu.
-      - query: Muhtemelen sorgulanan IP adresi.
+    - **Description:** Location information is received according to the user's IP.
+    - **Basic URL:** http://ip-api.com/json
+    - **Incoming Response Content** 
+      - status: The status of the API request.
+      - country: The country associated with the IP address.
+      - countryCode: Country code (e.g. US, UK).
+      - region: Region or state within the country.
+      - regionName: The full name of the region.
+      - city: The city associated with the IP address.
+      - zip: Postal or zip code.
+      - lat: Latitude coordinate.
+      - lon: Longitude coordinate.
+      - timezone: The time zone of the location.
+      - isp: Internet Service Provider.
+      - org: The organization associated with the IP.
+      - as: Autonomous System number and organization.
+      - query: Possibly the IP address being queried.
 
-### Veritabanı
+### Database
 
-#### Şema
+#### Scheme
+
 ```mermaid
 classDiagram
     class Users{
@@ -258,279 +285,287 @@ classDiagram
     Cities "1" -- "0..*" Weather
 ```
 
-#### Açıklama
-- **Users:** Kullanıcı bilgilerinin saklandığı tablo.
-  - `UserID` (INT, PK): Kullanıcının benzersiz kimliği (Primary Key).
-  - `NameSurname` (VARCHAR(100)): Kullanıcının adı ve soyadı.
-  - `Email` (VARCHAR(150)): Kullanıcının e-posta adresi.
-  - `Password` (VARCHAR(255)): Kullanıcının şifresi.
-  - `RegistrationDate` (DATETIME): Kullanıcının kayıt tarihi.
+#### Description
 
-- **Notifications:** Kullanıcılara gönderilen bildirimlerin saklandığı tablo.
-  - `NotificationID` (INT, PK): Bildirim benzersiz kimliği (Primary Key).
-  - `UserID` (INT, FK): Bildirim gönderen kullanıcının kimliği (Foreign Key).
-  - `Message` (VARCHAR(255)): Bildirim mesajı.
-  - `SentDate` (DATETIME): Bildirim gönderme tarihi.
+- **Users:** Table where user information is stored.
+  - `UserID` (INT, PK): Unique ID of the user (Primary Key).
+  - `NameSurname` (VARCHAR(100)): The user's first and last name.
+  - `Email` (VARCHAR(150)): User's e-mail address.
+  - `Password` (VARCHAR(255)): User's password.
+  - `RegistrationDate` (DATETIME): User's registration date.
 
-- **UserCities:** Kullanıcıların kaydettiği şehir bilgilerinin saklandığı tablo.
-  - `RecordID` (INT, PK): Kayıt benzersiz kimliği (Primary Key).
-  - `UserID` (INT, FK): Şehri kaydeden kullanıcının kimliği (Foreign Key).
-  - `CityID` (INT, FK): Kaydedilen şehrin kimliği (Foreign Key).
-  - `NotificationPreference` (BIT): Bildirim ayarları (Açık/Kapalı).
+- **Notifications:** Table where notifications sent to users are stored.
+  - `NotificationID` (INT, PK): Notification unique ID (Primary Key).
+  - `UserID` (INT, FK): ID of the user who sent the notification (Foreign Key).
+  - `Message` (VARCHAR(255)): Notification message.
+  - `SentDate` (DATETIME): Notification sending date.
 
-- **Cities:** Şehirlerin bilgilerinin saklandığı tablo.
-  - `CityID` (INT, PK): Şehir benzersiz kimliği (Primary Key).
-  - `CityName` (VARCHAR(100)): Şehir adı.
-  - `CountryName` (VARCHAR(100)): Şehri bulunan ülke adı.
+- **UserCities:** Table where the city information registered by users is stored.
+  - `RecordID` (INT, PK): Record unique ID (Primary Key).
+  - `UserID` (INT, FK): ID of the user who registered the city (Foreign Key).
+  - `CityID` (INT, FK): ID of the city registered (Foreign Key).
+  - `NotificationPreference` (BIT): Notification settings (On/Off).
 
-- **Weather:** Şehirdeki hava durumu verilerini saklayan tablo.
-  - `WeatherID` (INT, PK): Veri benzersiz kimliği (Primary Key).
-  - `CityID` (INT, FK): Verilerin ait olduğu şehrin kimliği (Foreign Key).
-  - `Date` (DATETIME): Verilerin alınma tarihi.
-  - `WeatherData` (JSON): Şehirdeki hava durumu verileri.
+- **Cities:** Table where the information of the cities is stored.
+  - `CityID` (INT, PK): City unique ID (Primary Key).
+  - `CityName` (VARCHAR(100)): City name.
+  - `CountryName` (VARCHAR(100)): Name of the country with the city.
 
-- **IpLocationUser:** Kullanıcının lokasyon verilerini saklayan tablo.
-  - `IplocationID` (INT, PK): Veri benzersiz kimliği (Primary Key).
-  - `UserID` (INT, FK): Giriş yapan kullanıcının kimliği (Foreign Key).
-  - `LocationData (JSON)` (JSON): Kolasyon verileri.
+- **Weather:** Table that stores weather data for the city.
+  - `WeatherID` (INT, PK): Data unique ID (Primary Key).
+  - `CityID` (INT, FK): ID of the city to which the data belongs (Foreign Key).
+  - `Date` (DATETIME): Date of data retrieval.
+  - `WeatherData` (JSON): Weather data in the city.
 
-#### İlişkiler
-- `Users` ve `Notifications` arasında bir *"bir-çok"* ilişkisi vardır (bir kullanıcıya birden fazla bildirim gönderilebilir).
-- `Users` ve `UserCities` arasında bir *"bir-çok"* ilişkisi vardır (bir kullanıcı birden fazla şehir kaydedebilir).
-- `Users` ve `IpLocationUser` arasında bir *"bir-çok"* ilişkisi vardır (bir kullanıcının birden fazla giriş yaptığı cihazın lokasyon verisi tutulabilir).
-- `UserCities` ve `Cities` arasında bir "çok-bir" ilişkisi vardır (birden fazla kullanıcı aynı şehri kaydedebilir).
-- `Cities` ve `Weather` arasında bir *"bir-çok"* ilişkisi vardır (bir şehir için birden fazla hava durumu kaydı olabilir).
+- **IpLocationUser:** Table that stores the user's location data.
+  - `IplocationID` (INT, PK): Data unique ID (Primary Key).
+  - `UserID` (INT, FK): ID of the logged in user (Foreign Key).
+  - `LocationData (JSON)` (JSON): Location data.
 
-### Sistem Mimarisi
-Proje için katmanlı mimari tercih edilmiş ve kullanılmıştır.
-- **Sunum Katmanı (Presentation Layer):** WPF ile oluşturulan kullanıcı arayüzü. Kullanıcı etkileşimlerini yönetir ve verileri görüntüler.
-- **Uygulama Katmanı (Application Layer):** İş mantığı ve uygulama akışını yönetir. API'den veri çeker, verileri işler ve sunum katmanına aktarır.
-- **Veri Katmanı (Data Layer):** API iletişimini ve veri kaynaklarına erişimi yönetir. Supabase, SenGrid ve Visual Crossing Weather API 'leri ile etkileşimi sağlar.
+#### Relationships
 
-## **Güvenlik ve Performans 🛡️**
+- There is a *"one-to-many ”* relationship between `Users` and `Notifications` (a user can be sent multiple notifications).
+- There is a *"one-to-many ”* relationship between `Users` and `UserCities` (a user can register multiple cities).
+- There is a *"one-to-many ”* relationship between `Users` and `IpLocationUser` (a user can keep location data of multiple logged-in devices).
+- There is a “many-to-one” relationship between `UserCities` and `Cities` (multiple users can register the same city).
+- `Cities` and `Weather` have a *"one-to-many ”* relationship (there can be more than one weather record for a city).
 
-### Güvenlik Protokolleri
-- **Kimlik Doğrulama:** Kullanıcılar kendi hesaplarına giriş yapabilmek için onaylanmış e-posta ve şifreleri ile giriş yapabilir.
-- **Veri Şifreleme:** Kullanıcıların belirlemiş oldukları şifreler Hash 'lenerek yabancıl kişiler tarafından okunamaz ve anlamlandırılamaz şekilde saklanılıyor.
-- **E-Posta Doğrulama:** Yeni kullanıcılar e-postalarına gönderilen kod ile hesaplarını doğrulamaları gerekli.
+### System Architecture
 
-### Performans Optimizasyonu
-- **Asenkron Programlama:** Uzun süren işlemleri (API çağrıları) asenkron olarak yapılır, böylece UI'nin donması önlenir.
-- **Optimize Edilmiş UI:** Gereksiz UI çizimlerinden kaçınılır ve performansı etkileyen UI elementleri doğru bir şekilde kullanılır.
+Layered architecture was preferred and used for the project.
+- **Presentation Layer:** The user interface created with WPF. It manages user interactions and displays data.
+- **Application Layer:** Manages business logic and application flow. Pulls data from the API, processes the data and passes it to the presentation layer.
+- **Data Layer:** Manages API communication and access to data sources. It provides interaction with Supabase, SenGrid and Visual Crossing Weather APIs.
 
-### Kaynak Kullanımı
-- Uygulamanın kaynak kullanımı;
-  - **CPU:** %0,1~0,4
+## **Safety and Performance 🛡️**
+
+#### Security Protocols
+
+- **Authentication:** Users can log in to their accounts with their approved e-mail and passwords.
+- **Data Encryption:** The passwords set by the users are hashed and stored in a way that cannot be read and made meaningful by strangers.
+- **Email Verification:** New users need to verify their accounts with the code sent to their e-mails.
+
+#### Performance Optimization
+
+- **Asynchronous Programming:** Long-running operations (API calls) are done asynchronously, preventing the UI from freezing.
+- **Optimized UI:** Unnecessary UI drawings are avoided and UI elements that affect performance are used correctly.
+
+### Resource Utilization
+- Resource utilization of the application;
+  - **CPU:** 0.1~0.4
   - **RAM:** 250~300MB
-  - **Ağ:** 0,1~0,2MB/sn
-  - **Disk:** 0,1~0,2MB/sn
+  - **Network:** 0.1~0.2MB/sec
+  - **Disk:** 0.1~0.2MB/sec
 
-## **Kullanıcı Dokümantasyonu 📖**
+## **User Documentation 📖**
 
-### Kullanım Kılavuzu
+#### User Manual
 
-##### Arayüzü Açıklamaları
-- **Ana Ekran**
-  - **Arama Çubuğu:** Belirli bir yer için hava durumu bilgilerini aramak için kullanılır.
-  - **Tarih ve Saat:** Mevcut tarih ve saati gösterir.
-  - **Konum:** Şu anda görüntülenen yerin adını gösterir.
-  - **Sıcaklık:** Mevcut sıcaklığı gösterir.
-  - **Rüzgar:** Rüzgarın hızını ve yönünü gösterir.
-  - **Nem:** Havadaki nem oranını gösterir.
-  - **Basınç:** Atmosfer basıncını gösterir.
-  - **Gün Döngüsü:** Güneşin doğuş ve batış saatlerini gösterir.
-  - **Günlük Tahmin:** Gelecek günlerin hava durumu tahminlerini gösterir.
-  - **Ana Hava Durumu Simgesi:** O anda meydana gelen havayı ifade eder.
-  - **Menü:** Menüyü açmak için tıklayın.
-- **Giriş Ekranı**
-  - **Kullanıcı Profili İkonu:** Uygulamanın kullanıcı profilini temsil eder.
-  - **E-posta Adresi Giriş Alanı:** E-posta adresinizi girmek için kullanılır.
-  - **E-posta Adresi Doğrulama İkonu:** Girilen e-posta adresinin geçerli olup olmadığını gösterir. (Yeşil tik geçerli, kırmızı çarpı geçersiz)
-  - **Şifre Giriş Alanı:** Şifrenizi girmek için kullanılır.
-  - **Şifre Doğrulama İkonu:** Girilen şifrenin doğru olup olmadığını gösterir. (Yeşil tik doğru, kırmızı çarpı yanlış)
-  - **Şifremi Unuttum Bağlantısı:** Şifrenizi unuttuysanız, şifre sıfırlama sayfasına yönlendirir.
-  - **Giriş Yap Butonu:** Giriş bilgileriniz doğruysa, uygulamaya giriş yapmanızı sağlar.
-  - **Üye Ol Bağlantısı:** Henüz bir hesabınız yoksa, üyelik sayfasına yönlendirir.
+##### Interface Descriptions
 
-#### Uygulama Arayüzü Açıklaması
-- **Ana Ekran**
-  - **Konum Arama:**
-    - Arama çubuğuna bir şehir veya bölge adı yazın.
-    - Arama sonuçlarından doğru konumu seçin.
-    - Uygulama, seçilen konum için hava durumu bilgilerini gösterecektir.
-  - **Güncel Hava Durumu Bilgilerini Görüntüleme:**
-    - Uygulama, seçilen konum için güncel sıcaklık, rüzgar, nem ve basınç bilgilerini otomatik olarak görüntüler.
-    - Gün döngüsü, güneşin doğuş ve batış saatlerini gösterir.
-  - **Günlük Tahminleri Görüntüleme:**
-    - "Diğer Günler" bölümü, gelecek günler için hava durumu tahminlerini gösterir.
-    - Her gün için beklenen hava durumu koşullarını (örneğin, yağmur, güneşli), sıcaklık aralığını ve genel hava durumunu gösteren bir simgeyi görebilirsiniz.
-- **Giriş Ekranı**
-  - **E-posta Adresi Girişi:**
-    - E-posta adresi giriş alanına geçerli bir e-posta adresi girin.
-    - E-posta adresi formatı doğruysa, yanında yeşil bir tik işareti görünecektir. Aksi takdirde kırmızı bir çarpı işareti görünecektir.
-  - **Şifre Girişi:**
-    - Şifre giriş alanına şifrenizi girin.
-    - Şifre doğruysa, yanında yeşil bir tik işareti görünecektir. Aksi takdirde kırmızı bir çarpı işareti görünecektir.
-  - **Giriş Yapma:**
-    - E-posta adresinizi ve şifrenizi doğru bir şekilde girdikten sonra *"Giriş Yap"* butonuna tıklayın.
-    - Giriş bilgileriniz doğruysa, uygulamaya giriş yapacaksınız.
-  - **Şifremi Unuttum:**
-    - Şifrenizi unuttuysanız *"Şifremi Unuttum"* bağlantısına tıklayın.
-    - Şifre sıfırlama talimatları e-posta adresinize gönderilecektir.
-  - **Üye Olma:**
-    - Henüz bir hesabınız yoksa *"Üye Ol"* bağlantısına tıklayın.
-    - Üyelik formunu doldurarak yeni bir hesap oluşturabilirsiniz.
-### SSS (Sıkça Sorulan Sorular)
-- **Soru 1:** Uygulama hangi şehirlerin hava durumunu gösteriyor?
-    - **Cevap:** Uygulama, OpenWeatherMap ve Visual Crossing Weather API'leri üzerinden erişilebilen tüm şehirlerin hava durumunu gösterir.
-- **Soru 2:** Bildirimler nasıl çalışıyor?
-    - **Cevap:** Bildirimler, kullanıcının seçtiği birincil şehir için belirli aralıklarla (varsayılan olarak 5 saat) gönderilir. Bildirim sıklığı ayarlar menüsünden değiştirilebilir.
-- **Soru 3:** Veri güncellemeleri ne sıklıkta yapılıyor?
-    - **Cevap:** API ‘dan her 5 saatte bir veri çekilir. Uygulama 5 saatlik süreçte önceden kaydettiği JSON verisinden çeker hava durumu verilerini.
-- **Soru 4:** Uygulama internet bağlantısı olmadan çalışır mı?
-    - **Cevap:** Uygulama, hava durumu verilerini çekmek için internet bağlantısı gerektirir. Ancak, önbellekte tutulan veriler internet bağlantısı olmadan görüntülenebilir.
-- **Soru 5:** Verilerin doğruluğu ne derecede?
-    - **Cevap:** Uygulama, OpenWeatherMap ve Visual Crossing Weather API'leri üzerinden erişilebilen tüm şehirlerin hava durumunu gösterir. Bu servisler büyük ve önemli şehirlerde doğruluk oranlı yüksek iken nispeten daha küçük şehirlerde ise hata payları oluşabiliyor.
-- **Soru 6:** Kaç tane şehri kayıt edebiliyoruz?
-    - **Cevap:** Uygulama, sizlere en fazla 3 şehri kayıt etmenize izin veriyor.
-- **Soru 7:** Hesap silebiliyor muyuz?
-    - **Cevap:** Uygulama üzerinden hesabınızı tamamen kaldırabiliyorsunuz. Depolanmış her hangi bir veriniz kalmayacak.
-- **Soru 8:** Şifremi unuttuysam ne yapmam lazım?
-    - **Cevap:** Uygulama üzerinden hesabınızın şifresini değiştirebilirsiniz.
-- **Soru 9:** Şifre belirlemede belli kurallar var mı?
-    - **Cevap:** Evet, uygulamaya kayıt olurken veya şifre girişi gerçekleştirilirken şifreniz uyması gereken bazı kuralları var. Bu kurallar:
-      - Şifreniz en az 8 karakterden oluşmalı.
-      - Şifreniz en az iki büyük harf içermelidir.
-      - Şifreniz en az iki rakam içermelidir.
-      - Şifreniz en az iki özel karakter içermelidir. *(Örneğin: !, @, #, +, -, vb)*
+- **Main Screen**
+  - **Search Bar:** Used to search for weather information for a specific location.
+  - **Date and Time:** Shows the current date and time.
+  - **Location:** Shows the name of the currently displayed location.
+  - **Temperature:** Shows the current temperature.
+  - **Wind:** Shows the speed and direction of the wind.
+  - **Humidity:** Shows the humidity in the air.
+  - **Pressure:** Shows the atmospheric pressure.
+  - **Day Cycle:** Shows the sunrise and sunset times.
+  - **Daily Forecast:** Shows the weather forecast for the coming days.
+  - **Main Weather Icon:** Indicates the weather occurring at that moment.
+  - **Menu:** Click to open the menu.
+- **Introduction Screen**
+  - **User Profile Icon:** Represents the user profile of the application.
+  - **Email Address Entry Field:** Used to enter your e-mail address.
+  - **Email Address Validation Icon:** Indicates whether the entered email address is valid or not (Green tick valid, red cross invalid)
+  - **Password Entry Field:** Used to enter your password.
+  - **Password Verification Icon:** Indicates whether the entered password is correct or not. (Green tick is correct, red cross is incorrect)
+  - **Forgot Password Link:** If you forgot your password, it redirects you to the password reset page.
+  - **Log In Button:** If your login information is correct, it allows you to log in to the application.
+  - **Become a Member Link:** If you do not have an account yet, it directs you to the membership page.
 
-### Sorun Giderme Rehberi
-- **Problem 1:** Uygulama açılmıyor veya çöküyor.
-    - **Çözüm:** Uygulamayı yeniden başlatın. Sorun devam ederse, uygulamayı yeniden kurun.
-- **Problem 2:** Hava durumu verileri görünmüyor.
-    - **Çözüm:** İnternet bağlantınızı kontrol edin. Geliştiriciler için ise API anahtarının doğru olduğundan emin olsunlar.
-- **Problem 3:** Bildirimler gelmiyor.
-    - **Çözüm:** Bildirim ayarlarını kontrol edin. Uygulamanın bildirim izninin olduğundan emin olun.
-- **Problem 4:** Uygulama çok yavaş çalışıyor.
-    - **Çözüm:** Uygulamayı yeniden başlatın. Gereksiz diğer uygulamaları kapatın.
-- **Problem 5:** Doğrulama kodu gönderilmedi.
-    - **Çözüm:** Tekrar deneyiniz veya girdiğiniz e-posta adresinin doğruluğundan emin olunuz.
-- **Problem 6:** Doğrulama kodu çalışmıyor.
-    - **Çözüm:** Tekrar bir kod gönderiniz. Eğer devam ediyorsa uygulamayı tekrar başlatın veya güncel sürüme sahip olduğunu kontrol ediniz.
-- **Problem 7:** Ayarlar panelinde bilgilerim yüklenmedi.
-    - Çözüm 7: Uygulamayı tekrardan kapatıp açınız veya muhtemel neden internet ağınızın zayıf olmasıdır.
+Description of #### Application Interface
+- **Main Screen**
+  - **Location Search:**
+    - Type a city or region name in the search bar.
+    - Select the correct location from the search results.
+    - The app will display weather information for the selected location.
+  - **Viewing Current Weather Information:**
+    - The app automatically displays current temperature, wind, humidity and pressure information for the selected location.
+    - The day cycle shows the sunrise and sunset times.
+  - **View Daily Forecasts:**
+    - The “Other Days” section shows weather forecasts for the coming days.
+    - For each day, you can see the expected weather conditions (e.g. rain, sunny), the temperature range and an icon showing the general weather.
+- **Introduction Screen**
+  - **Email Address Entry:**
+    - Enter a valid email address in the email address input field.
+    - If the email address format is correct, a green check mark will appear next to it. Otherwise a red cross will appear.
+  - **Password Entry:**
+    - Enter your password in the password entry field.
+    - If the password is correct, a green check mark will appear next to it. Otherwise a red cross will appear.
+  - **Logging In:**
+    - After entering your e-mail address and password correctly, click the *"Login ”* button.
+    - If your login details are correct, you will be logged in to the application.
+  - **Forgot Password:**
+    - If you have forgotten your password, click on the *"Forgot Password ”* link.
+    - Password reset instructions will be sent to your e-mail address.
+  - **Becoming a Member:**
+    - If you do not have an account yet, click on the *"Become a Member ”* link.
+    - You can create a new account by filling out the membership form.
+    
+### FAQ (Frequently Asked Questions)
 
-## **Kalite Güvence ✨**
+- **Question 1:** Which cities does the app show the weather for?
+    - **Answer:** The app shows the weather for all cities accessible via the Visual Crossing Weather API.
+- **Question 2:** How do notifications work?
+    - **Answer:** Notifications are sent at set intervals (5 hours by default) for the user's selected primary city. The notification frequency can be changed in the settings menu.
+- **Question 3:** How often are data updates done?
+    - **Answer:** Data is pulled from the API every 5 hours. The application pulls the weather data from the JSON data it previously saved in the 5-hour period.
+- **Question 4:** Does the application work without internet connection?
+    - **Answer:** The app requires an internet connection to pull weather data. However, the cached data can be viewed without an internet connection.
+- **Question 5:** How accurate is the data?
+    - **Answer:** The app shows the weather for all cities accessible through the OpenWeatherMap and Visual Crossing Weather APIs. While these services are highly accurate for large and important cities, they can be inaccurate for smaller cities.
+- **Question 6:** How many cities can we register?
+    - **Answer:** The application allows you to register up to 3 cities.
+- **Question 7:** Can we delete an account?
+    - **Answer:** You can completely remove your account through the application. You will not have any stored data.
+- **Question 8:** What should I do if I forgot my password?
+    - **Answer:** You can change the password of your account through the application.
+- **Question 9:** Are there certain rules for setting a password?
+    - **Answer:** Yes, there are some rules that your password must follow when registering or entering the password. These rules are
+      - Your password must be at least 8 characters.
+      - Your password must contain at least two capital letters.
+      - Your password must contain at least two numbers.
+      - Your password must contain at least two special characters. *(For example: !, @, #, +, -, etc.)*
 
-### Test Senaryoları
-- **Fonksiyonel Test Senaryoları:** Uygulama genel olarak ilk aşamada hedeflenen amaçlarına başarılı şekilde uyuyor.
-- **Performans Test Senaryoları:** Uygulama saniyede birden fazla kullanıcıya hizmet etmekte sorun yaşamıyor.
-- **Güvenlik Test Senaryoları:** Veri şifreleme, kullanıcı girişi ve e-posta doğrulama ile uygulamada kullanıcı güvenliği sağlanması hedefleniyor.
-- **Kullanılabilirlik Test Senaryoları:** 
+### Troubleshooting Guide
 
-### Hata Raporlama Prosedürleri
-- Kullanıcılar, karşılaştıkları hataları [**github issues**](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FEnesEfeTokta%2FWeatherPlusZero%2Fissues) bölümüne raporlayabilir.
-- Hata raporlarında şu bilgiler yer almalıdır:
-    - Hatanın tanımı
-    - Hatanın oluştuğu adım/senaryo
-    - Varsa hata mesajı
-    - Ekran görüntüsü
+- **Problem 1:** The application won't open or crashes.
+    - **Solution 1:** Restart the application. If the problem persists, reinstall the app.
+- **Problem 2:** Weather data does not appear.
+    - **Solution 2:** Check your internet connection. For developers, make sure the API key is correct.
+- **Problem 3:** Notifications are not coming.
+    - **Solution 3:** Check the notification settings. Make sure the app has notification permission.
+- **Problem 4:** The app is running very slow.
+    - **Solution 4:** Restart the app. Close other unnecessary applications.
+- **Problem 5:** The verification code was not sent.
+    - **Solution 5:** Try again or make sure that the e-mail address you entered is correct.
+- **Problem 6:** The verification code does not work.
+    - **Solution 6:** Send a code again. If it persists, restart the application or check that it has the latest version.
+- **Problem 7:** My information is not loaded in the settings panel.
+    - **Solution 7:** Close and open the app again or the probable cause is a weak internet network.
 
-### Kalite Metrikleri
-- **Hata Oranı:** Uygulamada oluşan hataların oranı.
-- **Test Kapsamı:** Test edilen kod satırlarının oranı.
-- **Performans Metrikleri:** Yanıt süreleri, kaynak kullanımı, uygulama başlangıç süresi.
-- **Kullanıcı Memnuniyeti:** Kullanıcı geri bildirimleri ve anket sonuçları.
+## **Quality Assurance ✨**
+
+#### Test Scenarios
+
+- **Functional Test Scenarios:** The application generally successfully fulfills its initial objectives.
+- **Performance Test Scenarios:** The application has no problem serving multiple users per second.
+- **Security Test Scenarios:** Data encryption, user login and e-mail verification are aimed to ensure user security in the application.
+- **Usability Test Scenarios:** The application was directed according to the feedback of people both in the planning process and in the development process. Before the final version was released, a test of 50 (Fifty) people was presented to users and their feedback was taken into account.
+
+### Error Reporting Procedures
+- Users can report bugs to [**github issues**](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FEnesEfeTokta%2FWeatherPlusZero%2Fissues).
+- Error reports should contain the following information:
+    - Definition of error
+    - Step/scenario where the error occurred
+    - Error message if any
+    - Screenshot
+
+#### Quality Metrics
+
+- **Error Rate:** The rate of errors in the application.
+- **Test Coverage:** Proportion of lines of code tested.
+- **Performance Metrics:** Response times, resource utilization, application startup time.
+- **User Satisfaction:** User feedback and survey results.
 
 ## **Sürdürülebilirlik ve Bakım 🛠️**
 
-### Bakım Planı
-- **Periyodik Güncellemeler:** Uygulamanın performansı, hataları ve yeni özellikleri için düzenli güncellemeler yayınlanacak.
-- **Teknik Borç Yönetimi:** Kodun kalitesini korumak ve gelecekteki değişiklikleri kolaylaştırmak için düzenli olarak teknik borç yönetimi yapılacak.
-- **Bağımlılık Güncellemeleri:** Kullanılan kütüphanelerin ve API'lerin güncel tutulması.
-- **Güvenlik Güncellemeleri:** Bulunan güvenlik açıklarına karşı hızlı bir şekilde güncelleme yayınlanması.
+#### Maintenance Plan
+- **Periodic Updates:** Regular updates will be released for the app's performance, bugs and new features.
+- **Technical Debt Management:** Regular technical debt management to maintain the quality of the code and facilitate future changes.
+- **Dependency Updates:** Keeping the used libraries and APIs up to date.
+- **Security Updates:** Quickly release updates against security vulnerabilities found.
 
-### Güncelleme Politikası
-- **İsimlendirme Kuralı:** İzimlendirme kuralı ise *(Major version).(Minor version).(Revision number).(Build number)* şekildedir.
-- **Büyük Güncellemeler:** Yeni özellikler veya önemli değişiklikler içeren güncellemeler.
-- **Küçük Güncellemeler:** Hata düzeltmeleri ve performans iyileştirmeleri içeren güncellemeler.
-- **Güncelleme Bildirimleri:** Kullanıcılara uygulama içi bildirimler veya e-posta yoluyla bilgilendirme yapılacak.
+#### Update Policy
+- **Naming convention:** The naming convention is *(Major version).(Minor version).(Revision number).(Build number)*.
+- **Major Updates:** Updates with new features or significant changes.
+- **Minor Updates:** Updates with bug fixes and performance improvements.
+- **Update Notifications:** Users will be notified via in-app notifications or email.
 
-### Destek Prosedürleri
-- Kullanıcılara e-posta yoluyla [**enesefetokta009@gmail.com**](https://www.google.com/url?sa=E&q=mailto%3Aenesefetokta009%40gmail.com) destek sağlanacak.
-- Sıkça sorulan sorular (SSS) ve sorun giderme rehberi güncel tutulacak.
-- GitHub repository üzerinden hata takibi ve geri bildirimler alınacak.
+#### Support Procedures
+- Support will be provided to users via email [**enesefetokta009@gmail.com**](https://www.google.com/url?sa=E&q=mailto%3Aenesefetokta009%40gmail.com).
+- Frequently asked questions (FAQ) and troubleshooting guide will be kept up to date.
+- Bug tracking and feedback will be received via GitHub repository.
 
-## Kullanıcı Arayüzü 🧮
-- **Tasarım Prensipleri:** Modern, minimalist ve kullanıcı dostu bir tasarım.
-- **Renk Paleti:** Açık ve koyu renk temaları arasında geçiş imkanı.
-- **Font Seçimi:** Okunabilirliği yüksek fontlar kullanılacak.
-- **Duyarlı Tasarım:** Farklı ekran boyutlarında ve cihazlarda uyumlu bir görüntüleme.
-- **UI Elementleri:**
-    - Arama Çubuğu
-    - Şehir Seçim Butonları
-    - Hava Durumu Bilgileri (Sıcaklık, Nem, Rüzgar, Yağış, vb.)
-    - Saatlik ve Günlük Tahmin Listeleri
-    - Bildirim Ayarları
-    - Ek Ayarlar ve Hesap Bilgileri Düğmesi
+## User Interface 🧮
+- **Design Principles:** Modern, minimalist and user-friendly design.
+- **Color Palette:** Possibility to switch between light and dark color themes.
+- **Font Selection:** High readability fonts will be used.
+- **Responsive Design:** Compatible display on different screen sizes and devices.
+- **UI Elements:**
+    - Search Bar
+    - City Selection Buttons
+    - Weather Information (Temperature, Humidity, Wind, Precipitation, etc.)
+    - Hourly and Daily Forecast Lists
+    - Notification Settings
+    - Additional Settings and Account Information Button
 
-## Yasal ve Hukuki Uyarılar ⚠️
+## Legal and Regulatory Notices ⚠️
 
-### Gizlilik Politikası
-Kişisel verilerinizin gizliliği bizim için önemlidir. Bu nedenle, verilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu şeffaf bir şekilde açıklamak isteriz:
+#### Privacy Policy
+The privacy of your personal data is important to us. Therefore, we would like to transparently explain how we collect, use and protect your data:
 
-**Toplanan Veriler:** Uygulamayı kullanımınız sırasında belirli veriler toplanabilir. Bu veriler, konum bilgileriniz, cihazınızla ilgili teknik veriler (örneğin, işletim sistemi sürümü, cihaz modeli), kullanım alışkanlıklarınız ve tercihleriniz olabilir. Topladığımız verilerin tam listesi için [Gizlilik Politikası sayfamızı](/PRIVACYPOLICY.md) ziyaret edin.
+**Data Collected:** Certain data may be collected during your use of the App. This data may include your location information, technical data about your device (e.g. operating system version, device model), usage habits and preferences. For a full list of the data we collect, visit [our Privacy Policy page](/PRIVACYPOLICY.md).
 
-**Veri Kullanımı:** Toplanan veriler, uygulamanın işlevselliğini geliştirmek, size daha iyi bir kullanıcı deneyimi sunmak, kişiselleştirilmiş içerik sağlamak, hataları gidermek ve analizler yapmak amacıyla kullanılabilir.
+**Data Usage:** The collected data may be used to improve the functionality of the application, provide you with a better user experience, provide personalized content, troubleshoot bugs and perform analytics.
 
-**Veri Güvenliği:** Kişisel verilerinizin güvenliğini sağlamak için endüstri standardı güvenlik önlemleri uygulanmaktadır. Ancak, internet üzerinden yapılan veri aktarımlarının tamamen güvenli olmadığını ve verilerinizin yetkisiz erişimlere karşı korunması için azami çaba gösterdiğimizi, ancak mutlak güvenlik garantisi veremediğimizi lütfen unutmayın.
+**Data Security:** Industry standard security measures are implemented to ensure the security of your personal data. However, please note that data transfers over the internet are not completely secure and we make every effort to protect your data against unauthorized access, but we cannot guarantee absolute security.
 
-**Veri Paylaşımı:** Kişisel verileriniz, yasal gereklilikler veya zorunlu durumlar dışında üçüncü şahıslarla paylaşılmaz.
+**Data Sharing:** Your personal data is not shared with third parties except for legal requirements or mandatory situations.
 
-**Haklarınız:** Kişisel verilerinize erişme, düzeltme, silme veya verilerinizi kullanmamızı sınırlama hakkına sahipsiniz. Bu haklarınızı nasıl kullanacağınız hakkında daha fazla bilgi için [Gizlilik Politikası sayfamızı](/PRIVACYPOLICY.md) ziyaret edin.
+**Your rights:** You have the right to access, correct, delete or restrict our use of your personal data. For more information on how to exercise these rights, visit our [Privacy Policy page](/PRIVACYPOLICY.md).
 
-### Kullanım Koşulları
-Uygulamamızı kullanarak aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız:
+### Terms of Use
+By using our application you agree to the following terms of use:
 
-**Kullanım Sınırları:** Uygulamayı yasalara uygun bir şekilde kullanmayı ve başkalarının haklarını ihlal etmemeyi kabul edersiniz.
+**Use Limits:** You agree to use the Application lawfully and not to violate the rights of others.
 
-**Fikri Mülkiyet:** Uygulamadaki tüm içerik (metinler, grafikler, logolar, ikonlar, yazılımlar vb.) tarafımıza veya lisans sahiplerimize aittir ve fikri mülkiyet haklarıyla korunmaktadır. Her hangi bir ekonomik gelir elde etme amacı dışında içeriklerimizin kullanılmasında sakınca yoktur.
+**Intellectual Property:** All content in the application (texts, graphics, logos, icons, software, etc.) belongs to us or our licensees and is protected by intellectual property rights. There is no harm in using our content for purposes other than generating any economic income.
 
-**Hesap Sorumluluğu:** Uygulamada bir hesap oluşturmanız durumunda, hesap bilgilerinizin gizliliğini korumak sizin sorumluluğunuzdadır.
+**Account Responsibility:** If you create an account on the application, you are responsible for maintaining the confidentiality of your account information.
 
-**Değişiklikler:** Kullanım koşulları zaman zaman güncellenebilir. Bu nedenle, düzenli olarak kontrol etmeniz önerilir.
+**Changes:** Terms of use may be updated from time to time. Therefore, it is recommended to check it regularly.
 
-**Sonlandırma:** Kullanım koşullarını ihlal etmeniz durumunda, hesabınız askıya alınabilir veya sonlandırılabilir.
+**Termination:** If you violate the terms of use, your account may be suspended or terminated.
 
-### Sorumluluk Reddi
-Uygulamamız, hava durumu bilgilerini genel bilgilendirme amacıyla sunmaktadır. Bu bilgilerin doğruluğu ve güncelliği konusunda azami özen gösterilmekle birlikte, aşağıdaki hususları dikkate almanız önemlidir:
+### Disclaimers
+Our application provides weather information for general information purposes. While utmost care is taken to ensure the accuracy and up-to-dateness of this information, it is important for you to consider the following:
 
-**Garanti Yoktur:** Uygulamanın sağladığı hava durumu bilgilerinin her zaman doğru, eksiksiz ve güncel olduğuna dair herhangi bir garanti vermemekteyiz. Hava durumu tahminleri, atmosferik koşulların karmaşıklığı nedeniyle hatalı olabilir.
+**No Warranty:** We do not make any guarantee that the weather information provided by the application is always accurate, complete and up-to-date. Weather forecasts can be inaccurate due to the complexity of atmospheric conditions.
 
-**Sorumluluk Sınırı:** Uygulamayı kullanımınızdan kaynaklanan doğrudan veya dolaylı zararlardan (örneğin, planlarınızın iptali, maddi kayıplar vb.) tarafımız sorumlu tutulamaz.
+**Limitation of Liability:** We cannot be held responsible for any direct or indirect damages (e.g. cancellation of your plans, financial losses, etc.) arising from your use of the application.
 
-**Profesyonel Tavsiye Yerine Geçmez:** Uygulamanın sağladığı bilgiler, profesyonel hava durumu uzmanlarının tavsiyesi yerine geçmez. Kritik kararlar almadan önce güvenilir kaynaklardan ve uzmanlardan bilgi almanız önerilir.
+**Not a Substitute for Professional Advice:** The information provided by the app is not a substitute for advice from professional weather experts. It is recommended that you obtain information from reliable sources and experts before making critical decisions.
 
-## Pazarlama & Tanıtım Stratejileri 🖊️
-- **Sosyal Medya Pazarlaması:** Uygulamanın özelliklerini ve faydalarını sosyal medya platformları üzerinden tanıtılacak.
-- **Blog Yazıları:** Uygulamanın geliştirme süreci, özellikleri ve kullanım alanları hakkında blog yazıları yayınlanacak.
-- **Tanıtım Videoları:** Uygulamanın kullanımını gösteren ve özelliklerini anlatan kısa tanıtım videoları hazırlanacak.
-- **Erken Erişim Programı:** Uygulamayı test etmek ve geri bildirim almak için erken erişim programı oluşturulacak.
+## Marketing & Promotion Strategies 🖊️
+- **Social Media Marketing:** The features and benefits of the application will be promoted through social media platforms.
+- **Blog Posts:** Blog posts will be published about the development process, features and usage areas of the application.
+- **Promotional Videos:** Short promotional videos will be prepared to show the use of the application and explain its features.
+- **Early Access Program:** An early access program will be created to test the application and get feedback.
 
-## Geliştirici Notları 🗒️
-- **22/12/2024:** XAML İle View Katmanı Yapıldı. Temel UI bileşenleri oluşturuldu.
-- **01/01/2025:** Supabase İle İşlemler Yapabilme Eklendi. Veri saklama ve kullanıcı yönetimi için Supabase entegrasyonu tamamlandı.
-- **06/01/2025:** Hava Durumu API’ı İle İletişim Sağlandı. OpenWeatherMap API ile entegrasyon sağlandı ve temel hava durumu verileri alınabiliyor.
-- **15/01/2025:** JSON Kayıt İşlemleri Yapıldı. Uygulama ayarlarının ve kullanıcı tercihlerinin JSON olarak kaydedilmesi sağlandı.
-- **25/01/2025:** Supabase ile ilgili iyileştirmeler yapıldı. Kodları daha okunaklı ve profesyonerleşti.
-- **01/02/2025:** E-Posta gönderme sistemi yapıldı.
-- **02/02/2025:** Kullanıcı giriş sistemi yapıldı.
-- **03/02/2025:** Kullanıcı kayıt sistemi yapıldı.
-- **04/02/2025:** Kullanıcı şifre sıfırlama sistemi yapıldı.
-- **08/02/2025:** Günlük hava durumunu e-posta gönderme sistemi yapıldı.
+## Developer Notes 🗒️
+- **22/12/2024:** View Layer Created with XAML. Basic UI components have been created.
+- **01/01/2025:** Added the ability to perform transactions with Supabase. Supabase integration for data storage and user management is completed.
+- **06/01/2025:** Communication Established with Weather API. Integration with OpenWeatherMap API has been achieved and basic weather data can be obtained.
+- **15/01/2025:** JSON Registration Completed. Application settings and user preferences are saved as JSON.
+- **25/01/2025:** Improvements have been made regarding Supabase. Their codes became more readable and professional.
+- **01/02/2025:** E-mail sending system was created.
+- **02/02/2025:** User login system was built.
+- **03/02/2025:** User registration system was created.
+- **04/02/2025:** User password reset system has been made.
+- **08/02/2025:** Daily weather e-mail sending system was created.
 
-## Sürümler 🆕
-- [v0.1.0 Beta](VersionsReadMe/v_0.1.0_Beta_README.md)
-
-## Dikkate Alınız 📢
-Weather Zero Plus üniversite 2.sınıf bir öğrencinin projesidir. Bunu dikkate alarak kullanın.
+## Take Note 📢
+Weather Zero Plus is the project of a second-year university student. Use it with this in mind.
