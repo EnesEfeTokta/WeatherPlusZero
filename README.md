@@ -483,6 +483,7 @@ Description of #### Application Interface
 - **Usability Test Scenarios:** The application was directed according to the feedback of people both in the planning process and in the development process. Before the final version was released, a test of 50 (Fifty) people was presented to users and their feedback was taken into account.
 
 ### Error Reporting Procedures
+
 - Users can report bugs to [**github issues**](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FEnesEfeTokta%2FWeatherPlusZero%2Fissues).
 - Error reports should contain the following information:
     - Definition of error
@@ -500,18 +501,21 @@ Description of #### Application Interface
 ## **Sürdürülebilirlik ve Bakım 🛠️**
 
 #### Maintenance Plan
+
 - **Periodic Updates:** Regular updates will be released for the app's performance, bugs and new features.
 - **Technical Debt Management:** Regular technical debt management to maintain the quality of the code and facilitate future changes.
 - **Dependency Updates:** Keeping the used libraries and APIs up to date.
 - **Security Updates:** Quickly release updates against security vulnerabilities found.
 
 #### Update Policy
+
 - **Naming convention:** The naming convention is *(Major version).(Minor version).(Revision number).(Build number)*.
 - **Major Updates:** Updates with new features or significant changes.
 - **Minor Updates:** Updates with bug fixes and performance improvements.
 - **Update Notifications:** Users will be notified via in-app notifications or email.
 
 #### Support Procedures
+
 - Support will be provided to users via email [**enesefetokta009@gmail.com**](https://www.google.com/url?sa=E&q=mailto%3Aenesefetokta009%40gmail.com).
 - Frequently asked questions (FAQ) and troubleshooting guide will be kept up to date.
 - Bug tracking and feedback will be received via GitHub repository.
@@ -567,12 +571,14 @@ Our application provides weather information for general information purposes. W
 **Not a Substitute for Professional Advice:** The information provided by the app is not a substitute for advice from professional weather experts. It is recommended that you obtain information from reliable sources and experts before making critical decisions.
 
 ## Marketing & Promotion Strategies 🖊️
+
 - **Social Media Marketing:** The features and benefits of the application will be promoted through social media platforms.
 - **Blog Posts:** Blog posts will be published about the development process, features and usage areas of the application.
 - **Promotional Videos:** Short promotional videos will be prepared to show the use of the application and explain its features.
 - **Early Access Program:** An early access program will be created to test the application and get feedback.
 
 ## Developer Notes 🗒️
+
 - **22/12/2024:** View Layer Created with XAML. Basic UI components have been created.
 - **01/01/2025:** Added the ability to perform transactions with Supabase. Supabase integration for data storage and user management is completed.
 - **06/01/2025:** Communication Established with Weather API. Integration with OpenWeatherMap API has been achieved and basic weather data can be obtained.
@@ -583,6 +589,10 @@ Our application provides weather information for general information purposes. W
 - **03/02/2025:** User registration system was created.
 - **04/02/2025:** User password reset system has been made.
 - **08/02/2025:** Daily weather e-mail sending system was created.
+- **15/02/2025:** Application activities are recorded.
+- **20/02/2025:** Location information is retrieved according to the device IP.
+- **22/02/2025:** Every time the user registers to the application, location information is recorded and transferred to the database.
+- **25/02/2025:** The JSON file containing application activities is encrypted.
 
 ## Take Note 📢
 Weather Zero Plus is the project of a second-year university student. Use it with this in mind.
