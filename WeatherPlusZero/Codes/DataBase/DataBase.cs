@@ -145,14 +145,13 @@ namespace WeatherPlusZero
 
             User = response;
 
-            await GetDatabaseData();
-            SaveIpLocationData();
-            SaveApplicationActivity();
+            if (await GetDatabaseData() && await SaveIpLocationData() && await SaveApplicationActivity())
+                return true;
 
-            return true;
+            return false;
         }
 
-        private static async void SaveIpLocationData()
+        private static async Task<bool> SaveIpLocationData()
         {
             IpLocationUser newIpLocationUser = new IpLocationUser()
             {
@@ -160,7 +159,11 @@ namespace WeatherPlusZero
                 userid = User.userid,
                 locationdata = await LocationService.GetLocationDataByApiAsync()
             };
-            await TAsyncUpdateRow<IpLocationUser>(newIpLocationUser);
+
+            if ((await TAsyncUpdateRow<IpLocationUser>(newIpLocationUser)) == null)
+                return false;
+
+            return true;
         }
 
         /// <summary>
@@ -260,7 +263,7 @@ namespace WeatherPlusZero
         /// <summary>
         /// Saves the application activity data for the current user.
         /// </summary>
-        private static async void SaveApplicationActivity()
+        private static async Task<bool> SaveApplicationActivity()
         {
             ApplicationActivityData data = new ApplicationActivityData
             {
@@ -288,6 +291,8 @@ namespace WeatherPlusZero
             };
 
             await ApplicationActivity.SaveApplicationActivityData(data);
+
+            return true;
         }
 
         /// <summary>
