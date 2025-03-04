@@ -300,7 +300,7 @@ namespace WeatherPlusZero
                 WaitGifBorder.Visibility = Visibility.Visible;
                 return;
             }
-            WaitGifBorder.Visibility = Visibility.Collapsed;
+            WaitGifBorder.Visibility = Visibility.Hidden;
         }
     }
 

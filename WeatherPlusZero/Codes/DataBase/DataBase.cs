@@ -210,9 +210,8 @@ namespace WeatherPlusZero
             Notification newNotification = new Notification
             {
                 userid = insertedUser.userid,
-                notificationtype = "Null",
-                notificationmessage = "Null",
-                notificationdatetime = DateTime.MinValue.ToString()
+                notificationtype = "Empty for now.",
+                notificationmessage = "Empty for now."
             };
             Notification insertedNotification = await TAsyncAddRow<Notification>(newNotification);
             if (insertedNotification == null) return false;
@@ -285,7 +284,7 @@ namespace WeatherPlusZero
                 IsDailyWeatherEmailsOn = UserCities[0].dailyweatheremailson,
                 IsImportantWeatherEmailsOn = UserCities[0].importantweatheremailson,
 
-                FirstDailyInformationDateTime = Notifications[0].notificationdatetime.ToString(),
+                FirstDailyInformationDateTime = Notifications[0].notificationdatetime,
 
                 IpLocation = await LocationService.GetLocationDataByApiAsync()
             };
@@ -372,7 +371,7 @@ namespace WeatherPlusZero
         public static int GetUserIdNotification() => Notifications[0].userid;
         public static string GetNotificationType() => Notifications[0].notificationtype;
         public static string GetNotificationMessage() => Notifications[0].notificationmessage;
-        public static string GetNotificationDateTime() => Notifications[0].notificationdatetime;
+        public static DateTime GetNotificationDateTime() => Notifications[0].notificationdatetime;
 
         public static IpLocationUser GetIpLocation() => IpLocationUsers[0];
         public static int GetIpLocationId() => IpLocationUsers[0].iplocationid;
@@ -534,7 +533,7 @@ namespace WeatherPlusZero
         public string password { get; set; } // WARNING => NOT NULL
 
         [Column("registrationdate")]
-        public DateTime registrationdate { get; set; } // WARNING => Registration Date is given a value by Supabase. Therefore it cannot get value from here.
+        public DateTime registrationdate { get; private set; } // WARNING => Registration Date is given a value by Supabase. Therefore it cannot get value from here.
     }
 
     [Table("cities")]
@@ -601,7 +600,7 @@ namespace WeatherPlusZero
         public string notificationmessage { get; set; } // WARNING => NOT NULL
 
         [Column("notificationdatetime")]
-        public string notificationdatetime { get; set; } // WARNING => Notification Date Time is given a value by Supabase. Therefore it cannot get value from here.
+        public DateTime notificationdatetime { get; private set; } // WARNING => Notification Date Time is given a value by Supabase. Therefore it cannot get value from here.
     }
 
     [Table("iplocationusers")]

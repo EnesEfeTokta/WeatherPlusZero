@@ -76,6 +76,8 @@ namespace WeatherPlusZero
                     return;
                 }
 
+                userSessionWindow.ShowWaitGift(true);
+
                 bool loginStatus = await DataBase.LoginUserOwnAuth(user.email, HashPassword(user.password));
 
                 if (loginStatus)
@@ -88,6 +90,8 @@ namespace WeatherPlusZero
                         "Login Error",
                         "Entry failed. Please try again to enter the information...",
                         NotificationType.Error);
+
+                    userSessionWindow.ShowWaitGift(false);
                 }
             }
             catch (Exception ex)
@@ -116,6 +120,8 @@ namespace WeatherPlusZero
 
         private static void LogInSuccess()
         {
+            userSessionWindow.ShowWaitGift(false);
+
             NotificationManagement.ShowNotification(
                 "Login Successful",
                 "Entry is successful. You will soon be redirected to the main screen...",
@@ -178,7 +184,6 @@ namespace WeatherPlusZero
             }
 
             user.password = HashPassword(user.password);
-            user.registrationdate = DateTime.UtcNow;
 
             UserManager.user = user;
 
@@ -257,6 +262,8 @@ namespace WeatherPlusZero
                 "Password Changed",
                 "Your password has been successfully changed.",
                 NotificationType.Success);
+
+            userSessionWindow.PanelTransition(Panels.Login);
         }
 
 

@@ -132,9 +132,7 @@ namespace WeatherPlusZero
         /// <param name="sendEmail">Email address</param>
         public static async void SendWeatherReportEmail(string sendEmail)
         {
-            DateTime firstDailyInformationDateTime = DateTime.Parse(await ApplicationActivity.GetFirstDailyInformationDateTimeFromApplicationActivityData());
-
-            if ((DateTime.UtcNow - firstDailyInformationDateTime).TotalHours > 24 && await ApplicationActivity.GetIsDailyWeatherEmailsOpenFromApplicationActivityData())
+            if ((DateTime.UtcNow - await ApplicationActivity.GetFirstDailyInformationDateTimeFromApplicationActivityData()).TotalHours > 24 && await ApplicationActivity.GetIsDailyWeatherEmailsOpenFromApplicationActivityData())
                 CreateEmail(sendEmail);
         }
 
@@ -156,7 +154,7 @@ namespace WeatherPlusZero
 
             await EmailService.SendMail_SendGrid(user.namesurname, user.email, emailHTML);
 
-            await ApplicationActivity.ChangeApplicationActivityDataByFirstDailyInformationDateTime(DateTime.Now.ToString());
+            await ApplicationActivity.ChangeApplicationActivityDataByFirstDailyInformationDateTime(DateTime.UtcNow);
 
             string emailBody = string.Empty;
             foreach (var item in weatherUpdateEmailPlaceholders)
@@ -169,8 +167,7 @@ namespace WeatherPlusZero
                 notificationid = DataBase.GetNotificationId(),
                 userid = DataBase.GetUserId(),
                 notificationtype = "Daily Weather Report",
-                notificationmessage = emailBody,
-                notificationdatetime = DateTime.UtcNow.ToString()
+                notificationmessage = emailBody
             };
 
             // [!] For now, instead of adding a new notification line, we update the existing notification line.

@@ -154,8 +154,7 @@ namespace WeatherPlusZero
                 notificationid = DataBase.GetNotificationId(),
                 userid = DataBase.GetUserId(),
                 notificationtype = "Emergency Weather Alert",
-                notificationmessage = report,
-                notificationdatetime = DateTime.UtcNow.ToString()
+                notificationmessage = report
             };
 
             // [!] For now, instead of adding a new notification line, we update the existing notification line.

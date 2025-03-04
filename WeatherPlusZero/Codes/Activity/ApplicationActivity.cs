@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace WeatherPlusZero
 {
@@ -77,7 +78,7 @@ namespace WeatherPlusZero
         }
 
         // Save the first daily information date and time.
-        public static async Task ChangeApplicationActivityDataByFirstDailyInformationDateTime(string dateTime)
+        public static async Task ChangeApplicationActivityDataByFirstDailyInformationDateTime(DateTime dateTime)
         {
             JsonService jsonService = new JsonService();
 
@@ -160,7 +161,7 @@ namespace WeatherPlusZero
         }
 
         // Get the first daily information date and time.
-        public static async Task<string> GetFirstDailyInformationDateTimeFromApplicationActivityData()
+        public static async Task<DateTime> GetFirstDailyInformationDateTimeFromApplicationActivityData()
         {
             ApplicationActivityData applicationActivityData = await GetApplicationActivityData();
 
@@ -205,7 +206,7 @@ namespace WeatherPlusZero
         public bool IsDailyWeatherEmailsOn { get; set; } = true; // Daily weather email status.
         public bool IsImportantWeatherEmailsOn { get; set; } = true; // Important weather email status.
 
-        public string FirstDailyInformationDateTime { get; set; } = "01.01.0001 01:01:01"; // First daily information date and time.
+        public DateTime FirstDailyInformationDateTime { get; set; } = DateTime.MinValue; // First daily information date and time.
 
         public IpLocation IpLocation { get; set; } // Location information.
     }

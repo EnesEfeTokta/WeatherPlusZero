@@ -71,7 +71,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="Login_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="Login_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_EmailTextBox_TextChanged"/>
+                                    <TextBox x:Name="Login_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_EmailTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     <Image x:Name="Login_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                                 </Grid>
                             </Border>
@@ -94,7 +94,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="Login_PasswordIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="Login_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_PasswordTextBox_TextChanged"/>
+                                    <TextBox x:Name="Login_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Login_PasswordTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     <Image x:Name="Login_PasswordStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                                 </Grid>
                             </Border>
@@ -174,7 +174,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="Register_NamesurnameIconImage" Source="Images/NamesurnameIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="Register_NamesurnameTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_NamesurnameTextBox_TextChanged"/>
+                                    <TextBox x:Name="Register_NamesurnameTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_NamesurnameTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     <Image x:Name="Register_NamesurnameStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                                 </Grid>
                             </Border>
@@ -197,7 +197,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="Register_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="Register_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_EmailTextBox_TextChanged"/>
+                                    <TextBox x:Name="Register_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_EmailTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     <Image x:Name="Register_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                                 </Grid>
                             </Border>
@@ -220,7 +220,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="Register_PasswordIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="Register_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_PasswordTextBox_TextChanged"/>
+                                    <TextBox x:Name="Register_PasswordTextBox" Grid.Column="1" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Register_PasswordTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     <Image x:Name="Register_PasswordStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                                 </Grid>
                             </Border>
@@ -289,7 +289,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="Forgot_NamesurnameIconImage" Source="Images/NamesurnameIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="Forgot_NamesurnameTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_NamesurnameTextBox_TextChanged"/>
+                                    <TextBox x:Name="Forgot_NamesurnameTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_NamesurnameTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     <Image x:Name="Forgot_NamesurnameStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                                 </Grid>
                             </Border>
@@ -312,7 +312,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="Forgot_EmailIconImage" Source="Images/EmailIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="Forgot_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_EmailTextBox_TextChanged"/>
+                                    <TextBox x:Name="Forgot_EmailTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="Forgot_EmailTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     <Image x:Name="Forgot_EmailStatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                                 </Grid>
                             </Border>
@@ -351,7 +351,7 @@
                 BorderThickness="0"
                 Grid.Column="1"
                 Grid.Row="1"
-                MaxWidth="300">
+                MaxWidth="300" d:IsHidden="True">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="130*"/>
@@ -381,7 +381,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="EmailVerification_KeyCodeIconImage" Source="Images/KeyCodeIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="EmailVerification_KeyCodeTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="EmailVerification_EmailKeyCodeTextBox_TextChanged"/>
+                                    <TextBox x:Name="EmailVerification_KeyCodeTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="EmailVerification_EmailKeyCodeTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                 </Grid>
                             </Border>
                         </Grid>
@@ -453,7 +453,7 @@
                                         <ColumnDefinition Width="30*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="ChangePassword_LockIconImage" Source="Images/LockIcon.png" Grid.Column="0" HorizontalAlignment="Right" Margin="0,3,0,3" Width="23"/>
-                                    <TextBox x:Name="ChangePassword_ChangePasswordTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="ChangePassword_ChangePasswordTextBox_TextChanged"/>
+                                    <TextBox x:Name="ChangePassword_ChangePasswordTextBox" Grid.Column="1" TextWrapping="Wrap" Text="" Background="Transparent" Foreground="White" Margin="0,4,0,4" BorderThickness="0" TextChanged="ChangePassword_ChangePasswordTextBox_TextChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                                     <Image x:Name="ChangePassword_StatusIconImage" Source="Images/TickIcon.png" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,0,5" Width="15"/>
                                 </Grid>
                             </Border>
