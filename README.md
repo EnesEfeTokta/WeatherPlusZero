@@ -324,6 +324,7 @@ CREATE TABLE public.iplocationusers (
 ```
 
 #### Scheme
+
 ```mermaid
 erDiagram
     USERS ||--o{ NOTIFICATIONS : "has"
@@ -573,7 +574,7 @@ Description of #### Application Interface
 - **Performance Metrics:** Response times, resource utilization, application startup time.
 - **User Satisfaction:** User feedback and survey results.
 
-## **Sürdürülebilirlik ve Bakım 🛠️**
+## **Sustainability and Maintenance 🛠️**
 
 #### Maintenance Plan
 
