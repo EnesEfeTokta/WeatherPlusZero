@@ -12,9 +12,6 @@ namespace WeatherPlusZero
         private readonly BitmapImage tickIcon;
         private readonly BitmapImage errorIcon;
 
-        private readonly UserManager _userManager;
-        private readonly AuthService authService;
-
         private readonly TextBox[] textBoxes;
 
         private Panels isEmailVerificationPanelFrom;
@@ -25,8 +22,6 @@ namespace WeatherPlusZero
         /// </summary>
         public UserSessionWindow()
         {
-            authService = new AuthService();
-            _userManager = new UserManager(authService);
             tickIcon = new BitmapImage(new Uri("Images/TickIcon.png", UriKind.Relative));
             errorIcon = new BitmapImage(new Uri("Images/ErrorIcon.png", UriKind.Relative));
 
@@ -61,25 +56,28 @@ namespace WeatherPlusZero
         /// Initializes the application by transitioning to the login panel.
         /// </summary>
         private void ApplicationStart()
-            => PanelTransition(Panels.Login);
+        {
+            UserManager.StartApplication();
+            PanelTransition(Panels.Login);
+        }
 
         /// <summary>
         /// Handles the login process when the login button is clicked.
         /// </summary>
         private async void LogInClickButton(object sender, RoutedEventArgs e)
-            => await _userManager.LogIn(new User { email = Login_EmailTextBox.Text, password = Login_PasswordTextBox.Text });
+            => await UserManager.LogIn(new User { email = Login_EmailTextBox.Text, password = Login_PasswordTextBox.Text });
 
         /// <summary>
         /// Handles the registration process when the register button is clicked.
         /// </summary>
         private void RegisterClickButton(object sender, RoutedEventArgs e)
-            => _userManager.Register(new User { namesurname = Register_NamesurnameTextBox.Text, email = Register_EmailTextBox.Text, password = Register_PasswordTextBox.Text });
+            => UserManager.Register(new User { namesurname = Register_NamesurnameTextBox.Text, email = Register_EmailTextBox.Text, password = Register_PasswordTextBox.Text });
 
         /// <summary>
         /// Handles the forgot password process when the forgot button is clicked.
         /// </summary>
         private async void ForgotClickButton(object sender, RoutedEventArgs e)
-            => await _userManager.Forgot(new User { namesurname = Forgot_NamesurnameTextBox.Text, email = Forgot_EmailTextBox.Text });
+            => await UserManager.Forgot(new User { namesurname = Forgot_NamesurnameTextBox.Text, email = Forgot_EmailTextBox.Text });
 
         /// <summary>
         /// Handles the email verification process when the email verification button is clicked.
@@ -89,10 +87,10 @@ namespace WeatherPlusZero
             switch (isEmailVerificationPanelFrom)
             {
                 case Panels.Register:
-                    await authService.RegisterVerificationCode(EmailVerification_KeyCodeTextBox.Text);
+                    await AuthService.RegisterVerificationCode(EmailVerification_KeyCodeTextBox.Text);
                     break;
                 case Panels.Forgot:
-                    authService.ForgotVerificationCode(EmailVerification_KeyCodeTextBox.Text);
+                    AuthService.ForgotVerificationCode(EmailVerification_KeyCodeTextBox.Text);
                     break;
             }
         }
@@ -101,14 +99,14 @@ namespace WeatherPlusZero
         /// Transitions the UI to the login panel.
         /// </summary>
         private async void ChangePasswordClickButton(object sender, RoutedEventArgs e)
-            => await _userManager.ChangePassword(ChangePassword_ChangePasswordTextBox.Text);
+            => await UserManager.ChangePassword(ChangePassword_ChangePasswordTextBox.Text);
 
         /// <summary>
         /// Updates the input icon based on the validation status of the email text box in the login panel.
         /// </summary>
         private void Login_EmailTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool iconStatus = _userManager.ValidateFieldsContinuously(ValidateType.Email, Login_EmailTextBox.Text);
+            bool iconStatus = UserManager.ValidateFieldsContinuously(ValidateType.Email, Login_EmailTextBox.Text);
             TextBoxInputIcon(Panels.Login, TextBoxInputIconType.Email, iconStatus);
         }
 
@@ -117,7 +115,7 @@ namespace WeatherPlusZero
         /// </summary>
         private void Login_PasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool iconStatus = _userManager.ValidateFieldsContinuously(ValidateType.Password, Login_PasswordTextBox.Text);
+            bool iconStatus = UserManager.ValidateFieldsContinuously(ValidateType.Password, Login_PasswordTextBox.Text);
             TextBoxInputIcon(Panels.Login, TextBoxInputIconType.Password, iconStatus);
         }
 
@@ -126,7 +124,7 @@ namespace WeatherPlusZero
         /// </summary>
         private void Register_NamesurnameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool iconStatus = _userManager.ValidateFieldsContinuously(ValidateType.NameSurname, Register_NamesurnameTextBox.Text);
+            bool iconStatus = UserManager.ValidateFieldsContinuously(ValidateType.NameSurname, Register_NamesurnameTextBox.Text);
             TextBoxInputIcon(Panels.Register, TextBoxInputIconType.Namesurname, iconStatus);
         }
 
@@ -135,7 +133,7 @@ namespace WeatherPlusZero
         /// </summary>
         private void Register_EmailTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool iconStatus = _userManager.ValidateFieldsContinuously(ValidateType.Email, Register_EmailTextBox.Text);
+            bool iconStatus = UserManager.ValidateFieldsContinuously(ValidateType.Email, Register_EmailTextBox.Text);
             TextBoxInputIcon(Panels.Register, TextBoxInputIconType.Email, iconStatus);
         }
 
@@ -144,7 +142,7 @@ namespace WeatherPlusZero
         /// </summary>
         private void Register_PasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool iconStatus = _userManager.ValidateFieldsContinuously(ValidateType.Password, Register_PasswordTextBox.Text);
+            bool iconStatus = UserManager.ValidateFieldsContinuously(ValidateType.Password, Register_PasswordTextBox.Text);
             TextBoxInputIcon(Panels.Register, TextBoxInputIconType.Password, iconStatus);
         }
 
@@ -153,7 +151,7 @@ namespace WeatherPlusZero
         /// </summary>
         private void Forgot_NamesurnameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool iconStatus = _userManager.ValidateFieldsContinuously(ValidateType.NameSurname, Forgot_NamesurnameTextBox.Text);
+            bool iconStatus = UserManager.ValidateFieldsContinuously(ValidateType.NameSurname, Forgot_NamesurnameTextBox.Text);
             TextBoxInputIcon(Panels.Forgot, TextBoxInputIconType.Namesurname, iconStatus);
         }
 
@@ -162,7 +160,7 @@ namespace WeatherPlusZero
         /// </summary>
         private void Forgot_EmailTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool iconStatus = _userManager.ValidateFieldsContinuously(ValidateType.Email, Forgot_EmailTextBox.Text);
+            bool iconStatus = UserManager.ValidateFieldsContinuously(ValidateType.Email, Forgot_EmailTextBox.Text);
             TextBoxInputIcon(Panels.Forgot, TextBoxInputIconType.Email, iconStatus);
         }
 
@@ -179,7 +177,7 @@ namespace WeatherPlusZero
         /// </summary>
         private void ChangePassword_ChangePasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            bool iconStatus = _userManager.ValidateFieldsContinuously(ValidateType.Password, ChangePassword_ChangePasswordTextBox.Text);
+            bool iconStatus = UserManager.ValidateFieldsContinuously(ValidateType.Password, ChangePassword_ChangePasswordTextBox.Text);
             TextBoxInputIcon(Panels.ChangePassword, TextBoxInputIconType.Password, iconStatus);
         }
 
@@ -289,6 +287,20 @@ namespace WeatherPlusZero
             {
                 textBox.Text = "";
             }
+        }
+
+        /// <summary>
+        /// Shows or hides the wait GIF based on the specified value.
+        /// </summary>
+        /// <param name="show">True to show the GIF, false to hide it.</param>
+        public void ShowWaitGift(bool show)
+        {
+            if (show)
+            {
+                WaitGifBorder.Visibility = Visibility.Visible;
+                return;
+            }
+            WaitGifBorder.Visibility = Visibility.Hidden;
         }
     }
 

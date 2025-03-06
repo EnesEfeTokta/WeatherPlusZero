@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,16 +17,13 @@ namespace WeatherPlusZero
 
         private ObservableCollection<FutureDay> WeatherList { get; set; }
 
-        private Point _startPoint;
-        private bool _isDragging;
+        private Point _startPoint { get; set; }
+        private bool _isDragging { get; set; }
 
-        ApplicationProgress applicationProgress;
-        SearchCity searchCity;
+        private bool isSettingsPanelVisible { get; set; } = false;
 
         public MainWindow()
         {
-            applicationProgress = new ApplicationProgress();
-            searchCity = new SearchCity();
             InitializeComponent();
             Initialize();
         }
@@ -39,10 +35,7 @@ namespace WeatherPlusZero
 
         private void ApplicationStart()
         {
-            applicationProgress.ApplicationStart();
-
-            //HelloCard helloCard = new HelloCard();
-            //helloCard.Show();
+            ApplicationProgress.ApplicationStart();
 
             // Hide the add city and search clear buttons.
             CancelCitySelectButton.Visibility = Visibility.Hidden;
@@ -50,10 +43,8 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Kullanıcı TextBox 'a girdiğinde çalışır...
+        /// It runs when the user enters the TextBox...
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CityNameSearchTextBox_GoFocus(object sender, RoutedEventArgs e)
         {
             if (CityNameSearchTextBox.Text == "Search for city...")
@@ -64,10 +55,8 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Kullanıcı TextBox 'tan çıktığında çalışır...
+        /// Runs when the user exits the TextBox...
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CityNameSearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(CityNameSearchTextBox.Text))
@@ -78,36 +67,30 @@ namespace WeatherPlusZero
         }
 
         /// <summary>
-        /// Kullanıcı yazıdığı şehri ENTER tuşu ile onaylıyor.
+        /// The user confirms the city he typed in with the ENTER key.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CityNameSearchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                SearchCity();
+                StartSearchCity();
                 e.Handled = false;
             }
         }
 
         /// <summary>
-        /// Kullanıcı şehir adı aramsını başatan UI fonksiyon.
+        /// UI function that starts the user city name search.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CityNameSearchClickButton(object sender, RoutedEventArgs e)
-        {
-            SearchCity();
-        }
+            => StartSearchCity();
 
-        private async void SearchCity()
+        private async void StartSearchCity()
         {
             string cityName = CityNameSearchTextBox.Text;
             if (cityName == "Search for city...")
                 return;
 
-            bool successStatus = await searchCity.SearchCityName(cityName);
+            bool successStatus = await SearchCity.SearchCityName(cityName);
 
             if (successStatus)
             {
@@ -123,16 +106,16 @@ namespace WeatherPlusZero
             }
         }
 
-        private async void AddCitySelectButton_Click(object sender, RoutedEventArgs e)
+        private void AddCitySelectButton_Click(object sender, RoutedEventArgs e)
         {
             CityButtonOperations();
-            await searchCity.AddSelectCity();
+            SearchCity.AddSelectCity();
         }
 
-        private async void CanselCitySelectButton_Click(object sender, RoutedEventArgs e)
+        private void CanselCitySelectButton_Click(object sender, RoutedEventArgs e)
         {
             CityButtonOperations();
-            await searchCity.CanselCitySelect();
+            SearchCity.CanselCitySelect();
         }
 
         private void CityButtonOperations()
@@ -141,6 +124,15 @@ namespace WeatherPlusZero
             CancelCitySelectButton.Visibility = Visibility.Hidden;
             CityNameSearchTextBox.Text = "Search for city...";
             CityNameSearchTextBox.Foreground = Brushes.White;
+        }
+
+        /// <summary>
+        /// Changes the background image of the home screen.
+        /// </summary>
+        /// <param name="path">Path to the image to be replaced.</param>
+        public void UpdateBackgroundImage(string path)
+        {
+            BackgroundImageBrush.ImageSource = new BitmapImage(new Uri(path, UriKind.Absolute));
         }
 
         /// <summary>
@@ -233,6 +225,8 @@ namespace WeatherPlusZero
             newImage.CacheOption = BitmapCacheOption.OnLoad;
             newImage.EndInit();
 
+            image.Source = newImage;
+
             return true;
         }
 
@@ -265,20 +259,19 @@ namespace WeatherPlusZero
             if (hour >= 16 || hour < 6)
             {
                 SetDayInformation(hour, TimeDayProgressBar, Colors.DarkBlue);
-                SetIconImage("pack://application:,,,/Images/MoonIcon.png", WeatherTimeStatusIconImage); // Ay resmi
+                SetIconImage("pack://application:,,,/Images/MoonIcon.png", WeatherTimeStatusIconImage);
             }
             else
             {
                 SetDayInformation(hour, TimeDayProgressBar, Colors.Yellow);
-                SetIconImage("pack://application:,,,/Images/SunIcon.png", WeatherTimeStatusIconImage); // Güneş resmi
+                SetIconImage("pack://application:,,,/Images/SunIcon.png", WeatherTimeStatusIconImage);
             }
 
-            double progressWidth = TimeDayProgressBar.ActualWidth;
+            double fillWidth = (TimeDayProgressBar.Value / TimeDayProgressBar.Maximum) * (TimeDayProgressBar.ActualWidth);
 
-            double imagePosition = (TimeDayProgressBar.Value / TimeDayProgressBar.Maximum) * progressWidth;
-
-            WeatherStatusTransform.X = imagePosition - (WeatherStatusIconImage.Width / 2);
+            WeatherStatusTransform.X = fillWidth - (WeatherTimeStatusIconImage.ActualWidth / 2);
         }
+
 
         /// <summary>
         /// 
@@ -314,5 +307,67 @@ namespace WeatherPlusZero
             _isDragging = false;
             WeatherScrollViewer.ReleaseMouseCapture();
         }
+
+        /// <summary>
+        /// Shows or hides the settings panel.
+        /// </summary>
+        private void SettingsShowButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isSettingsPanelVisible)
+            {
+                SettingsPanelBorder.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                SettingsPanelBorder.Visibility = Visibility.Visible;
+                SettingsPanelManager.OpenSettingsPanel();
+            }
+
+            isSettingsPanelVisible = !isSettingsPanelVisible;
+        }
+
+        /// <summary>
+        /// Logs the user out of the application.
+        /// </summary>
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+            => SettingsPanelManager.LogOut();
+
+        /// <summary>
+        /// Updates the settings panel with the received data.
+        /// </summary>
+        /// <param name="data">...</param>
+        public void UpdateSettingsPanel(ApplicationActivityData data)
+        {
+            UserNameSurnameTextBlock.Text = "Name Surname: " + data.UserNameSurname;
+            UserEmailTextBlock.Text = "Email: " + data.UserEmail;
+
+            InAppCheckBox.IsChecked = data.IsInAppNotificationOn;
+            DailyWeatherCheckBox.IsChecked = data.IsDailyWeatherEmailsOn;
+            EmergencyWeatherCheckBox.IsChecked = data.IsImportantWeatherEmailsOn;
+
+            UserSelectCityTextBlock.Text = "Selected City: " + data.SelectCity;
+        }
+
+        private void NotificationsCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            if (!isSettingsPanelVisible) // If the settings panel is not visible, do not return.
+                return;
+            SettingsPanelManager.UpdateNotificationsApplicationActivityDataAsync(
+                InAppCheckBox.IsChecked ?? false,
+                DailyWeatherCheckBox.IsChecked ?? false,
+                EmergencyWeatherCheckBox.IsChecked ?? false);
+        }
+
+        /// <summary>
+        /// Removes the city from the user's list.
+        /// </summary>
+        public void RemoveCity_Click(object sender, RoutedEventArgs e)
+            => SettingsPanelManager.ClearCity();
+
+        /// <summary>
+        /// Opens the GitHub page of the project.
+        /// </summary>
+        private void GoToGitHub_Click(object sender, RoutedEventArgs e)
+            => SettingsPanelManager.GoToGitHubPage();
     }
 }

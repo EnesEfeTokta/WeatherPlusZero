@@ -11,39 +11,42 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Icon="Images\AppLogo.png">
-    <Grid x:Name="GeneralGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="130"/>
-            <RowDefinition Height="220"/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30"/>
-            <ColumnDefinition Width="295"/>
-            <ColumnDefinition Width="25"/>
-            <ColumnDefinition Width="420"/>
-            <ColumnDefinition Width="30"/>
-        </Grid.ColumnDefinitions>
+    <Grid>
+        <Border x:Name="GeneralBorder">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="130"/>
+                    <RowDefinition Height="220"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="295"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="420"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Background Image -->
-        <Grid.Background>
-            <ImageBrush ImageSource="Images\RainyWeatherInTheEvening.jpg"
+                <!-- Background Image -->
+                <Grid.Background>
+                    <ImageBrush x:Name="BackgroundImageBrush" 
+                        ImageSource="https://english.wafa.ps/image/NewsThumbImg/Default/8aa3ec9b-fae1-42e7-98ff-d509af72c906.jpg"
                         Stretch="UniformToFill"/>
-        </Grid.Background>
+                </Grid.Background>
 
-        <!-- Search Box Container -->
-        <Border x:Name="CityNameSearchBorder" 
+                <!-- Search Box Container -->
+                <Border x:Name="CityNameSearchBorder" 
                 Grid.Column="1" 
                 Grid.Row="1"
                 CornerRadius="10"
                 Background="#33FFFFFF"
                 BorderBrush="#66FFFFFF"
                 BorderThickness="0">
-            <Grid x:Name="CityNameSearchGrid">
-                <!-- Text Input -->
-                <TextBox x:Name="CityNameSearchTextBox"
+                    <Grid x:Name="CityNameSearchGrid">
+                        <!-- Text Input -->
+                        <TextBox x:Name="CityNameSearchTextBox"
                          Background="Transparent" 
                          BorderThickness="0"
                          Foreground="Gray"
@@ -55,22 +58,22 @@
                          GotFocus="CityNameSearchTextBox_GoFocus"
                          LostFocus="CityNameSearchTextBox_LostFocus"
                          KeyDown="CityNameSearchTextBox_KeyDown">
-                    Search for city...
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Triggers>
-                                <Trigger Property="IsFocused"
+                            Search for city...
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsFocused"
                                         Value="True">
-                                    <Setter Property="Text"
+                                            <Setter Property="Text"
                                             Value=""/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
 
-                <!-- Search Icon Button -->
-                <Button x:Name="CityNameSearchButton"
+                        <!-- Search Icon Button -->
+                        <Button x:Name="CityNameSearchButton"
                         Content="🔍"
                         Width="30"
                         Height="30"
@@ -80,66 +83,67 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Click="CityNameSearchClickButton"/>
-            </Grid>
-        </Border>
+                    </Grid>
+                </Border>
 
-        <!-- Settings Open -->
-        <Border x:Name="SettingsOpenBorder" Grid.Column="3" Grid.Row="1">
-            <Grid x:Name="SettingsOpenGrid">
-                <Button x:Name="SettingsOpenButton"
-                        Content="🧰"
-                        Width="30"
-                        Height="30"
-                        Background="Transparent"
-                        Foreground="White"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"/>
+                <!-- Settings Open -->
+                <Border x:Name="SettingsOpenBorder" Grid.Column="3" Grid.Row="1">
+                    <Grid x:Name="SettingsOpenGrid">
+                        <Button x:Name="SettingsOpenButton"
+                                Content="🧰"
+                                Width="30"
+                                Height="30"
+                                Background="Transparent"
+                                Foreground="White"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Click="SettingsShowButton_Click"/>
 
-                <Button x:Name="CancelCitySelectButton" 
+                        <Button x:Name="CancelCitySelectButton" 
                         HorizontalAlignment="Left" 
                         VerticalAlignment="Center" 
                         Height="25" Width="25"
                         Click="CanselCitySelectButton_Click">
-                    <Button.Foreground>
-                        <ImageBrush/>
-                    </Button.Foreground>
-                    <Button.BorderBrush>
-                        <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                    </Button.BorderBrush>
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/GarbageIcon.png"/>
-                    </Button.Background>
-                </Button>
+                            <Button.Foreground>
+                                <ImageBrush/>
+                            </Button.Foreground>
+                            <Button.BorderBrush>
+                                <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                            </Button.BorderBrush>
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/GarbageIcon.png"/>
+                            </Button.Background>
+                        </Button>
 
-                <Button x:Name="AddCitySelectButton" 
+                        <Button x:Name="AddCitySelectButton" 
                         HorizontalAlignment="Left" 
                         VerticalAlignment="Center" 
                         Height="26" Width="25" Margin="30,0,0,0"
                         Click="AddCitySelectButton_Click">
-                    <Button.BorderBrush>
-                        <SolidColorBrush Color="#FF707070" Opacity="0"/>
-                    </Button.BorderBrush>
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Images/PlusIcon.png"/>
-                    </Button.Background>
-                </Button>
-            </Grid>
-        </Border>
+                            <Button.BorderBrush>
+                                <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                            </Button.BorderBrush>
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/PlusIcon.png"/>
+                            </Button.Background>
+                        </Button>
+                    </Grid>
+                </Border>
 
-        <!-- Time Date Day Location -->
-        <Border x:Name="TimeDateDayLocationBorder" Grid.Column="1" Grid.Row="2">
-            <Grid x:Name="TimeDateDayLocationGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="35"/>
-                </Grid.RowDefinitions>
+                <!-- Time Date Day Location -->
+                <Border x:Name="TimeDateDayLocationBorder" Grid.Column="1" Grid.Row="2">
+                    <Grid x:Name="TimeDateDayLocationGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
 
-                <!-- Date -->
-                <Border x:Name="DateBorder" Grid.Column="0" Grid.Row="0">
-                    <Grid x:Name="DateGrid">
+                        <!-- Date -->
+                        <Border x:Name="DateBorder" Grid.Column="0" Grid.Row="0">
+                            <Grid x:Name="DateGrid">
 
-                        <TextBlock x:Name="DateTextBlock" 
+                                <TextBlock x:Name="DateTextBlock" 
                                    Text="January 04" 
                                    FontSize="15" 
                                    Foreground="Gray" 
@@ -147,14 +151,14 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Bottom"
                                    Grid.ColumnSpan="2"/>
-                    </Grid>
-                </Border>
+                            </Grid>
+                        </Border>
 
-                <!-- Time and Day -->
-                <Border x:Name="TimeAndDayBorder" Grid.Column="0" Grid.Row="1">
-                    <Grid x:Name="TimeAndDayGrid">
+                        <!-- Time and Day -->
+                        <Border x:Name="TimeAndDayBorder" Grid.Column="0" Grid.Row="1">
+                            <Grid x:Name="TimeAndDayGrid">
 
-                        <TextBlock x:Name="TimeAndDayTextBlock" 
+                                <TextBlock x:Name="TimeAndDayTextBlock" 
                                    Text="12:52 Thursday" 
                                    FontSize="35" 
                                    Foreground="White" 
@@ -162,13 +166,13 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Stretch"
                                    Grid.ColumnSpan="2"/>
-                    </Grid>
-                </Border>
+                            </Grid>
+                        </Border>
 
-                <!-- Location -->
-                <Border x:Name="LocationBorder" Grid.Column="0" Grid.Row="2">
-                    <Grid x:Name="LocationGrid">
-                        <TextBlock x:Name="LocationTextBlock" 
+                        <!-- Location -->
+                        <Border x:Name="LocationBorder" Grid.Column="0" Grid.Row="2">
+                            <Grid x:Name="LocationGrid">
+                                <TextBlock x:Name="LocationTextBlock" 
                                    Text="Oltu/Erzurum" 
                                    FontSize="15" 
                                    Foreground="White" 
@@ -176,173 +180,173 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Top"
                                    Grid.ColumnSpan="2"/>
+                            </Grid>
+                        </Border>
                     </Grid>
                 </Border>
-            </Grid>
-        </Border>
 
-        <!-- Weather Image -->
-        <Border x:Name="WeatherIconBorder" Grid.Column="3" Grid.Row="2">
-            <Grid>
-                <Image x:Name="WeatherStatusIconImage"
+                <!-- Weather Image -->
+                <Border x:Name="WeatherIconBorder" Grid.Column="3" Grid.Row="2">
+                    <Grid>
+                        <Image x:Name="WeatherStatusIconImage"
                        Source="Images\WindyCloudySunny.png"
                        Width="100"
                        Height="100"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"/>
-            </Grid>
-        </Border>
+                    </Grid>
+                </Border>
 
-        <!-- Weather Information -->
-        <Border x:Name="WeatherInformationBorder" Grid.Column="1" Grid.Row="3">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="136"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="136"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="100"/>
-                </Grid.RowDefinitions>
+                <!-- Weather Information -->
+                <Border x:Name="WeatherInformationBorder" Grid.Column="1" Grid.Row="3">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="136"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="136"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
 
-                <!-- Temperature -->
-                <Border x:Name="TemperatureBorder"
+                        <!-- Temperature -->
+                        <Border x:Name="TemperatureBorder"
                     CornerRadius="10"
                     Background="#33FFFFFF"
                     BorderBrush="#66FFFFFF"
                     BorderThickness="0" 
                     Grid.Column="0" 
                     Grid.Row="0">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="80"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Temperature -->
-                        <Border Grid.Column="0" Grid.Row="0">
                             <Grid>
-                                <Image x:Name="TemperatureIconImage" 
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="80"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Temperature -->
+                                <Border Grid.Column="0" Grid.Row="0">
+                                    <Grid>
+                                        <Image x:Name="TemperatureIconImage" 
                                        Source="Images\TemperatureIcon.png" 
                                        Width="14"
                                        Height="15"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center" Margin="18,0,0,0"/>
 
-                                <TextBlock x:Name="TemperatureTitleTextBlock" 
+                                        <TextBlock x:Name="TemperatureTitleTextBlock" 
                                 Text="Temperature" 
                                 FontSize="12"
                                 FontWeight="Light"
                                 Foreground="White"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"/>
-                            </Grid>
-                        </Border>
+                                    </Grid>
+                                </Border>
 
-                        <!-- Temperature Value -->
-                        <Border Grid.Column="0" Grid.Row="1">
-                            <Grid>
-                                <TextBlock x:Name="TemperatureValueTextBlock" 
+                                <!-- Temperature Value -->
+                                <Border Grid.Column="0" Grid.Row="1">
+                                    <Grid>
+                                        <TextBlock x:Name="TemperatureValueTextBlock" 
                                 Text="10℃" 
                                 FontSize="40"
                                 FontWeight="Bold"
                                 Foreground="Gray"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
                             </Grid>
                         </Border>
-                    </Grid>
-                </Border>
 
-                <!-- Humid -->
-                <Border x:Name="HumidBorder"
+                        <!-- Humid -->
+                        <Border x:Name="HumidBorder"
                     CornerRadius="10"
                     Background="#33FFFFFF"
                     BorderBrush="#66FFFFFF"
                     BorderThickness="0" 
                     Grid.Column="0" 
                     Grid.Row="2">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="80"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Humid -->
-                        <Border Grid.Column="0" Grid.Row="0">
                             <Grid>
-                                <Image x:Name="HumidIconImage" 
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="80"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Humid -->
+                                <Border Grid.Column="0" Grid.Row="0">
+                                    <Grid>
+                                        <Image x:Name="HumidIconImage" 
                                        Source="Images\HumidIcon.png" 
                                        Width="13"
                                        Height="14"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top" Margin="33,5,0,0"/>
 
-                                <TextBlock x:Name="HumidName" 
+                                        <TextBlock x:Name="HumidName" 
                                 Text="Humid" 
                                 FontSize="12"
                                 FontWeight="Light"
                                 Foreground="White"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"/>
-                            </Grid>
-                        </Border>
+                                    </Grid>
+                                </Border>
 
-                        <!-- Humid Value -->
-                        <Border Grid.Column="0" Grid.Row="1">
-                            <Grid>
-                                <TextBlock x:Name="HumidValueTextBlock" 
+                                <!-- Humid Value -->
+                                <Border Grid.Column="0" Grid.Row="1">
+                                    <Grid>
+                                        <TextBlock x:Name="HumidValueTextBlock" 
                                 Text="%19" 
                                 FontSize="40"
                                 FontWeight="Bold"
                                 Foreground="Gray"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
                             </Grid>
                         </Border>
-                    </Grid>
-                </Border>
 
-                <!-- Wind -->
-                <Border x:Name="WindBorder"
+                        <!-- Wind -->
+                        <Border x:Name="WindBorder"
                     CornerRadius="10"
                     Background="#33FFFFFF"
                     BorderBrush="#66FFFFFF"
                     BorderThickness="0" 
                     Grid.Column="2" 
                     Grid.Row="0">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="80"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Wind -->
-                        <Border Grid.Column="0" Grid.Row="0">
                             <Grid>
-                                <Image x:Name="WindIconImage" 
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="80"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Wind -->
+                                <Border Grid.Column="0" Grid.Row="0">
+                                    <Grid>
+                                        <Image x:Name="WindIconImage" 
                                        Source="Images\WindIcon.png" 
                                        Width="13"
                                        Height="14"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center" Margin="37,0,0,0"/>
 
-                                <TextBlock x:Name="WindName" 
+                                        <TextBlock x:Name="WindName" 
                                 Text="Wind" 
                                 FontSize="12"
                                 FontWeight="Light"
                                 Foreground="White"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"/>
-                            </Grid>
-                        </Border>
+                                    </Grid>
+                                </Border>
 
-                        <!-- Wind Value -->
-                        <Border Grid.Column="0" Grid.Row="1">
-                            <Grid>
-                                <TextBlock x:Name="WindValueTextBlock" 
+                                <!-- Wind Value -->
+                                <Border Grid.Column="0" Grid.Row="1">
+                                    <Grid>
+                                        <TextBlock x:Name="WindValueTextBlock" 
                                 Text="49 °NE 20 kmh" 
                                 TextWrapping="Wrap"
                                 FontSize="20"
@@ -350,49 +354,49 @@
                                 Foreground="Gray"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
                             </Grid>
                         </Border>
-                    </Grid>
-                </Border>
 
-                <!-- Pressure -->
-                <Border x:Name="PressureBorder"
+                        <!-- Pressure -->
+                        <Border x:Name="PressureBorder"
                     CornerRadius="10"
                     Background="#33FFFFFF"
                     BorderBrush="#66FFFFFF"
                     BorderThickness="0" 
                     Grid.Column="2" 
                     Grid.Row="2">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="80"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Pressure -->
-                        <Border Grid.Column="0" Grid.Row="0">
                             <Grid>
-                                <Image x:Name="PressureIconImage" 
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="80"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Pressure -->
+                                <Border Grid.Column="0" Grid.Row="0">
+                                    <Grid>
+                                        <Image x:Name="PressureIconImage" 
                                        Source="Images\PressureIcon.png" 
                                        Width="13"
                                        Height="14"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top" Margin="29,5,0,0"/>
 
-                                <TextBlock x:Name="PressureTitleTextBlock" 
+                                        <TextBlock x:Name="PressureTitleTextBlock" 
                                 Text="Pressure" 
                                 FontSize="12"
                                 FontWeight="Light"
                                 Foreground="White"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"/>
-                            </Grid>
-                        </Border>
+                                    </Grid>
+                                </Border>
 
-                        <!-- Pressure Value -->
-                        <Border Grid.Column="0" Grid.Row="1">
-                            <Grid>
-                                <TextBlock x:Name="PressureValueTextBlock" 
+                                <!-- Pressure Value -->
+                                <Border Grid.Column="0" Grid.Row="1">
+                                    <Grid>
+                                        <TextBlock x:Name="PressureValueTextBlock" 
                                 Text="1017 hPa/mb" 
                                 TextWrapping="Wrap"
                                 FontSize="20"
@@ -400,66 +404,66 @@
                                 Foreground="Gray"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
                             </Grid>
                         </Border>
                     </Grid>
                 </Border>
-            </Grid>
-        </Border>
 
-        <!-- Day Information And Future Days Information -->
-        <Border Grid.Column="3" Grid.Row="3">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="100"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="100"/>
-                </Grid.RowDefinitions>
+                <!-- Day Information And Future Days Information -->
+                <Border Grid.Column="3" Grid.Row="3">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
 
-                <!-- Day Information -->
-                <Border x:Name="DayScheduleBorder" 
+                        <!-- Day Information -->
+                        <Border x:Name="DayScheduleBorder" 
                         Grid.Column="0" 
                         Grid.Row="0"
                         CornerRadius="10"
                         Background="#33FFFFFF"
                         BorderBrush="#66FFFFFF"
                         BorderThickness="0">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="80"/>
-                        </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="80"/>
+                                </Grid.RowDefinitions>
 
-                        <Border x:Name="DayScheduleTitleBorder" Grid.Column="0" Grid.Row="0">
-                            <Grid x:Name="DayScheduleTitleGrid">
-                                <TextBlock x:Name="DayScheduleTitleTextBlock"
+                                <Border x:Name="DayScheduleTitleBorder" Grid.Column="0" Grid.Row="0">
+                                    <Grid x:Name="DayScheduleTitleGrid">
+                                        <TextBlock x:Name="DayScheduleTitleTextBlock"
                                            Text="Day"
                                            Foreground="White"
                                            FontWeight="Light"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"/>
 
-                                <Image x:Name="DayScheduleIconImage" 
+                                        <Image x:Name="DayScheduleIconImage" 
                                        Source="Images\DayIcon.png"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center" Margin="175,0,0,0" Height="16" Width="17"/>
-                            </Grid>
-                        </Border>
+                                    </Grid>
+                                </Border>
 
-                        <Border x:Name="DayScheduleValueBorder" Grid.Column="0" Grid.Row="1">
-                            <Grid x:Name="DayScheduleValueGrid">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="26.667"/>
-                                    <RowDefinition Height="26.666"/>
-                                    <RowDefinition Height="26.667"/>
-                                </Grid.RowDefinitions>
+                                <Border x:Name="DayScheduleValueBorder" Grid.Column="0" Grid.Row="1">
+                                    <Grid x:Name="DayScheduleValueGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="26.667"/>
+                                            <RowDefinition Height="26.666"/>
+                                            <RowDefinition Height="26.667"/>
+                                        </Grid.RowDefinitions>
 
-                                <Border Grid.Column="0" Grid.Row="1">
-                                    <Canvas x:Name="TimeDayCanvas"
+                                        <Border Grid.Column="0" Grid.Row="1">
+                                            <Canvas x:Name="TimeDayCanvas"
                                                 Width="395"
                                                 Height="30"
                                                 VerticalAlignment="Center">
-                                        <ProgressBar x:Name="TimeDayProgressBar"
+                                                <ProgressBar x:Name="TimeDayProgressBar"
                                                      Minimum="0"
                                                      Maximum="24"
                                                      Value="0"
@@ -471,39 +475,140 @@
                                                      HorizontalAlignment="Center" 
                                                      Canvas.Top="8"/>
 
-                                        <Image x:Name="WeatherTimeStatusIconImage" 
+                                                <Image x:Name="WeatherTimeStatusIconImage" 
                                                Source="Images\SunIcon.png"
                                                Width="20"
                                                Height="20"
                                                VerticalAlignment="Center">
-                                            <Image.RenderTransform>
-                                                <TranslateTransform x:Name="WeatherStatusTransform" />
-                                            </Image.RenderTransform>
-                                        </Image>
-                                    </Canvas>
-                                </Border>
+                                                    <Image.RenderTransform>
+                                                        <TranslateTransform x:Name="WeatherStatusTransform"/>
+                                                    </Image.RenderTransform>
+                                                </Image>
+                                            </Canvas>
+                                        </Border>
 
-                                <Border Grid.Column="0" Grid.Row="2">
-                                    <Grid x:Name="TimeGrid">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="20"/>
-                                            <ColumnDefinition Width="380"/>
-                                            <ColumnDefinition Width="20"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Border x:Name="khfrkjh" Grid.Column="1" Grid.Row="0">
-                                            <Grid>
-                                                <TextBlock x:Name="StartDayTimeTextBlock" 
+                                        <Border Grid.Column="0" Grid.Row="2">
+                                            <Grid x:Name="TimeGrid">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="20"/>
+                                                    <ColumnDefinition Width="380"/>
+                                                    <ColumnDefinition Width="20"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border x:Name="khfrkjh" Grid.Column="1" Grid.Row="0">
+                                                    <Grid>
+                                                        <TextBlock x:Name="StartDayTimeTextBlock" 
                                                            Text="00:00"
                                                            Foreground="White"
                                                            HorizontalAlignment="Left"
                                                            VerticalAlignment="Top"/>
 
-                                                <TextBlock x:Name="EndDayTimeTextBlock" 
+                                                        <TextBlock x:Name="EndDayTimeTextBlock" 
                                                            Text="23:59"
                                                            Foreground="White"
                                                            HorizontalAlignment="Right"
                                                            VerticalAlignment="Top"/>
+                                                    </Grid>
+                                                </Border>
                                             </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Future Days Information -->
+                        <Border x:Name="FutureDaysBorder" 
+                        Grid.Column="0" 
+                        Grid.Row="3"
+                        CornerRadius="10"
+                        Background="#33FFFFFF"
+                        BorderBrush="#66FFFFFF"
+                        BorderThickness="0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="80"/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Column="0" Grid.Row="0">
+                                    <Grid>
+                                        <TextBlock x:Name="FutureDaysTitleTextBlock"
+                                           Text="Days"
+                                           Foreground="White"
+                                           FontWeight="Light"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Column="0" Grid.Row="1">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="380"/>
+                                            <ColumnDefinition Width="20"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="8"/>
+                                            <RowDefinition Height="50"/>
+                                            <RowDefinition Height="0"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
+                                            <!-- Scrollable Area -->
+                                            <ScrollViewer x:Name="WeatherScrollViewer"
+                    HorizontalScrollBarVisibility="Hidden"
+                    VerticalScrollBarVisibility="Disabled"
+                    PreviewMouseLeftButtonDown="WeatherScrollViewer_PreviewMouseLeftButtonDown"
+                    PreviewMouseMove="WeatherScrollViewer_PreviewMouseMove"
+                    PreviewMouseLeftButtonUp="WeatherScrollViewer_PreviewMouseLeftButtonUp">
+                                                <ItemsControl x:Name="WeatherItemsControl" 
+                                                      ItemsSource="{Binding WeatherList}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+
+                                                    <!-- Day Sample Cards -->
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Width="Auto" Height="Auto" Margin="2,0,20,0">
+                                                                <StackPanel x:Name="DaySampleCardsStackPanel" 
+                                                                    HorizontalAlignment="Center" 
+                                                                    VerticalAlignment="Center">
+                                                                    <Grid>
+                                                                        <Grid.RowDefinitions >
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                        </Grid.RowDefinitions>
+
+                                                                        <TextBlock Text="{Binding DayName}"  
+                                                                           FontSize="7" 
+                                                                           Foreground="White"
+                                                                           FontWeight="Bold"
+                                                                           HorizontalAlignment="Center"
+                                                                           VerticalAlignment="Top"
+                                                                           Grid.Row="0"/>
+                                                                        <Image Source="{Binding IconPath}" 
+                                                                       Width="25" 
+                                                                       Height="25" 
+                                                                       VerticalAlignment="Center"
+                                                                       HorizontalAlignment="Center"
+                                                                       Grid.Row="1"/>
+                                                                        <TextBlock Text="{Binding MinMaxTemperature}" 
+                                                                           Foreground="White"
+                                                                           FontWeight="Light"
+                                                                           FontSize="7"
+                                                                           HorizontalAlignment="Center"
+                                                                           Grid.Row="2"/>
+                                                                    </Grid>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
                                         </Border>
                                     </Grid>
                                 </Border>
@@ -512,102 +617,73 @@
                     </Grid>
                 </Border>
 
-                <!-- Future Days Information -->
-                <Border x:Name="FutureDaysBorder" 
-                        Grid.Column="0" 
-                        Grid.Row="3"
-                        CornerRadius="10"
-                        Background="#33FFFFFF"
-                        BorderBrush="#66FFFFFF"
-                        BorderThickness="0">
+                <!-- Settings Panel -->
+                <Border x:Name="SettingsPanelBorder" BorderThickness="1" Grid.Column="3" Grid.RowSpan="5" Grid.ColumnSpan="2" Margin="210,0,0,-4" Visibility="Hidden">
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF0047FF" Offset="1"/>
+                            <GradientStop Color="#FF00DAFF"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="80"/>
+                            <RowDefinition Height="15*"/>
+                            <RowDefinition Height="17*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="16*"/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="200*"/>
+                            <RowDefinition Height="15*"/>
                         </Grid.RowDefinitions>
-                        <Border Grid.Column="0" Grid.Row="0">
-                            <Grid>
-                                <TextBlock x:Name="FutureDaysTitleTextBlock"
-                                           Text="Days"
-                                           Foreground="White"
-                                           FontWeight="Light"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="12*"/>
+                            <ColumnDefinition Width="95*"/>
+                            <ColumnDefinition Width="12*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" Grid.Row="1">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="20"/>
-                                    <ColumnDefinition Width="380"/>
-                                    <ColumnDefinition Width="20"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="8"/>
-                                    <RowDefinition Height="50"/>
-                                    <RowDefinition Height="0"/>
-                                </Grid.RowDefinitions>
+                        <Button x:Name="CloseSettingsPanelButton" Grid.Column="1" Content="❌" Background="Transparent" Foreground="White" BorderThickness="0" Click="SettingsShowButton_Click" Margin="164,0,0,0" Grid.Row="1"/>
 
-                                <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
-                                    <!-- Scrollable Area -->
-                                    <ScrollViewer x:Name="WeatherScrollViewer"
-                    HorizontalScrollBarVisibility="Hidden"
-                    VerticalScrollBarVisibility="Disabled"
-                    PreviewMouseLeftButtonDown="WeatherScrollViewer_PreviewMouseLeftButtonDown"
-                    PreviewMouseMove="WeatherScrollViewer_PreviewMouseMove"
-                    PreviewMouseLeftButtonUp="WeatherScrollViewer_PreviewMouseLeftButtonUp">
-                                        <ItemsControl x:Name="WeatherItemsControl" 
-                                                      ItemsSource="{Binding WeatherList}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
+                        <TextBlock Grid.Column="1" Grid.Row="2" Text="User" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" VerticalAlignment="Center" Height="10" Margin="10,0,0,0"/>
+                        <Line Grid.Column="1" Grid.Row="2" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Bottom" Height="3"/>
+                        <TextBlock x:Name="UserNameSurnameTextBlock" Grid.Column="1" Grid.Row="3" Text="Name Surname: Enes Efe" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Margin="74,0,0,0" Width="116"/>
+                        <TextBlock x:Name="UserEmailTextBlock" Grid.Column="1" Grid.Row="4" Text="Email: enesefetokta41@gmail.com" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Margin="28,0,0,0" Width="162"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Left" Content="Log Out" Grid.Row="5" VerticalAlignment="Center" Height="16" Width="46" Margin="144,0,0,0" FontSize="7" BorderBrush="#FF0063A6" Background="#FF58B9FF" Click="LogoutButton_Click"/>
 
-                                            <!-- Day Sample Cards -->
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border Width="Auto" Height="Auto" Margin="2,0,20,0">
-                                                        <StackPanel x:Name="DaySampleCardsStackPanel" 
-                                                                    HorizontalAlignment="Center" 
-                                                                    VerticalAlignment="Center">
-                                                            <Grid>
-                                                                <Grid.RowDefinitions >
-                                                                    <RowDefinition Height="Auto"/>
-                                                                    <RowDefinition Height="Auto"/>
-                                                                    <RowDefinition Height="Auto"/>
-                                                                </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="1" Grid.Row="6" Text="Select City" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
+                        <Line Grid.Column="1" Grid.Row="6" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Bottom" Height="3"/>
+                        <TextBlock x:Name="UserSelectCityTextBlock" Grid.Column="1" Grid.Row="7" Text="City: None" HorizontalAlignment="Left" TextAlignment="Right" Foreground="White" FontWeight="Bold" FontSize="10" Margin="56,0,0,0" Width="116"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Left" Grid.Row="7" VerticalAlignment="Center" Height="12" Width="13" Margin="177,0,0,0" Click="RemoveCity_Click">
+                            <Button.BorderBrush>
+                                <SolidColorBrush Color="#FF707070" Opacity="0"/>
+                            </Button.BorderBrush>
+                            <Button.Background>
+                                <ImageBrush ImageSource="/Images/GarbageIcon.png"/>
+                            </Button.Background>
+                            <Button.Foreground>
+                                <SolidColorBrush Color="Black" Opacity="0"/>
+                            </Button.Foreground>
+                        </Button>
 
-                                                                <TextBlock Text="{Binding DayName}"  
-                                                                           FontSize="7" 
-                                                                           Foreground="White"
-                                                                           FontWeight="Bold"
-                                                                           HorizontalAlignment="Center"
-                                                                           VerticalAlignment="Top"
-                                                                           Grid.Row="0"/>
-                                                                <Image Source="{Binding IconPath}" 
-                                                                       Width="25" 
-                                                                       Height="25" 
-                                                                       VerticalAlignment="Center"
-                                                                       HorizontalAlignment="Center"
-                                                                       Grid.Row="1"/>
-                                                                <TextBlock Text="{Binding MinMaxTemperature}" 
-                                                                           Foreground="White"
-                                                                           FontWeight="Light"
-                                                                           FontSize="7"
-                                                                           HorizontalAlignment="Center"
-                                                                           Grid.Row="2"/>
-                                                            </Grid>
-                                                        </StackPanel>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </ScrollViewer>
-                                </Border>
-                            </Grid>
-                        </Border>
+                        <TextBlock Grid.Column="1" Grid.Row="8" Text="Notifications" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
+                        <Line Grid.Column="1" Grid.Row="8" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Bottom" Height="3"/>
+                        <CheckBox x:Name="InAppCheckBox" Checked="NotificationsCheckBox_Changed" Unchecked="NotificationsCheckBox_Changed" Grid.Column="1" Content="In-App" HorizontalAlignment="Left" Margin="138,0,0,0" Grid.Row="9" VerticalAlignment="Center" Width="52" Foreground="White" Background="#FF007DB8" BorderBrush="White" FontSize="10" Height="14" IsChecked="True"/>
+                        <CheckBox x:Name="EmergencyWeatherCheckBox" Checked="NotificationsCheckBox_Changed" Unchecked="NotificationsCheckBox_Changed" Grid.Column="1" Content="Emergency Weather" HorizontalAlignment="Left" Margin="79,0,0,0" Grid.Row="10" VerticalAlignment="Center" Width="111" Foreground="White" Background="#FF007DB8" BorderBrush="White" FontSize="10" Height="14" IsChecked="True"/>
+                        <CheckBox x:Name="DailyWeatherCheckBox" Checked="NotificationsCheckBox_Changed" Unchecked="NotificationsCheckBox_Changed" Grid.Column="1" Content="Daily Weather" HorizontalAlignment="Left" Margin="106,0,0,0" Grid.Row="11" VerticalAlignment="Center" Width="84" BorderBrush="White" Background="#FF007DB8" Foreground="White" FontSize="10" Height="16" IsChecked="True"/>
+
+                        <TextBlock Grid.Column="1" Grid.Row="12" Text="Info" Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="8"/>
+                        <Line Grid.Column="1" Grid.Row="12" X1="10" Y1="0" X2="200" Y2="0"  Stroke="White" VerticalAlignment="Bottom" Height="3"/>
+                        <Button Grid.Column="1" HorizontalAlignment="Left" Content="GitHub" Grid.Row="13" VerticalAlignment="Center" Height="16" Width="46" Margin="144,0,0,0" FontSize="7" BorderBrush="#FF0063A6" Background="#FF58B9FF" Click="GoToGitHub_Click" />
+                        <TextBlock Grid.Column="1" Grid.Row="14" Text="Weather Zero Plus is the project of a 2nd year student studying at Atatürk University. Please use with this in mind." Foreground="White" FontSize="7" Width="180" HorizontalAlignment="Left" TextAlignment="Right" Margin="10,0,0,0" VerticalAlignment="Center" Height="28" TextWrapping="Wrap"/>
                     </Grid>
                 </Border>
             </Grid>

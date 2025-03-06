@@ -1,197 +1,213 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Alert</title>
-    <style type="text/css">
-           /* Base Styles */
-        body, table, td, p, a, h1, h2, h3 {
-            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-            margin: 0;
-            padding: 0;
-            border: 0;
-            outline: none;
-        }
-        body {
-            width: 100% !important;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.6;
-            -webkit-text-size-adjust: none;
-        }
-        a {
-            color: #3498db;
-            text-decoration: none;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hava Durumu Uyarısı</title>
+  <style type="text/css">
+    /* Genel Stiller */
+    body, table, td, p, a, h1, h2, h3, ul, li {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+    body {
+      width: 100% !important;
+      background-color: #f4f4f4;
+      color: #333;
+      -webkit-text-size-adjust: none;
+    }
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
 
-        /* Email Wrapper */
-        .email-wrapper {
-            width: 100%;
-            background-color: #f4f4f4;
-        }
-        .email-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    /* E-posta Kapsayıcı */
+    .email-wrapper {
+      width: 100%;
+      background-color: #f4f4f4;
+      padding: 20px 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
 
-        /* Header */
-        .email-header {
-            padding: 30px;
-            text-align: center;
-             background-color: #ffe0e0;
-        }
-         .email-header a {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-            text-decoration: none;
-        }
+    /* Başlık */
+    .email-header {
+      background-color: #ffe0e0;
+      text-align: center;
+      padding: 30px;
+    }
+    .email-header a {
+      font-size: 20px;
+      font-weight: bold;
+      color: #e74c3c;
+      text-decoration: none;
+    }
 
-        /* Body */
-        .email-body {
-            padding: 30px;
-        }
-        .email-body h1 {
-            font-size: 28px;
-            font-weight: bold;
-            color: #e74c3c;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-         .email-body h2 {
-             font-size: 20px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-          .email-body h3{
-            font-size: 18px;
-            font-weight: bold;
-            color: #2c3e50;
-             margin-bottom: 10px;
-        }
-        .email-body p {
-            font-size: 16px;
-            color: #555;
-            margin-bottom: 15px;
-             line-height: 1.7;
-        }
+    /* İçerik Bölümü */
+    .email-body {
+      padding: 30px;
+    }
+    .email-body h1 {
+      font-size: 28px;
+      font-weight: bold;
+      color: #e74c3c;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .email-body h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin: 20px 0 15px;
+    }
+    .email-body h3 {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .email-body p {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 15px;
+      line-height: 1.7;
+    }
+    .email-body ul {
+      margin-bottom: 15px;
+      padding-left: 20px;
+      color: #555;
+    }
+    .email-body ul li {
+      margin-bottom: 10px;
+      list-style-type: disc;
+    }
 
-        /* Button */
-      .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .button {
-             display: inline-block;
-            background-color: #3498db;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
+    /* Buton */
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .button {
+      display: inline-block;
+      background-color: #e74c3c;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #c0392b;
+    }
 
-        }
-          .button:hover{
-               background-color: #2980b9;
-          }
+    /* Footer */
+    .email-footer {
+      background-color: #f4f4f4;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+    .email-footer a {
+      color: #777;
+      text-decoration: underline;
+    }
 
+    /* Animasyonlu Uyarı İkonu */
+    .weather-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+      color: #e74c3c;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
 
-        /* Footer */
-          .email-footer {
-            background-color: #f4f4f4;
-            padding: 20px;
-             margin-top: 30px;
-            text-align: center;
-        }
-        .email-footer p {
-            color: #777;
-            font-size: 14px;
-             margin-bottom: 10px;
-        }
-         .email-footer a {
-            color: #777;
-            font-size: 14px;
-            text-decoration: underline;
-        }
-
-
-           /* Responsive */
-        @media screen and (max-width: 600px) {
-            .email-container {
-                width: 95%;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .email-body {
-                padding: 20px;
-            }
-              .email-header{
-                 padding: 20px;
-             }
-           .email-body h1{
-                  font-size: 24px;
-            }
-            .email-body p{
-                  font-size: 15px;
-            }
-        }
-           .weather-icon{
-                font-size: 40px;
-               margin-bottom: 10px;
-                color: #3498db;
-        }
-    </style>
+    /* Responsive */
+    @media screen and (max-width: 600px) {
+      .email-container {
+        width: 95%;
+      }
+      .email-body {
+        padding: 20px;
+      }
+      .email-header {
+        padding: 20px;
+      }
+      .email-body h1 {
+        font-size: 24px;
+      }
+      .email-body p, .email-body ul li {
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <td>
-                <table class="email-container" width="100%" cellpadding="0" cellspacing="0">
-                     <tr>
-                        <td class="email-header">
-                            <a href="#">Weather Zero Plus</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="email-body">
-                             <h1><i class="weather-icon">⚠️</i> Emergency Weather Alert!</h1>
-                             <p>Dear user, an abrupt and significant weather change has been detected in the [LOCATION] region.</p>
-                             <h2>Weather Alert Details</h2>
-                            <p><strong>Change Type:</strong> [WEATHER_CHANGE_TYPE]</p>
-                            <p><strong>Severity:</strong> [WEATHER_SEVERITY]</p>
-                             <p><strong>Start Time:</strong> [WEATHER_START_TIME]</p>
-                            <p><strong>Estimated Duration:</strong> [WEATHER_ESTIMATED_DURATION]</p>
-                            <h2>Precautions</h2>
-                             <p>Please take the following precautions for your safety:</p>
-                             <ul>
-                                <li>[PRECAUTION_1]</li>
-                                <li>[PRECAUTION_2]</li>
-                                <li>[PRECAUTION_3]</li>
-                            </ul>
-                            <div class="button-container">
-                                <p>See the application for detailed information.</p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                         <td class="email-footer">
-                            <p>Weather Zero Plus</p>
-                            <p>Türkiye Ağrı Merkez 709 St. Co. 04100</p>
-                            <p><a href="https://github.com/EnesEfeTokta/WeatherPlusZero">Github</a> | <a href="https://github.com/EnesEfeTokta/WeatherPlusZero">Contact</a></p>
-                         </td>
-                    </tr>
-                </table>
+  <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>
+        <table class="email-container" width="100%" cellpadding="0" cellspacing="0">
+          <!-- Header -->
+          <tr>
+            <td class="email-header">
+              <a href="#">Weather Zero Plus</a>
             </td>
-        </tr>
-    </table>
+          </tr>
+          <!-- Body -->
+          <tr>
+              <td class="email-body">
+                  <h1>
+                      <span class="weather-icon" aria-hidden="true">⚠️</span> URGENT WEATHER WARNING!
+                  </h1>
+                  <p>Dear user, A sudden and significant weather change has been detected in <strong>[LOCATION]</strong>.</p>
+
+                  <h2>Warning Details</h2>
+                  <p><strong>Type of Change:</strong> [WEATHER_CHANGE_TYPE]</p>
+                  <p><strong>Status:</strong> [WEATHER_STATUS]</p>
+                  <p><strong>Level of Violence:</strong> [WEATHER_SEVERITY]</p>
+                  <p><strong>Start Time:</strong> [WEATHER_START_TIME]</p>
+
+                  <h2>Precautions</h2>
+                  <p>Please take the following precautions for your safety:</p>
+                  <ul>
+                      <li>[PRECAUTION_1]</li>
+                      <li>[PRECAUTION_2]</li>
+                      <li>[PRECAUTION_3]</li>
+                  </ul>
+                  <div class="button-container">
+                      <a href="[APP_LINK]" class="button">Open the App for Detailed Information</a>
+                      <p>Visit our app for more information.</p>
+                  </div>
+              </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td class="email-footer">
+              <p>Weather Zero Plus</p>
+              <p>Turkiye, Agri Center 709 St. Co. 04100</p>
+              <p>
+                <a href="https://github.com/EnesEfeTokta/WeatherPlusZero">Github</a> | 
+                <a href="mailto:enesefetokta009@gmail.com">Contact</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
