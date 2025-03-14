@@ -162,11 +162,6 @@ gitGraph
 <img src="Screenshots/UrgentWeatherWarning.png" width="150" height="200">
 <img src="Screenshots/WeatherUpdate.png" width="150" height="450">
 
-
-## Görevler 📝
-
-[Görevler](https://www.notion.so/1531fb14c4a880c29cd1e8274f998d62?pvs=21)
-
 ## Project Planning and Design 🎨
 
 The data to be displayed:
