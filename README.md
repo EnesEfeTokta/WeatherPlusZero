@@ -109,10 +109,6 @@ These files are used to personalize the app's user experience and securely manag
 
 [Weather Plus Zero GitHub Repo](https://github.com/EnesEfeTokta/WeatherPlusZero)
 
-## Drawio 🪢
-
-[Weather Plus Zero Drawio](https://github.com/EnesEfeTokta/WeatherPlusZero/blob/main/WeatherPlusZero/Planning/WeatherPlusZero.drawio)
-
 ## Project Branching
 
 The `main` branch is the main branch. It works and the latest codes are kept here. In the development process, the 'Develop' branch is used.
