@@ -200,7 +200,7 @@ OpenWeatherMap was preferred as the data source. Thus, we can access the data mo
         - key (API key),
         - contentType (data type - json)
 
-- Twilio SendGrid:**
+- **Twilio SendGrid:**
     - **Description:** Twilio SendGrid provides email sending and management service.
     - **Basic URL:** https://api.sendgrid.com/v3/
     - **Endpoint:** mail/send
@@ -423,13 +423,13 @@ Layered architecture was preferred and used for the project.
 
 ## **Safety and Performance 🛡️**
 
-#### Security Protocols
+### Security Protocols
 
 - **Authentication:** Users can log in to their accounts with their approved e-mail and passwords.
 - **Data Encryption:** The passwords set by the users are hashed and stored in a way that cannot be read and made meaningful by strangers.
 - **Email Verification:** New users need to verify their accounts with the code sent to their e-mails.
 
-#### Performance Optimization
+### Performance Optimization
 
 - **Asynchronous Programming:** Long-running operations (API calls) are done asynchronously, preventing the UI from freezing.
 - **Optimized UI:** Unnecessary UI drawings are avoided and UI elements that affect performance are used correctly.
@@ -443,9 +443,9 @@ Layered architecture was preferred and used for the project.
 
 ## **User Documentation 📖**
 
-#### User Manual
+### User Manual
 
-##### Interface Descriptions
+#### Interface Descriptions
 
 - **Main Screen**
   - **Search Bar:** Used to search for weather information for a specific location.
@@ -469,7 +469,7 @@ Layered architecture was preferred and used for the project.
   - **Log In Button:** If your login information is correct, it allows you to log in to the application.
   - **Become a Member Link:** If you do not have an account yet, it directs you to the membership page.
 
-Description of #### Application Interface
+#### Description of Application Interface
 - **Main Screen**
   - **Location Search:**
     - Type a city or region name in the search bar.
@@ -602,7 +602,7 @@ Description of #### Application Interface
 
 ## Legal and Regulatory Notices ⚠️
 
-#### Privacy Policy
+### Privacy Policy
 The privacy of your personal data is important to us. Therefore, we would like to transparently explain how we collect, use and protect your data:
 
 **Data Collected:** Certain data may be collected during your use of the App. This data may include your location information, technical data about your device (e.g. operating system version, device model), usage habits and preferences. For a full list of the data we collect, visit [our Privacy Policy page](/PRIVACYPOLICY.md).
